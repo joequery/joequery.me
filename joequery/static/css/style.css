@@ -80,11 +80,6 @@ header nav>ul>li {
 header nav>ul>li:hover>a {
 	color:#258fb8
 }
-header nav>ul>li>a {
-	padding:38px 30px 38px 0;
-	margin-top:-38px;
-	background:url('images/detail.png') right center no-repeat
-}
 header nav>ul>li>a:only-child {
 	padding-right:0;
 	background:none
