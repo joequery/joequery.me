@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf8">
+	<title>Slash &mdash; a minimal theme for Octopress</title>
+	<meta name="description" content="Slash is a clean one-column theme designed for Octopress, supporting all features in classic theme and built-in Fancybox. Want to try a different theme? That's is!">
+	<link rel="stylesheet" href="style.css">
+	<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js"></script>
+</head>
+<body>
+	<header class="inner">
+		<h1 class="left"><a href="index.html">JoeQuery</a></h1>
+		<nav class="menu left">
+			<ul class="main">
+				<li><a href="#">Programming</a></li>
+				<li><a href="#">Math</a></li>
+				<li><a href="#">Github</a></li>
+				<li><a href="#">Screencasts</a></li>
+				<li><a href="#">About/Resume</a></li>
+				<li><a href="#">Contact</a></li>
+			</ul>
+		</nav>
+	</header>
+	<div id="content" class="inner">
+		<article class="page" id="install">
+			<h1 class="title">Install</h1>
+			<div class="entry">
+				<p>Type the code below and experience Slash!</p>
+				<pre>$ cd octopress
+$ git clone git://github.com/tommy351/Octopress-Theme-Slash.git .themes/slash
+$ rake install['slash']
+$ rake generate</pre>
+				<p>Have problems when installing with zsh? Try <code>rake install\['slash'\]</code> instead.</p>
+			</div>
+		</article>
+		<article class="page" id="overview">
+			<h1 class="title">Overview</h1>
+			<div class="entry">
+				<p>Slash is a clean one-column theme designed for Octopress, supporting all features in classic theme and built-in <a href="http://fancyapps.com/fancybox/" target="_blank">Fancybox</a>. Want to try a different theme? That's is!</p>
+				<h2>Videos</h2>
+				<p>Slash can resize HTML5 <code>video</code> and embedded video like <code>iframe</code>, <code>object</code> to page width automatically.</p>
+				<p>
+					<div class="video-container">
+<iframe src="http://www.youtube.com/embed/3JX6TyLOmGQ" frameborder="0" allowfullscreen></iframe>
+					</div>
+				</p>
+				<p>Just wrap embedded code with <code>#video-container</code> as below:</p>
+				<pre>&lt;div class="video-container"&gt;
+	// embedded code      
+&lt;/div&gt;</pre>
+		<article class="page" id="questions">
+			<h1 class="title">Q&amp;A</h1>
+			<div class="entry">
+				<h3>How to show Facebook link in top right corner?</h3>
+				<p>Add <code>facebook_user</code> parameter to <code>_config.yml</code> and fill it with your Facebook ID.</p>
+				<h3>How to edit menus?</h3>
+				<p>Edit <code>slash</code>&rarr;<code>source</code>&rarr;<code>_includes</code>&rarr;<code>custom</code>&rarr;<code>navigation.html</code>.</p>
+				<h3>How to hide Twitter stream in banner?</h3>
+				<p>Delete <code>slash</code>&rarr;<code>source</code>&rarr;<code>_layouts</code>&rarr;<code>default.html</code> line 6.</p>
+				<h3>How to disable Fancybox?</h3>
+				<ol>
+					<li>Delete <code>slash</code>&rarr;<code>source</code>&rarr;<code>_includes</code>&rarr;<code>after_footer.html</code> line 4.</li>
+					<li>Delete <code>slash</code>&rarr;<code>source</code>&rarr;<code>javascripts</code>&rarr;<code>caption.js</code> line 14.</li>
+				</ol>
+				<p>If you have any problems or advices, feel free to comment <a href="http://zespia.tw/blog/2012/01/25/slash-theme/">here</a>.</p>
+			</div>
+		</article>
+	</div>
+    <footer class="inner"><a href="https://github.com/tommy351/Octopress-Theme-Slash">(Slash)</footer>
+</body>
+</html>
