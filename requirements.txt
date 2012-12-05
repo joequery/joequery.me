@@ -1,0 +1,5 @@
+flask
+formencode
+flask-wtf
+pyquery
+requests
