@@ -1,0 +1,20 @@
+{% macro img(g, file, alt="", class="", url="") %}
+{% if url == "" %}
+    <img src="{{g.assets}}/images/{{file}}" alt="{{alt}}" class="{{class}}" />
+{% else %}
+    <a href="{{url}}"><img src="{{g.assets}}/images/{{file}}" alt="{{alt}}" class="{{class}}" /></a>
+{% endif %}
+{% endmacro %}
+
+{% macro js(g, file) %}
+<script type="text/javascript" src="{{g.assets}}/js/{{file}}.js"></script>
+{% endmacro %}
+
+{% macro css(g, file) %}
+<link rel="stylesheet" type="text/css" href="{{g.assets}}/css/{{file}}.css" />
+{% endmacro %}
+
+{% macro render_field(field) %}
+  <dt>{{ field.label }}
+  <dd>{{ field(**kwargs)|safe }}
+{% endmacro %}
