@@ -2,7 +2,7 @@
 import os
 from flask import Flask, request, g, render_template
 
-SECRET_KEY = "p5uaR9bqNgImmIhiF62yAF8yY-A8CKjLHvaO0Pubp8g6ZcbpP8XjupuHCtwPT_dLQRPozD1P8xfvqi10RiH-zorv1DnRKw=="
+SECRET_KEY = "9x1P17j12gbQsCL4xqyQDp1kkOR7l5vMgxsw6elhkd49jxMIvwm8QBlNiSv2tBy-pIpwZf5RBZFB65qJV5ZNTetEhboDJ5GnWVSdZ_dnLtA="
 
 # App configuration
 app = Flask(__name__)
