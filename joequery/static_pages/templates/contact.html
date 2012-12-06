@@ -1,11 +1,21 @@
+{% from "macros" import img %}
 {% extends "basic-layout.html" %}
 {% block title %}Contact | Joseph McCullough{% endblock %}
 
 {% block body %} 
 <article class="page">
     <h1 class="title">Contact</h1>
+    <div class="entry" style="width: 300px;float: left;">
+{% filter markdown %}
+* Email: [joseph@vertstudios.com](mailto:joseph@vertstudios.com)
+* Twitter: [@joe_query](http://twitter.com/joe_query)
+* Github: [JoeQuery](https://github.com/joequery)
+* Reddit: [/u/JoeQuery](http://www.reddit.com/user/JoeQuery/)
+* HN: [RegEx](http://news.ycombinator.com/user?id=RegEx)
+{% endfilter %}
+    </div>
     <div class="entry">
-        <p>You can reach me the following ways</p>
+        {{img(g, "joseph.jpg", alt="Joseph and little brother Evan")|safe}}
     </div>
 </article>
 {% endblock %}
