@@ -1,0 +1,163 @@
+{% from "macros" import img %}
+{% extends "basic-layout.html" %}
+{% block title %}Resume | Joseph McCullough{% endblock %}
+
+{% block body %} 
+<article class="page">
+    <div class="entry">
+{% filter markdown %}
+Resume
+======
+
+Contact
+-------
+
+Joseph McCullough  
+joseph@vertstudios.com  
+903 316 8096
+
+Employment
+----------
+
+### [Communications Corporation of America][0] (Dec 2011-Present)
+  
+  * Drupal module development for 25+ TV station websites
+  * In-house utilities to aid workflow
+  * Amazon Web Services management
+  * General Ubuntu Server administration
+  * Custom backup utility creation for local servers
+
+### [Vert Studios][1] - Partner (Sep 2010-Present)
+
+  * Custom jQuery plugin development
+  * Simple website development via Wordpress, RefineryCMS
+  * Deployment, hosting, and version control management
+  * Traffic generation via technical articles
+
+### McCullough Designs - Owner (2009-Sep 2010)
+
+  * Clients include
+    * Donco Oilfield Inc.
+    * ETV Software
+    * Design903
+  * Designed websites, sliced PSDs to HTML, set up hosting. 
+
+Open Source Projects
+--------------------
+
+Github profile: [JoeQuery][2]
+
+### Authored Projects
+
+* [SnipSnip][3] - Local code snippet storage for OSX/Linux. [See demo][4].  
+* [Stagger][5] - Backup multiple MySQL databases at staggered times to ease 
+  server load
+* [Route53-To-S3][6] - Backup Route53 DNS Records from AWS to S3
+* [Stupid Table Plugin][7] - A stupidly simple jQuery table sorting plugin
+  (Used by Mozilla!)
+* [Rails Template][8] - Rails template with extensive nginx documentation  
+* [Vert-Flask][9] - The source of the Vert Studios website, made with Flask.
+
+### Contributed Projects
+
+* [Python Requests][10] - Python HTTP request module
+* [Tyler Public Art][11] - Public art map/list, curated by [HackTyler][12]
+
+Publications
+------------
+
+I frequently write articles on programming, server configuration, bug fixes,
+and best practices.
+
+* [Introduction to Recursion][13]
+* [Git Workflow: Crap, I committed to master!][14]
+* [Nginx, PHP-FPM Installation Guide on Ubuntu 11.04][15]
+* [Multiple .screenrc configurations (GNU Screen Tutorial)][16]
+* [Beginner's Introduction to Pointers in C][17]
+* [Converting a simple website to Python Flask][18]
+
+More publications can be viewed on the [Vert Studios Blog][20]
+
+Skills
+------
+
+* Git
+* Ruby / Python / PHP
+* Bash
+* MySQL
+* JavaScript
+* C (intermediate)
+* Very comfortable in unix environment
+
+Education
+---------
+
+### Currently Attending
+
+University of Texas at Tyler  
+Major: Computer Science with Math minor  
+3900 University Boulevard  
+Tyler, TX 75701-6699  
+(903)566-7000  
+Expected Graduation Date: 2015  
+
+### Associates in General Studies
+Tyler Junior College  
+1327 South Baxter Avenue  
+Tyler, Texas 75701  
+(903)510-2200 Graduation Date: 2010  
+
+### High School Diploma
+Robert E. Lee High School  
+411 ESE Loop 323  
+Tyler, TX 75703  
+(903)262-2625  
+Graduation Date: 2009  
+  
+References
+----------
+
+### Justin Edwards
+
+Former partner of Vert Studios  
+903-920-9514  
+justin@vertstudios.com  
+
+### Chris Stewart
+
+Tyler Junior College Art Department Chair  
+903-510-2234  
+cste@tjc.edu  
+
+### Kevin Western
+
+Programmer, former classmates at UT Tyler  
+903-530-6185  
+kevinwestern@gmail.com  
+
+[0]: http://www.comcorpusa.com/
+[1]: http://www.vertstudios.com/
+[2]: https://github.com/joequery
+[3]: https://github.com/joequery/SnipSnip
+[4]: http://codestre.am/c427e41ee84b817e7df1c50bf
+[5]: https://github.com/Hack56/Stagger
+[6]: https://github.com/Hack56/Route53-To-S3
+[7]: https://github.com/joequery/Stupid-Table-Plugin
+[8]: https://github.com/Hack56/Rails-Template
+[9]: https://github.com/joequery/Vert-Flask
+[10]: https://github.com/kennethreitz/requests
+[11]: http://www.tylerpublicart.com/
+[12]: https://groups.google.com/forum/?fromgroups#!forum/hacktyler
+[13]: http://www.vertstudios.com/blog/introduction-recursion-%E2%80%93-part-2/
+[14]: http://www.vertstudios.com/blog/git-workflow-crap-committed-master/
+[15]: http://www.vertstudios.com/blog/nginx-php-fpm-installation-guide-10-04/
+[16]: http://www.vertstudios.com/blog/multiple-screenrc-configurations-gnu-screen-tutorial/
+[17]: http://vertstudios.com/blog/introduction-pointers-in-c/
+[18]: http://vertstudios.com/blog/new-flask-site/
+[20]: http://www.vertstudios.com/blog/
+[21]: https://github.com/joequery/Stupid-Table-Plugin/blob/master/stupidtable.js
+[22]: https://github.com/Hack56/Rails-Template/wiki/Nginx-Server-Configuration
+{% endfilter %}
+    </div>
+</article>
+{% endblock %}

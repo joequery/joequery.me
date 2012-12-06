@@ -1,5 +1,6 @@
 flask
 formencode
 flask-wtf
+flask-markdown
 pyquery
 requests
