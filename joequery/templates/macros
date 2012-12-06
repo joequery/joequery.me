@@ -18,3 +18,10 @@
   <dt>{{ field.label }}
   <dd>{{ field(**kwargs)|safe }}
 {% endmacro %}
+
+{% macro yt(vid) %}
+    <div class="video-container">
+        <iframe src="http://www.youtube.com/embed/{{vid}}" 
+                frameborder="0" allowfullscreen></iframe>
+    </div>
+{% endmacro %}

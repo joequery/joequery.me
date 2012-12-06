@@ -1,3 +1,4 @@
+{% from "macros" import yt %}
 {% extends "basic-layout.html" %}
 {% block title %}Joseph McCullough | Developer Blog and Resume{% endblock title %}
 
@@ -19,11 +20,8 @@ $ rake generate</pre>
         <p>Slash is a clean one-column theme designed for Octopress, supporting all features in classic theme and built-in <a href="http://fancyapps.com/fancybox/" target="_blank">Fancybox</a>. Want to try a different theme? That's is!</p>
         <h2>Videos</h2>
         <p>Slash can resize HTML5 <code>video</code> and embedded video like <code>iframe</code>, <code>object</code> to page width automatically.</p>
-        <p>
-            <div class="video-container">
-<iframe src="http://www.youtube.com/embed/3JX6TyLOmGQ" frameborder="0" allowfullscreen></iframe>
-            </div>
-        </p>
+
+        <p> {{ yt("3JX6TyLOmGQ")|safe }} </p>
         <p>Just wrap embedded code with <code>#video-container</code> as below:</p>
         <pre>&lt;div class="video-container"&gt;
 // embedded code      
