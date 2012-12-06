@@ -1,35 +1,12 @@
-{% from "macros" import css %}
-<!DOCTYPE html>
-<html>
-<head>
-	<meta charset="utf8">
-	<title>Slash &mdash; a minimal theme for Octopress</title>
-	<meta name="description" content="Slash is a clean one-column theme designed for Octopress, supporting all features in classic theme and built-in Fancybox. Want to try a different theme? That's is!">
-    {{ css(g, "style")|safe }}
-	<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js"></script>
-</head>
-<body>
-	<header class="inner">
-		<h1 class="left"><a href="#">JoeQuery</a></h1>
-		<nav class="menu left">
-			<ul class="main">
-				<li><a href="#">Programming</a></li>
-				<li><a href="#">Math</a></li>
-				<li><a href="#">Github</a></li>
-				<li><a href="#">Screencasts</a></li>
-				<li><a href="#">About/Resume</a></li>
-				<li><a href="#">Contact</a></li>
-			</ul>
-		</nav>
-	</header>
-	<div id="content" class="inner">
-		<article class="page">
-			<h1 class="title">Page Not Found</h1>
-			<div class="entry">
-                <p>We're sorry, the page requested cannot be found.</p>
-			</div>
-		</article>
-	</div>
-    <footer class="inner"><a href="https://github.com/tommy351/Octopress-Theme-Slash">(Slash)</footer>
-</body>
-</html>
+{% extends "basic-layout.html" %}
+{% block title %}404 Page Not found | Joseph McCullough{% endblock %}
+
+{% block body %} 
+<article class="page">
+    <h1 class="">404 - Page Not found</h1>
+    <div class="entry">
+        <p>Sorry, the page requested could not be found.</p>
+    </div>
+</article>
+{% endblock %}
+
