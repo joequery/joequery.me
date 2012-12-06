@@ -5,6 +5,8 @@ from flask import (
  request, g, abort, flash, redirect, 
  render_template, url_for
 )
+import joequery.static_pages.routes
+app.register_blueprint(joequery.static_pages.routes.bp)
 
 @app.before_request
 def before_first_request():
@@ -26,7 +28,3 @@ def before_first_request():
 @app.errorhandler(404)
 def page_not_found(e):
       return render_template('404.html'), 404
-
-@app.route("/")
-def index():
-    return render_template("index.html")
