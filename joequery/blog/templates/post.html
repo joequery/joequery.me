@@ -11,17 +11,19 @@
         {{ post['date'] }}
     </div>
   </div>
+</article>
 
-  {% if post['related'] %}
-  <div id="related">
-    <h2>Related Articles</h2>
-    <ul>
-      {% for postTitle,postURL in post['related'] %}
-        <li><a href={{postURL}}>{{postTitle}}</a></li>
-      {% endfor %}
-    </ul>
-  </div>
-  {% endif %}
-</div><!--blogpost-->
+{% if post['related'] %}
+    <article class="page">
+        <div class="entry">
+            <h2 style="border-bottom: 0px;">Related Articles</h2>
+            <ul style="border: 0px;">
+              {% for postTitle,postURL in post['related'] %}
+                <li><a href={{postURL}}>{{postTitle}}</a></li>
+              {% endfor %}
+            </ul>
+        </div>
+    </article>
+{% endif %}
 {% endblock body %}
 
