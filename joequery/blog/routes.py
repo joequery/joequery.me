@@ -2,7 +2,8 @@
 # The blog!
 ##########################
 from flask import (
- Blueprint, render_template, abort, request, flash, make_response
+ Blueprint, render_template, abort, request, flash, make_response, redirect,
+ url_for
 )
 from jinja2 import TemplateNotFound
 from markdown import markdown
@@ -19,7 +20,23 @@ BLOG_SYS_PATH = os.sep.join(ThisFilePath.split('/')[:-1])
 
 bp = Blueprint('blog', __name__, template_folder="./")
 
-@bp.route('/<category>/page/<int:pagenum>/')
+# I feel dirty hardcoding this, but I really don't care at this point.
+@bp.route('/math')
+def blog_math_index():
+    return redirect_to_blog_index("math")
+
+@bp.route('/code')
+def blog_code_index():
+    return redirect_to_blog_index("code")
+
+@bp.route('/screencast')
+def blog_screencast_index():
+    return redirect_to_blog_index("screencast")
+
+def redirect_to_blog_index(category):
+    return redirect(url_for(".blog_index_page", category=category, pagenum=1))
+
+@bp.route('/<category>/<int:pagenum>/')
 def blog_index_page(category, pagenum):
   try:
     return render_template("pages/%s/page%d.static" % (category, pagenum))
