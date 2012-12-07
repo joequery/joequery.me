@@ -22,10 +22,10 @@ bp = Blueprint('blog', __name__, template_folder="./")
 def blog_index():
   return render_template("pages/page1.static")
 
-@bp.route('/blog/page/<int:pagenum>/')
-def blog_index_page(pagenum):
+@bp.route('/<category>/page/<int:pagenum>/')
+def blog_index_page(category, pagenum):
   try:
-    return render_template("pages/page%d.static" % pagenum)
+    return render_template("pages/%s/page%d.static" % (category, pagenum))
   except (TemplateNotFound, IOError) as e:
     return render_template('404.html'), 404
 
@@ -61,7 +61,6 @@ def get_article(category, post):
       'url': os.path.join(category, post),
       'related': related
     }
-    print("The body path: %s" % bodyPath)
     return render_template(bodyPath, 
         post=postData, 
         title=postData['title'],

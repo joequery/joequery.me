@@ -19,33 +19,15 @@ def write_rss_feed(rss):
   f.close()
   print("Generated static rss feed")
 
-# Write the 'from the blog' html.
-def write_from_the_blog(posts):
-  stories = copy.deepcopy(posts) 
-  for story in stories:
-    _alter_rss(story)
-
-  # Get the rendered html from from_the_blog_gen
-  with app.test_request_context():
-    html = render_template("templates/from_the_blog.html", stories=stories)
-  
-  # Write the html to from_the_blog to call from the home page.
-  feedPath = os.path.join(BLOG_SYS_PATH, "templates", "from_the_blog.static")
-  f = open(feedPath, 'w')
-  f.write(html)
-  f.close()
-  print("Generated 'from the blog' static file")
-
 def write_index_pages(postsPerPage):
   i=1
-  #posts = get_posts(app, postsPerPage)
-  posts = get_posts(app, 10)
+  posts = get_posts(app, postsPerPage)
   while posts:
     for post in posts:
-      # Make the date in the form '04/25/2012'
+      post['category'] = post['url'].split('/')[1]
       post['pubDate'] = time.strftime("%B %d, %Y", post['pubDate'])
 
-    pagePath = os.path.join(BLOG_SYS_PATH, "pages", "page%d.static" % i)
+    pagePath = os.path.join(BLOG_SYS_PATH, "pages", category, "page%d.static" % i)
     with app.test_request_context():
       before_first_request()
       newposts = get_posts(app, postsPerPage, postsPerPage * i - 1)
@@ -86,9 +68,9 @@ def write_xml_sitemap():
     f.close()
   print("Generated xml sitemap")
 
-posts = get_posts(app, 10)
-rss = gen_rss_feed(app, posts)
-write_rss_feed(rss)
+#posts = get_posts(app, 10)
+#rss = gen_rss_feed(app, posts)
+#write_rss_feed(rss)
 #write_from_the_blog(posts)
 write_index_pages(10)
 #write_xml_sitemap()
