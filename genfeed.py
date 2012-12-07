@@ -31,7 +31,7 @@ def write_index_pages(postsPerPage):
         pagePath = os.path.join(BLOG_SYS_PATH, "pages", category, "page%d.static" % i)
         with app.test_request_context():
           before_first_request()
-          start = postsPerPage * i - 1
+          start = postsPerPage * i
           newposts = get_posts_by_category(app, postsPerPage, category, start)
 
           # Determine if we should display prev/next buttons
@@ -48,7 +48,8 @@ def write_index_pages(postsPerPage):
           else:
             title = "Programming blog | Page %d" % i
           html = render_template("templates/blog_index.html", 
-              posts=posts, prevPage=prevPage, nextPage=nextPage, title=title)
+              posts=posts, prevPage=prevPage, nextPage=nextPage, title=title,
+              category=category)
 
           f = open(pagePath, 'w')
           f.write(html)
@@ -74,5 +75,5 @@ posts = get_posts(app, 10)
 rss = gen_rss_feed(app, posts)
 write_rss_feed(rss)
 #write_from_the_blog(posts)
-write_index_pages(10)
+write_index_pages(2)
 #write_xml_sitemap()

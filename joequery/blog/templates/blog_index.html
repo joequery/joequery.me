@@ -11,18 +11,19 @@
         </div>
     </article>
   {% endfor %}
-  <div id="nextPrev">
-    <p>
-    {% if prevPage %}
-      <a href="/blog/page/{{prevPage}}">&laquo; Older Articles</a> 
-    {% endif %}
-    {% if prevPage and nextPage %}
-      &#8212;
-    {% endif%}
-    {% if nextPage %}
-    <a href="/blog/page/{{nextPage}}">Newer Articles &raquo;</a> 
-    {% endif %}
-    </p>
+   <article class="page">
+        {% if prevPage %}
+            <div class="entry">
+                <a href="/{{category}}/{{prevPage}}">&laquo; Newer Articles</a> 
+                {% endif %}
+                {% if prevPage and nextPage %}
+                  &#8212;
+                {% endif%}
+                {% if nextPage %}
+                <a href="/{{category}}/{{nextPage}}">Older Articles &raquo;</a> 
+            </div>
+        {% endif %}
+   </article>
   </div>
 </article>
 {% endblock body %}
