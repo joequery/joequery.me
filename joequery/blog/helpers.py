@@ -6,7 +6,6 @@ import time
 from flask import render_template
 from pyquery import PyQuery
 import copy
-from xml.sax.saxutils import escape
 
 BLOG_SYS_PATH = os.sep.join(os.path.realpath(__file__).split('/')[:-1])
 
@@ -16,7 +15,7 @@ BLOG_SYS_PATH = os.sep.join(os.path.realpath(__file__).split('/')[:-1])
 # get_posts(10, 10) gets posts 11-21
 # app is the application object
 def get_posts(app, numPosts, start=0):
-  with open('blog/rss.txt', 'r') as f:
+  with open(os.path.join(BLOG_SYS_PATH, "rss.txt"), 'r') as f:
     posts = []
 
     # consume `start` number of lines to make sure we start at the right 
@@ -46,14 +45,11 @@ def get_posts(app, numPosts, start=0):
     # are the same, labeled under "description".
     description = metaData.description or metaData.excerpt
 
-    # Get url prefix of blog blueprint
-    url_prefix = app.blueprints['blog'].url_prefix
-
     postTime = time.strptime(metaData.time, "%Y-%m-%d %a %H:%M %p")
     postDict = {
       'title' : metaData.title,
       'description' : description,
-      'url': os.path.join(url_prefix, post),
+      'url': os.path.join("/", post),
       'pubDate': time.strptime(metaData.time, "%Y-%m-%d %a %H:%M %p")
     }
     postDict['comments'] = postDict['url'] + "#comments"
@@ -62,17 +58,12 @@ def get_posts(app, numPosts, start=0):
       # Get the blog post body
       content = render_template(bodyPath, post=postDict)
       jQuery = PyQuery(content)
-      body = jQuery("#blogPost .post").html()
+      body = jQuery("#blogPost .entry").eq(0).html()
       
       postDict['body'] = body
       postList.append(postDict)
 
   return postList
-
-# Escape HTML and also escape jinja functions.
-def escape_html(string):
-  html = escape(string.encode('ascii','xmlcharrefreplace').strip())
-  return "{% raw %}" + html + "{% endraw %}"
 
 # Generate an rss feed from a list of posts. We write this to a static xml file
 # for speed. app is the application object.
@@ -84,10 +75,10 @@ def gen_rss_feed(app, postList):
 
   # Alter the contents of the posts to satisfy XML/RSS requirements.
   for post in posts:
-    post['title'] = escape(post['title'])
-    post['description'] = escape_html(post['description'])
-    post['body'] = escape_html(post['body'])
-    post['url'] = "http://vertstudios.com%s" % post['url']
+    post['title'] = post['title']
+    post['description'] = post['description']
+    post['body'] = post['body']
+    post['url'] = "http://joequery.me/%s" % post['url']
     # RFC822 specifications.
     post['pubDate']=time.strftime("%a, %d %b %Y %H:%M:%S +0000",post['pubDate'])
  

@@ -22,8 +22,8 @@ beginner-intermediate programmer.</description>
   <title>{{post['title']}}</title>
   <link>{{post['url']}}</link>
   <pubDate>{{post['pubDate']}}</pubDate>
-  <description>{{post['description']}}</description>
-  <content:encoded>{{post['body']}}</content:encoded>
+  <description><![CDATA[{{post['body']}}]]></description>
+  <guid>{{post['url']}}</guid>
 </item>
 {% endfor %}
 </channel>

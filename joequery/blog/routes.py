@@ -61,6 +61,7 @@ def get_article(category, post):
       'url': os.path.join(category, post),
       'related': related
     }
+    print("The body path: %s" % bodyPath)
     return render_template(bodyPath, 
         post=postData, 
         title=postData['title'],
