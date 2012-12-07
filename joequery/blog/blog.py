@@ -10,7 +10,6 @@ import os
 import imp
 import time
 from helpers import get_posts, get_excerpt
-from settings import app
 import inspect
 import pprint
 import base64
