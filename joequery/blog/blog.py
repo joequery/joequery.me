@@ -17,12 +17,12 @@ import base64
 ThisFilePath = os.path.realpath(__file__)
 BLOG_SYS_PATH = os.sep.join(ThisFilePath.split('/')[:-1])
 
-blog = Blueprint('blog', __name__, template_folder="./", url_prefix="/blog")
-@blog.route('/')
+blog = Blueprint('blog', __name__, template_folder="./")
+@blog.route('/blog/')
 def blog_index():
   return render_template("pages/page1.static")
 
-@blog.route('/page/<int:pagenum>/')
+@blog.route('/blog/page/<int:pagenum>/')
 def blog_index_page(pagenum):
   try:
     return render_template("pages/page%d.static" % pagenum)
@@ -30,9 +30,9 @@ def blog_index_page(pagenum):
     return render_template('404.html'), 404
 
 
-@blog.route('/<post>/')
-def blog_post(post):
-  postDir = os.path.join("posts", post)
+@blog.route('/<category>/<post>/')
+def get_article(category, post):
+  postDir = os.path.join("posts", category, post)
   metaPath = os.path.join(BLOG_SYS_PATH, postDir, 'meta.py')
   bodyPath = os.path.join(postDir, 'body.html')
 
@@ -49,7 +49,7 @@ def blog_post(post):
     related = []
     if hasattr(metaData, 'related'):
       for postTitle, postURL in metaData.related:
-        newURL = os.path.join(blog.url_prefix, postURL)
+        newURL = os.path.join(category, postURL)
         related.append((postTitle, newURL))
 
     # Get the timestamp into a time object so we can display it however we want
@@ -58,7 +58,7 @@ def blog_post(post):
       'title' : metaData.title,
       'description' : metaData.description,
       'date' : time.strftime("%B %d, %Y", postTime), # January 15, 2012
-      'url': os.path.join(blog.url_prefix, post),
+      'url': os.path.join(category, post),
       'related': related
     }
     return render_template(bodyPath, 
