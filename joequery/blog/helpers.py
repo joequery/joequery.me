@@ -10,18 +10,10 @@ import copy
 BLOG_SYS_PATH = os.sep.join(os.path.realpath(__file__).split('/')[:-1])
 BLOG_CATEGORIES = ["code", "math", "screencast"]
 
-# Get `numPosts` number of posts. Returns a list of dictionaries with the
-# following attributes: title, description, date, url, body
-# Start from `start`, 0 indexed.
-# get_posts(10, 10) gets posts 11-21
-# app is the application object
-def get_posts(app, numPosts, start=0, category=None):
+def get_posts_by_category(app, numPosts, category=None, start=0):
   with open(os.path.join(BLOG_SYS_PATH, "rss.txt"), 'r') as f:
     posts = []
 
-    # consume `start` number of lines to make sure we start at the right 
-    # place in the file. If a category is provided, skip `start` number of
-    # posts for that category
     for x in xrange(start):
       try:
         cat = ""
@@ -43,37 +35,67 @@ def get_posts(app, numPosts, start=0, category=None):
         break
     f.close()
 
-  postList = [] # We'll be populating this w/ dictionaries and returning 
-  for post in posts:
-    # Get all the data needed for the rss feed.
-    metaPath = os.path.join(BLOG_SYS_PATH, "posts", post, 'meta.py')
-    bodyPath = os.path.join("posts", post, 'body.html')
-    metaData = imp.load_source('data', metaPath)
+    postList = retrieve_post_contents(posts, app)
+    return postList
 
-    # Old posts used a custom excerpt. Now the excerpt and description
-    # are the same, labeled under "description".
-    description = metaData.description or metaData.excerpt
+def get_posts(app, numPosts, start=0):
+  with open(os.path.join(BLOG_SYS_PATH, "rss.txt"), 'r') as f:
+    posts = []
 
-    postTime = time.strptime(metaData.time, "%Y-%m-%d %a %H:%M %p")
-    postDict = {
-      'title' : metaData.title,
-      'description' : description,
-      'url': os.path.join("/", post),
-      'pubDate': time.strptime(metaData.time, "%Y-%m-%d %a %H:%M %p")
-    }
-    postDict['comments'] = postDict['url'] + "#comments"
+    for x in xrange(start):
+      try:
+        f.next()
+      except StopIteration:
+        break
 
-    with app.test_request_context():
-      # Get the blog post body
-      content = render_template(bodyPath, post=postDict)
-      jQuery = PyQuery(content)
-      body = jQuery("#blogPost .entry").eq(0).html()
-      
-      postDict['body'] = body
-      postList.append(postDict)
+    # Now get `numPosts` number of post URLs
+    for x in xrange(numPosts):
+      try:
+        url = f.next().strip()
+        posts.append(url)
+      except StopIteration:
+        break
+    f.close()
 
-  return postList
+    postList = retrieve_post_contents(posts, app)
+    return postList
 
+
+def retrieve_post_contents(postURLs, app):
+    '''
+    Pass in a list of postURLS, get their contents and metadata back
+    '''
+    postList = [] # We'll be populating this w/ dictionaries and returning 
+    for post in postURLs:
+      # Get all the data needed for the rss feed.
+      metaPath = os.path.join(BLOG_SYS_PATH, "posts", post, 'meta.py')
+      bodyPath = os.path.join("posts", post, 'body.html')
+      metaData = imp.load_source('data', metaPath)
+  
+      # Old posts used a custom excerpt. Now the excerpt and description
+      # are the same, labeled under "description".
+      description = metaData.description or metaData.excerpt
+  
+      postTime = time.strptime(metaData.time, "%Y-%m-%d %a %H:%M %p")
+      postDict = {
+        'title' : metaData.title,
+        'description' : description,
+        'url': os.path.join("/", post),
+        'pubDate': time.strptime(metaData.time, "%Y-%m-%d %a %H:%M %p")
+      }
+      postDict['comments'] = postDict['url'] + "#comments"
+  
+      with app.test_request_context():
+        # Get the blog post body
+        content = render_template(bodyPath, post=postDict)
+        jQuery = PyQuery(content)
+        body = jQuery("#blogPost .entry").eq(0).html()
+        
+        postDict['body'] = body
+        postList.append(postDict)
+  
+    return postList
+  
 # Generate an rss feed from a list of posts. We write this to a static xml file
 # for speed. app is the application object.
 def gen_rss_feed(app, postList):

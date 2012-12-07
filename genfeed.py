@@ -3,8 +3,8 @@ import os
 from joequery import before_first_request
 from joequery.settings import app
 from joequery.blog.helpers import (
-    get_posts, BLOG_SYS_PATH, gen_rss_feed, _alter_rss, get_excerpt,
-    BLOG_CATEGORIES
+    get_posts_by_category, BLOG_SYS_PATH, gen_rss_feed, _alter_rss, get_excerpt,
+    BLOG_CATEGORIES, get_posts
 )
 from flask import render_template, current_app,g 
 import copy
@@ -23,7 +23,7 @@ def write_rss_feed(rss):
 def write_index_pages(postsPerPage):
   for category in BLOG_CATEGORIES:
       i=1
-      posts = get_posts(app, postsPerPage, category=category)
+      posts = get_posts_by_category(app, postsPerPage, category=category)
       while posts:
         for post in posts:
           post['pubDate'] = time.strftime("%B %d, %Y", post['pubDate'])
@@ -31,7 +31,8 @@ def write_index_pages(postsPerPage):
         pagePath = os.path.join(BLOG_SYS_PATH, "pages", category, "page%d.static" % i)
         with app.test_request_context():
           before_first_request()
-          newposts = get_posts(app, postsPerPage, postsPerPage * i - 1)
+          start = postsPerPage * i - 1
+          newposts = get_posts_by_category(app, postsPerPage, category, start)
 
           # Determine if we should display prev/next buttons
           prevPage = False
@@ -69,9 +70,9 @@ def write_xml_sitemap():
     f.close()
   print("Generated xml sitemap")
 
-#posts = get_posts(app, 10)
-#rss = gen_rss_feed(app, posts)
-#write_rss_feed(rss)
+posts = get_posts(app, 10)
+rss = gen_rss_feed(app, posts)
+write_rss_feed(rss)
 #write_from_the_blog(posts)
 write_index_pages(10)
 #write_xml_sitemap()
