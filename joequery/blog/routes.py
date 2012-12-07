@@ -16,6 +16,7 @@ import base64
 
 ThisFilePath = os.path.realpath(__file__)
 BLOG_SYS_PATH = os.sep.join(ThisFilePath.split('/')[:-1])
+BLOG_CATEGORIES = ["code", "math", "screencast"]
 
 bp = Blueprint('blog', __name__, template_folder="./")
 @bp.route('/blog/')

@@ -8,28 +8,37 @@ from pyquery import PyQuery
 import copy
 
 BLOG_SYS_PATH = os.sep.join(os.path.realpath(__file__).split('/')[:-1])
+BLOG_CATEGORIES = ["code", "math", "screencast"]
 
 # Get `numPosts` number of posts. Returns a list of dictionaries with the
 # following attributes: title, description, date, url, body
 # Start from `start`, 0 indexed.
 # get_posts(10, 10) gets posts 11-21
 # app is the application object
-def get_posts(app, numPosts, start=0):
+def get_posts(app, numPosts, start=0, category=None):
   with open(os.path.join(BLOG_SYS_PATH, "rss.txt"), 'r') as f:
     posts = []
 
     # consume `start` number of lines to make sure we start at the right 
-    # place in the file
+    # place in the file. If a category is provided, skip `start` number of
+    # posts for that category
     for x in xrange(start):
       try:
-        f.next()
+        cat = ""
+        while cat != category:
+            url = f.next().strip()
+            cat = url.split('/')[0]
       except StopIteration:
         break
 
     # Now get `numPosts` number of post URLs
     for x in xrange(numPosts):
       try:
-        posts.append(f.next().strip())
+        cat = ""
+        while cat != category:
+            url = f.next().strip()
+            cat = url.split('/')[0]
+        posts.append(url)
       except StopIteration:
         break
     f.close()
