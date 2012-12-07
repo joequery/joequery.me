@@ -17,12 +17,12 @@ import base64
 ThisFilePath = os.path.realpath(__file__)
 BLOG_SYS_PATH = os.sep.join(ThisFilePath.split('/')[:-1])
 
-blog = Blueprint('blog', __name__, template_folder="./")
-@blog.route('/blog/')
+bp = Blueprint('blog', __name__, template_folder="./")
+@bp.route('/blog/')
 def blog_index():
   return render_template("pages/page1.static")
 
-@blog.route('/blog/page/<int:pagenum>/')
+@bp.route('/blog/page/<int:pagenum>/')
 def blog_index_page(pagenum):
   try:
     return render_template("pages/page%d.static" % pagenum)
@@ -30,7 +30,7 @@ def blog_index_page(pagenum):
     return render_template('404.html'), 404
 
 
-@blog.route('/<category>/<post>/')
+@bp.route('/<category>/<post>/')
 def get_article(category, post):
   postDir = os.path.join("posts", category, post)
   metaPath = os.path.join(BLOG_SYS_PATH, postDir, 'meta.py')
@@ -68,7 +68,7 @@ def get_article(category, post):
   except (TemplateNotFound, IOError) as e:
     return render_template('404.html'), 404
 
-@blog.route('/feed/')
+@bp.route('/feed/')
 def rss_feed():
   response = make_response(render_template("templates/rssfeed.static"))
   response.headers['Content-Type'] = "text/xml; charset=UTF-8"

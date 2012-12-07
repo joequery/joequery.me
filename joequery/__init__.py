@@ -6,8 +6,8 @@ from flask import (
  render_template, url_for
 )
 import joequery.static_pages.routes
-import joequery.blog.blog
-app.register_blueprint(joequery.blog.blog.blog)
+import joequery.blog.routes
+app.register_blueprint(joequery.blog.routes.bp)
 app.register_blueprint(joequery.static_pages.routes.bp)
 
 @app.before_request
