@@ -233,7 +233,6 @@ header .social a.rss:hover {
 }
 @media screen and (max-width:600px) {
 	header nav>ul {
-		display:none
 	}
 	header nav select {
 		display:block
