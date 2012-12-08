@@ -1,0 +1,32 @@
+{% extends "basic-layout.html" %}
+{% block title %}Joseph McCullough | Developer Blog and Resume{% endblock title %}
+
+{% block body %}
+
+{% macro blog_preview(category, catTitle, post) %}
+    <article class="page">
+        <h1 class="title">{{catTitle}}</h1>
+        <h2>{{post['title']}}</h2>
+        <div class="entry">
+            {{post['description']|safe}}
+        </div>
+        <p>{{post['pubDate']}} | 
+        <a href="/{{post['url']}}">Read the full article &rarr;</a></p>
+    </article>
+{% endmacro %}
+
+{% if posts['code'] %} 
+    {{blog_preview("code", "Programming", posts['code'])|safe}}
+{% endif %}
+
+{% if posts['math'] %} 
+    {{blog_preview("math", "Math", posts['math'])|safe}}
+{% endif %}
+
+{% if posts['screencast'] %} 
+    {{blog_preview("screencast", "Screencasts", posts['screencast'])|safe}}
+{% endif %}
+
+
+{% endblock %}
+

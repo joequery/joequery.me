@@ -35,7 +35,10 @@ def get_posts_by_category(app, numPosts, category=None, start=0):
         break
     f.close()
 
-    postList = retrieve_post_contents(posts, app)
+    postList = []
+    for url in posts:
+        post = get_post_by_url(url, app)
+        postList.append(post)
     return postList
 
 def get_posts(app, numPosts, start=0):
@@ -57,44 +60,42 @@ def get_posts(app, numPosts, start=0):
         break
     f.close()
 
-    postList = retrieve_post_contents(posts, app)
+    postList = []
+    for url in posts:
+        post = get_post_by_url(url, app)
+        postList.append(post)
     return postList
 
 
-def retrieve_post_contents(postURLs, app):
+def get_post_by_url(url, app):
     '''
-    Pass in a list of postURLS, get their contents and metadata back
+    Pass in a post url (/code/apost) and get back the contents
     '''
-    postList = [] # We'll be populating this w/ dictionaries and returning 
-    for post in postURLs:
-      # Get all the data needed for the rss feed.
-      metaPath = os.path.join(BLOG_SYS_PATH, "posts", post, 'meta.py')
-      bodyPath = os.path.join("posts", post, 'body.html')
-      metaData = imp.load_source('data', metaPath)
-  
-      # Old posts used a custom excerpt. Now the excerpt and description
-      # are the same, labeled under "description".
-      description = metaData.description or metaData.excerpt
-  
-      postTime = time.strptime(metaData.time, "%Y-%m-%d %a %H:%M %p")
-      postDict = {
-        'title' : metaData.title,
-        'description' : description,
-        'url': os.path.join("/", post),
-        'pubDate': time.strptime(metaData.time, "%Y-%m-%d %a %H:%M %p")
-      }
-      postDict['comments'] = postDict['url'] + "#comments"
-  
-      with app.test_request_context():
+    # Get all the data needed for the rss feed.
+    metaPath = os.path.join(BLOG_SYS_PATH, "posts", url, 'meta.py')
+    bodyPath = os.path.join("posts", url, 'body.html')
+    metaData = imp.load_source('data', metaPath)
+
+    # Old posts used a custom excerpt. Now the excerpt and description
+    # are the same, labeled under "description".
+    description = metaData.description or metaData.excerpt
+
+    postTime = time.strptime(metaData.time, "%Y-%m-%d %a %H:%M %p")
+    postDict = {
+    'title' : metaData.title,
+    'description' : description,
+    'url': os.path.join("/", url),
+    'pubDate': time.strptime(metaData.time, "%Y-%m-%d %a %H:%M %p")
+    }
+    postDict['comments'] = postDict['url'] + "#comments"
+
+    with app.test_request_context():
         # Get the blog post body
         content = render_template(bodyPath, post=postDict)
         jQuery = PyQuery(content)
         body = jQuery("#blogPost .entry").eq(0).html()
-        
-        postDict['body'] = body
-        postList.append(postDict)
-  
-    return postList
+    postDict['body'] = body
+    return postDict
   
 # Generate an rss feed from a list of posts. We write this to a static xml file
 # for speed. app is the application object.

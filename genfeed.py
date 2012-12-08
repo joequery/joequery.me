@@ -4,7 +4,7 @@ from joequery import before_first_request
 from joequery.settings import app
 from joequery.blog.helpers import (
     get_posts_by_category, BLOG_SYS_PATH, gen_rss_feed, _alter_rss, get_excerpt,
-    BLOG_CATEGORIES, get_posts
+    BLOG_CATEGORIES, get_posts, get_post_by_url
 )
 from flask import render_template, current_app,g 
 import copy
@@ -58,7 +58,43 @@ def write_index_pages(postsPerPage):
           posts = newposts
   print("Generated static blog pages")
 
-posts = get_posts(app, 10)
-rss = gen_rss_feed(app, posts)
-write_rss_feed(rss)
-write_index_pages(10)
+def home_page_posts(app):
+    '''
+    Get a post from each category
+    '''
+    categories = BLOG_CATEGORIES[:]
+    rssPath = os.path.join(BLOG_SYS_PATH, "rss.txt")
+    posts = {}
+    f = open(rssPath, 'r')
+    line = f.next().strip()
+    while categories:
+        try:
+            category = line.split('/')[0]
+            if category in categories:
+                categories.remove(category)
+                post = get_post_by_url(line, app)
+                post['pubDate'] = time.strftime("%B %d, %Y", post['pubDate'])
+                print(post)
+                posts[category] = post
+            line = f.next().strip()
+        except StopIteration:
+            break
+    f.close()
+
+    # Render the blog samples template with our posts. Write the output
+    # to be used as the home page
+    with app.test_request_context():
+        before_first_request()
+        html = render_template("templates/home_blog_samples.html", posts=posts)
+
+    homePagePath = os.path.join(currentDir, "joequery", "static_pages", "templates", "home.html")
+    f = open(homePagePath, 'w')
+    f.write(html)
+    f.close()
+
+
+#posts = get_posts(app, 10)
+#rss = gen_rss_feed(app, posts)
+#write_rss_feed(rss)
+#write_index_pages(10)
+home_page_posts(app)
