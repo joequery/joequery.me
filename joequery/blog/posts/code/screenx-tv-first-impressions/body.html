@@ -1,0 +1,82 @@
+{% extends "templates/post.html" %}
+{% block post %}
+
+{% filter markdown %}
+[ScreenX TV](http://screenx.tv/) is a tool for broadcasting your terminal in
+real time. The project is open source and currently in development.
+
+Repos:
+
+* [ScreenX TV Sandbox](https://github.com/yasulab/screenxtv-sandbox)
+* [ScreenX TV Ruby Client](https://github.com/tompng/screenxtv-ruby-client)
+* [ScreenX TV GCC Client](https://github.com/tompng/screenxtv-gcc-client)
+* [ScreenX TV Internal Software](https://github.com/tompng/screenx)
+
+ScreenX TV vs Codestre.am
+-------------------------
+
+[codestre.am](http://codestre.am) is another terminal broadcasting service I've
+used in the past. 
+
+### Replays
+
+One feature codestre.am has that ScreenX TV currently lacks
+is video-on-demand for previous broadcasts. These stream replays are
+particularly useful for bug reports and tutorials.
+
+### Performance
+
+codestre.am's servers are constantly under heavy load. Sometimes the
+site will simply be unavailable for 30 minutes at a time. The lack of
+reliability is a bit of a turn off. Currently, ScreenX TV seems to have almost
+zero down-time. The site is extremely responsive. Broadcasting is very smooth,
+consistent, and lag-free. This might be due to the lack of users, though.  Only
+time will tell.
+
+### Ease of installation
+
+Installing codestre.am was particularly annoying. The installation process was
+plagued with npm and node.js errors. It took at least two hours of googling
+error messages to finally get to where I was broadcasting.
+
+ScreenX TV has three installation options. You can install via 
+
+* [GCC](https://github.com/tompng/screenxtv-gcc-client) 
+* [Ruby Gems](https://github.com/tompng/screenxtv-ruby-client)
+* [curl script](https://github.com/yasulab/screenxtv-sandbox)
+
+I've tried both the GCC and the curl script installations. Both work perfectly.
+
+### Ease of use, features, and various issues
+
+In order to broadcast, codestre.am would generate a random string for you to 
+pass to the `codestream` executable that you install via npm. ScreenX TV uses
+a local configuration file.
+
+codestre.am had huge issues in all my terminals - ranging from iTerm2 to
+gnome-terminal. The terminal would display correctly on the stream, but my
+screen would appear completely broken in the actual terminal. This resulted in
+me hiding my terminal behind my browser window and looking at the browser to
+work. This was a pretty severe inconvenience. ScreenX TV seems to work
+perfectly in this regard.
+
+codestre.am only let you broadcast in one size: About 630x330. ScreenX TV will
+adjust the broadcast stream size as you adjust your terminal. If you stretch
+your terminal, you will see the stream adjust in real-time.
+
+Conclusion
+----------
+
+codestre.am is a finished product that feels like an unfinished product.
+ScreenX TV is an unfinished product that feels like it could be everything
+codestre.am tried to be once fully developed. If ScreenX TV can implement
+replay support, I can see it changing how tutorials, debugging, and
+pair-programming are handled.
+
+
+
+{% endfilter %}
+
+{% endblock post %}
+
+

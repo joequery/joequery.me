@@ -1,2 +1,3 @@
+code/screenx-tv-first-impressions
 math/thoughts-on-proof-strategies
 screencast/intro-c-pointers
