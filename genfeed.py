@@ -86,7 +86,7 @@ def write_home_page_posts(app):
         before_first_request()
         html = render_template("templates/home_blog_samples.html", posts=posts)
 
-    homePagePath = os.path.join(currentDir, "joequery", "static_pages", "templates", "home.html")
+    homePagePath = os.path.join(currentDir, "joequery", "static_pages", "templates", "home.static")
     f = open(homePagePath, 'w')
     f.write(html)
     f.close()

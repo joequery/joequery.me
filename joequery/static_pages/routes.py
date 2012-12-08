@@ -12,7 +12,10 @@ bp = Blueprint('static_pages', __name__, template_folder="templates")
 # Special route for index
 @bp.route("/")
 def home_page():
-    return static_page("home")
+    try:
+        return render_template("home.static")
+    except TemplateNotFound:
+        return render_template("404.html"), 404
 
 @bp.route("/resume")
 def resume_page():
