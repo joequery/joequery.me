@@ -58,22 +58,7 @@ def write_index_pages(postsPerPage):
           posts = newposts
   print("Generated static blog pages")
 
-# Write an xml sitemap
-def write_xml_sitemap():
-  with open('blog/rss.txt', 'r') as f:
-    posts = [x.strip() for x in f.readlines()]
-
-  with app.test_request_context():
-    html = render_template("sitemap.html", posts=posts)
-    sitemapPath = os.path.join(currentDir, "templates", "sitemap.static")
-    f = open(sitemapPath, 'w')
-    f.write(html)
-    f.close()
-  print("Generated xml sitemap")
-
 posts = get_posts(app, 10)
 rss = gen_rss_feed(app, posts)
 write_rss_feed(rss)
-#write_from_the_blog(posts)
-write_index_pages(2)
-#write_xml_sitemap()
+write_index_pages(10)
