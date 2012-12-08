@@ -1,5 +1,1 @@
-code/test3
-code/test2
-math/test
-code/test
-screencast/test
+screencast/intro-c-pointers

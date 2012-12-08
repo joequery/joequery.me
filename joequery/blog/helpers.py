@@ -6,6 +6,7 @@ import time
 from flask import render_template
 from pyquery import PyQuery
 import copy
+import markdown
 
 BLOG_SYS_PATH = os.sep.join(os.path.realpath(__file__).split('/')[:-1])
 BLOG_CATEGORIES = ["code", "math", "screencast"]
@@ -79,6 +80,7 @@ def get_post_by_url(url, app):
     # Old posts used a custom excerpt. Now the excerpt and description
     # are the same, labeled under "description".
     description = metaData.description or metaData.excerpt
+    description = markdown.markdown(description)
 
     postTime = time.strptime(metaData.time, "%Y-%m-%d %a %H:%M %p")
     postDict = {
