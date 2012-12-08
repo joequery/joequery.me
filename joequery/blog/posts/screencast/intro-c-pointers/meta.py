@@ -1,4 +1,4 @@
-title="Introduction to Pointers in C"
+title="Introduction to pointers in C"
 description="""In this screencast, we cover the basics of pointers in C including:
 
 * What exactly is a pointer?

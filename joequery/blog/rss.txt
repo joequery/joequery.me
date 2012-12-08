@@ -1,1 +1,2 @@
+math/thoughts-on-proof-strategies
 screencast/intro-c-pointers

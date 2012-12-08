@@ -6,13 +6,15 @@
         <h1 class="title"><a href="{{post['url']}}">{{post['title']}}</a></h1>
         <div class="entry">
             <p>{{post['description']|safe}}</p>
+        </div>
+        <div class="entry">
             {{post['pubDate']}} | 
-            <a href="{{post['url']}}">Read the full article &rArr;</a>
+            <a href="{{post['url']}}">Read the full article</a>
         </div>
     </article>
   {% endfor %}
-   <article class="page">
-        {% if prevPage %}
+    {% if prevPage %}
+       <article class="page">
             <div class="entry">
                 <a href="/{{category}}/{{prevPage}}">&laquo; Newer Articles</a> 
                 {% endif %}
@@ -22,8 +24,8 @@
                 {% if nextPage %}
                 <a href="/{{category}}/{{nextPage}}">Older Articles &raquo;</a> 
             </div>
-        {% endif %}
-   </article>
+       </article>
+    {% endif %}
   </div>
 </article>
 {% endblock body %}

@@ -5,28 +5,31 @@
 
 {% macro blog_preview(category, catTitle, post) %}
     <article class="page">
-        <h1 class="title"><a href="{{category}}">{{catTitle}}</a></h1>
+        <h1 class="title">Latest {{catTitle}}</h1>
         <h2><a href="{{post['url']}}">{{post['title']}}</a></h2>
         <div class="entry">
             {{post['description']|safe}}
         </div>
-        <p>{{post['pubDate']}} | 
-        <a href="{{post['url']}}">Read the full article &rarr;</a></p>
+        <div class="entry">
+            <p>{{post['pubDate']}} | 
+            <a href="{{post['url']}}">Read the full article</a> |
+            <a href="{{category}}">View more {{catTitle}}s</a>
+            </p>
+        </div>
     </article>
 {% endmacro %}
 
 {% if posts['code'] %} 
-    {{blog_preview("code", "Programming Articles", posts['code'])|safe}}
-{% endif %}
-
-{% if posts['math'] %} 
-    {{blog_preview("math", "Math Articles", posts['math'])|safe}}
+    {{blog_preview("code", "programming article", posts['code'])|safe}}
 {% endif %}
 
 {% if posts['screencast'] %} 
-    {{blog_preview("screencast", "Screencasts", posts['screencast'])|safe}}
+    {{blog_preview("screencast", "screencast", posts['screencast'])|safe}}
 {% endif %}
 
+{% if posts['math'] %} 
+    {{blog_preview("math", "math article", posts['math'])|safe}}
+{% endif %}
 
 {% endblock %}
 
