@@ -58,7 +58,7 @@ def write_index_pages(postsPerPage):
           posts = newposts
   print("Generated static blog pages")
 
-def home_page_posts(app):
+def write_home_page_posts(app):
     '''
     Get a post from each category
     '''
@@ -74,7 +74,6 @@ def home_page_posts(app):
                 categories.remove(category)
                 post = get_post_by_url(line, app)
                 post['pubDate'] = time.strftime("%B %d, %Y", post['pubDate'])
-                print(post)
                 posts[category] = post
             line = f.next().strip()
         except StopIteration:
@@ -92,9 +91,11 @@ def home_page_posts(app):
     f.write(html)
     f.close()
 
+    print("Generated sample posts for the home page")
 
-#posts = get_posts(app, 10)
-#rss = gen_rss_feed(app, posts)
-#write_rss_feed(rss)
-#write_index_pages(10)
-home_page_posts(app)
+
+posts = get_posts(app, 10)
+rss = gen_rss_feed(app, posts)
+write_rss_feed(rss)
+write_index_pages(10)
+write_home_page_posts(app)
