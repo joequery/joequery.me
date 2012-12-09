@@ -1,0 +1,136 @@
+{% from "macros" import img, blogimg %}
+{% extends "templates/post.html" %}
+{% block post %}
+
+{% filter markdown %}
+These notes are based on the content of [Introduction to the Design and
+Analysis of Algorithms (3rd Edition)][0].
+
+[0]: http://www.amazon.com/Introduction-Design-Analysis-Algorithms-Edition/dp/0132316811/
+
+<u>def</u>: dynamic programming
+
+> A technique for solving problems with overlapping subproblems.
+
+Instead of solving overlapping subproblems again and again, store the results
+in a table.
+
+Ex: Fibonacci Sequence
+----------------------
+{{blogimg(g,post,"img1.jpg")|safe}}
+
+It's easy to see how the Fibonacci sequence spirals out of control in terms of
+subproblem overlap. The algorithm ends up recalculating various `F(x)`'s over
+and over again, as seen in the `F(5)` example above.
+
+With dynamic programming, instead of recalculating known `F(n)` for `n` we've
+already seen, we store `F(n)` in some form of  table and look up the value when
+needed.
+
+We can use an array to store the values of `F(n)` as we go. Consequently, the
+n-th element of the array is equal to `F(n)`. Instead of substituting backwards
+*from* `F(n)` like in most recurrences, we start from `F(0)` and make our way
+up to `F(n)`.
+
+{{blogimg(g,post,"img2.jpg")|safe}}
+
+You could also avoid the overhead of an array by just keeping track of the last
+two numbers in the sequence.
+
+
+Other examples of dynamic programming
+-------------------------------------
+
+* Computing binomial coefficients
+* Constructing an optimal binary search tree (based on probabilities)
+* Warshall's algorithm for transitive closure
+* Floyd's algorithm for all-pairs shortest paths
+* Some instances of difficult discrete optimization problems
+
+### Computing a binomial coefficient
+
+<u>def</u>: binomial coefficient
+
+> A binomial coefficient C(n,k) is the total number of combinations of k
+elements from an n-elemnt set, with 0 &le; k &le; n. This is also known as "n
+choose k"
+{{blogimg(g,post,"img3.jpg")|safe}}
+
+We can store the values of the recurrence `C(n,k)` in a table like so:
+{{blogimg(g,post,"img4.jpg")|safe}}
+
+Note that this forms Pascal's Triangle!
+
+Here's an example where we solve `C(5,2)`
+{{blogimg(g,post,"img5.jpg")|safe}}
+
+If we were to look at Pascal's Triangle, the intersection of row `n=5` and
+column `k=2` (both 0-indexed) has the value 10. You can look up any of the
+other `C(n,k)` values calculated above, and you'll find they are properly
+positioned on Pascal's Triangle.
+{{blogimg(g,post,"pascal.png")|safe}}
+
+#### Algorithm
+
+The generic algorithm for finding `C(n,k)`
+
+    def binomial(n,k)
+        for i=0 to n do
+            for j=0 to min(i,k) do
+                if j == 0 or j == i
+                    C[i,j] = 1
+                else
+                    C[i,j] = C[i-1, j-1] + C[i-1, j]
+        return C[n,k]
+
+#### Manual runs through the algorithm
+{{blogimg(g,post,"img6.jpg")|safe}}
+
+#### A Python implementation
+
+    def binomial(n,k):
+        C = []
+        i = 0
+        while i <= n:
+            j = 0
+            C.insert(i, [])
+            while j <= min(i,k):
+                if j == 0 or j == i:
+                    C[i].insert(j, 1)
+                else:
+                    C[i].insert(j, C[i-1][j-1] + C[i-1][j])
+                j += 1
+            i += 1
+        return C[n][k]
+    print(binomial(5,2)) # 10
+
+#### Analysis
+
+The basic operation is Addition. Now observe that the algorithm has two
+"stages".  In the first stage, we have `i<k`. This means `min(i,k)==i`, so the
+inner loop gets executed `i` times for each iteration of `i` while `i<k`. Once
+`i>=k`, though, `min(i,k)==k`, so the inner loop gets executed `k` times for
+each iteration of `i` while `i<=n`. Since a single addition occurs for each
+execution of the inner loop, we now have all the information we need to come
+up with a formula for the number of additions performed by our `binomial(n,k)`
+algorithm.
+
+Here are a few example tables produced by various calls to `binomial(n,k)`.
+Pay close attention to the shape of the table.
+{{blogimg(g,post,"img7.jpg")|safe}}
+    
+Could you find the pattern of the shapes?
+{{blogimg(g,post,"img8.jpg")|safe}}
+
+Each table is split into two shapes: A triangle with height `k+1`, and a
+rectangle with height `n-k` and width `k+1`. This is a direct result of the
+"stages" of the algorithm described above. Now that we have a higher
+understand of how our algorithm builds the table, we can now come up with a
+summation for the number of additions executed by `binomial(n,k)`,
+{{blogimg(g,post,"img9.jpg")|safe}}
+
+{% endfilter %}
+
+{% endblock post %}
+
+

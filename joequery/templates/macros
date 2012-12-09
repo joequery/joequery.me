@@ -1,9 +1,13 @@
 {% macro img(g, file, alt="", class="", url="") %}
 {% if url == "" %}
-    <img src="{{g.assets}}/images/{{file}}" alt="{{alt}}" class="{{class}}" />
+<img src="{{g.assets}}/images/{{file}}" alt="{{alt}}" class="{{class}}" />
 {% else %}
-    <a href="{{url}}"><img src="{{g.assets}}/images/{{file}}" alt="{{alt}}" class="{{class}}" /></a>
+<a href="{{url}}"><img src="{{g.assets}}/images/{{file}}" alt="{{alt}}" class="{{class}}" /></a>
 {% endif %}
+{% endmacro %}
+
+{% macro blogimg(g, post, file) %}
+<img src="{{g.assets}}/images/{{post['url']}}/{{file}}" alt="{{alt}}" class="{{class}}" />
 {% endmacro %}
 
 {% macro js(g, file) %}
