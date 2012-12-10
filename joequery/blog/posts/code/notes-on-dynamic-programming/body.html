@@ -70,9 +70,9 @@ other `C(n,k)` values calculated above, and you'll find they are properly
 positioned on Pascal's Triangle.
 {{blogimg(g,post,"pascal.png")|safe}}
 
-### Algorithm
+### Pseudocode
 
-The algorithm for finding `C(n,k)`
+The pseudocode for finding `C(n,k)`
 
     def binomial(n,k)
         for i=0 to n do
@@ -230,7 +230,118 @@ simply reconstruct the list to meet our requirements by eliminating all
 vertices between the first and last occurrences of v<sub>k</sub>.
 {{blogimg(g,post,"img12.jpg")|safe}}
 
-{% endfilter %}
+So now we once again have **v<sub>i</sub>, L, v<sub>j</sub>**. But now that we
+know v<sub>k</sub> appears only once in `L`, we can separate `L` out into
+three groups: vertices before v<sub>k</sub>, v<sub>k</sub>, and vertices after
+v<sub>k</sub>. We'll label the "before" group `L1` and the "after" group
+`L2`. So now our path from v<sub>i</sub> to v<sub>j</sub> looks like
+
+**v<sub>i</sub>, L1, v<sub>k</sub>, L2, v<sub>j</sub>**
+
+Since both `L1` and `L2` do not have v<sub>k</sub> in them, we can conclude
+that all vertices in `L1` and `L2` are less than or equal to `k-1`.
+
+With this information about the path and its vertices, we can make some
+conclusions.
+
+We know there exists a path from v<sub>i</sub> to v<sub>k</sub> with each
+intermediate vertex less than or equal to `k-1`. By definition, this means
+r<sub>ik</sub><sup>(k-1)</sup>=1. Similarly, we know
+r<sub>kj</sub><sup>(k-1)</sup>=1.
+
+#### What we've shown
+
+Ultimately, we've shown that if r<sub>ij</sub><sup>(k)</sup>=1, then either
+r<sub>ij</sub><sup>(k-1)</sup>=1 (if v<sub>k</sub> not in `L`) **or** both
+r<sub>ik</sub><sup>(k-1)</sup>=1 and r<sub>kj</sub><sup>(k-1)</sup>=1
+
+The converse of these statements is also true, although the text does not
+explicitly prove it. This means we *finally* have an algorithm.
+
+### Algorithm
+
+If a element r<sub>ij</sub> is 1 in R<sup>(k-1)</sup>, it remains 1 in
+R<sup>(k)</sup>. If r<sub>ij</sub> is 0 in R<sup>(k-1)</sup>, we change it to
+1 in R<sup>(k)</sup> iff r<sub>ik</sub><sup>(k-1)</sup> and
+r<sub>kj</sub><sup>(k-1)</sup> are both 1.
+
+Example:
+{{blogimg(g,post,"img13.jpg")|safe}}
+
+### Pseudocode
+
+    # A: adjacency matrix of a digraph with n vertices
+    def warshall(A[1..n, 1..n]):
+        R[0] = A
+        for k=1 to n do
+            for i = 1 to n do
+                for j = 1 to n do
+                    R[k][i][j] = R[k-1][i][j] OR (R[k-1][i][k] AND R[k-1][k][j])
+        return R[n]
+
+### Python implementation
+
+The biggest issue porting the pseudocode over to Python was adjusting the
+algorithm to work with 0-index arrays. `k` still needs to start at 1 since
+`R[0]` is immediately assigned the adjacency matrix. The outermost loop needs
+to loop exactly `n` times with `k` starting at 1, so `k<=n` is the appropriate
+while condition. The inner loops need to loop exactly `n` times starting with
+their respective counters at 0 (for array indexing purposes), so `var <= n-1`
+is the appropriate while condition for the inner loops.
+
+The most confusing issue was how to treat `k`. When using `k` as part of an
+array index for a row/column, you have to subtract 1 to account for the
+0-index. However, when referring to the k-th matrix, we don't adjust `k` since
+`R` was already defined as a 0-index array in the pseudocode.
+
+    def warshall(A, n):
+        R = []
+        R.insert(0, A)
+        k = 1
+        while k <= n:
+            R.insert(k, [])
+            i = 0
+            while i <= n-1:
+                R[k].insert(i, [])
+                j = 0
+                while j <= n-1:
+                    hasPath = R[k-1][i][j] or (R[k-1][i][k-1] and R[k-1][k-1][j])
+                    R[k][i].insert(j, int(hasPath))
+                    j += 1
+                i += 1
+            k += 1
+        return R[n]
+                    
+
+
+    # Adjacency matrix of the graph used through the examples in the notes.
+    adj = [
+        [0,0,1,0],
+        [1,0,0,1],
+        [0,0,0,0],
+        [0,1,0,0],
+    ]
+
+    print(warshall(adj, 4))
+
+### Analysis
+
+The time efficiency of Warshall's algorithm is &theta;(n<sup>3</sup>).
+Traversal based approaches for finding the transitive closure outperform
+Warshall's algorithm for sparse graphs represented by adjacency lists.
+
+In regards to space efficiency, it's actually unnecessary to store so many
+matrices. Similar to the Fibonacci sequence and other dynamic programming
+problems, we can avoid the storage overhead of holding on to so many data
+structures.
+
+Next time
+---------
+
+Next time, we'll learn about Floyd's Algorithm, and searching applications
+related to dynamic programming.
+
+{% endfilter %} 
 {% endblock post %}
 
 
