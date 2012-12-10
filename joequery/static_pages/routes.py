@@ -22,10 +22,14 @@ def resume_page():
 def contact_page():
     return static_page("contact.html")
 
-def static_page(slug):
+@bp.route("/stream")
+def stream_page():
+    return static_page("stream.html")
+
+def static_page(slug, **kwargs):
     # Since we're accepting all routes in the form of /url, we have to
     # handle 404s on our own.
     try:
-        return render_template(slug)
+        return render_template(slug, **kwargs)
     except TemplateNotFound:
         return render_template("404.html"), 404

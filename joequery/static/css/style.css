@@ -26,6 +26,9 @@ a {
 	outline-width:0;
 	color:#258fb8
 }
+a.streaming{
+	color:#800517;
+}
 .left {
 	float:left
 }
@@ -214,7 +217,7 @@ header .social a.rss:hover {
 	}
 	header nav>ul>li {
 		margin-left:0;
-		margin-right:50px
+		margin-right:25px
 	}
 	header nav>ul>li:last-of-type {
 		margin-right:0

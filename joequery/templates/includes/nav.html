@@ -7,6 +7,9 @@
             <li><a href="/screencast">Screencasts</a></li>
             <li><a href="/resume">Resume</a></li>
             <li><a href="/contact">Contact</a></li>
+            {% if g.streaming %}
+            <li><a href="/stream" class="streaming">LIVE - Code stream</a></li>
+            {% endif %}
         </ul>
     </nav>
 </header>

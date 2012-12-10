@@ -5,6 +5,8 @@ from flask import (
  request, g, abort, flash, redirect, 
  render_template, url_for
 )
+import requests
+import json
 import joequery.static_pages.routes
 import joequery.blog.routes
 app.register_blueprint(joequery.blog.routes.bp)
@@ -23,8 +25,31 @@ def before_first_request():
     else:
       g.assets = app.static_url_path
 
+  # Determine if we're streaming on streenxtv
+  def get_streaming_status():
+      r = requests.get("http://screenx.tv/screens/status/joequery")
+      if r.content == 'null':
+          g.streaming = False
+      else:
+          # Example json: {u'casting': True, u'title': u'infinite `date`'}
+          js = json.loads(r.content)
+          g.streaming = js['casting']
+
+  # Determine if we're streaming on streenxtv
+  def get_streaming_status():
+      r = requests.get("http://screenx.tv/screens/status/joequery")
+      if r.content == 'null':
+          g.streaming = False
+      else:
+          # Example json: {u'casting': True, u'title': u'infinite `date`'}
+          js = json.loads(r.content)
+          g.streaming = js['casting']
+
   get_env()
   set_assets_dir()
+  get_streaming_status()
+
+
   
 
 @app.errorhandler(404)

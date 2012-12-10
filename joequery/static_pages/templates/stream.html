@@ -1,0 +1,25 @@
+{% from "macros" import img %}
+{% extends "basic-layout.html" %}
+{% block title %}Live Code Stream | Joseph McCullough{% endblock %}
+
+{% block body %} 
+<article class="page">
+    <h1 class="title">Live code stream via ScreenX TV</h1>
+    <div class="entry">
+        {% if g.streaming %}
+            <div class="video-container">
+            <iframe src="http://screenx.tv/embed/joequery" 
+                    frameborder="0" allowfullscreen></iframe>
+            </div>
+        {% else %}
+            <p>Sorry, I'm not broadcasting right now!</p>
+        {% endif %}
+    </div>
+    <div class="entry">
+        <h2 class="title">About ScreenX TV</h2>
+        <p><a href="http://screenx.tv/">ScreenX TV</a> is a service that lets
+        you easily stream your terminal to the world. 
+        <a href="/code/screenx-tv-first-impressions/">Learn more</a>.
+    </div>
+</article>
+{% endblock %}
