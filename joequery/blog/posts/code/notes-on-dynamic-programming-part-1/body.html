@@ -52,7 +52,7 @@ Other examples of dynamic programming
 <u>def</u>: binomial coefficient
 
 > A binomial coefficient C(n,k) is the total number of combinations of k
-elements from an n-elemnt set, with 0 &le; k &le; n. This is also known as "n
+elements from an n-elemnt set, with 0 <= k <= n. This is also known as "n
 choose k"
 {{blogimg(g,post,"img3.jpg")|safe}}
 
@@ -204,7 +204,7 @@ So how exactly can we relate R<sup>(k)</sup> to R<sup>(k-1)</sup>? Here's how.
 
 Let r<sub>ij</sub><sup>(k)</sup> = 1. By how we've defined `R(k)`, this means
 there exists a nontrivial path from the i-th vertex v<sub>i</sub> to the j-th
-vertex v<sub>j</sub>, with all intermediate vertices &le; `k`. Let `L` be this
+vertex v<sub>j</sub>, with all intermediate vertices <= `k`. Let `L` be this
 list of intermediate vertices. We can thus describe the path from
 v<sub>i</sub> to v<sub>j</sub> as 
 
@@ -326,7 +326,7 @@ array index for a row/column, you have to subtract 1 to account for the
 
 ### Analysis
 
-The time efficiency of Warshall's algorithm is &theta;(n<sup>3</sup>).
+The time efficiency of Warshall's algorithm is O(n<sup>3</sup>).
 Traversal based approaches for finding the transitive closure outperform
 Warshall's algorithm for sparse graphs represented by adjacency lists.
 
