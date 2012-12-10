@@ -7,10 +7,18 @@ from flask import (
 )
 import requests
 import json
+import time
+
 import joequery.static_pages.routes
 import joequery.blog.routes
 app.register_blueprint(joequery.blog.routes.bp)
 app.register_blueprint(joequery.static_pages.routes.bp)
+
+SCREENX_CACHE = {
+    "interval": 60, # seconds
+    "lastChecked": 0,
+    "streaming": False
+}
 
 @app.before_request
 def before_first_request():
@@ -37,13 +45,24 @@ def before_first_request():
 
   # Determine if we're streaming on streenxtv
   def get_streaming_status():
-      r = requests.get("http://screenx.tv/screens/status/joequery")
-      if r.content == 'null':
-          g.streaming = False
-      else:
-          # Example json: {u'casting': True, u'title': u'infinite `date`'}
-          js = json.loads(r.content)
-          g.streaming = js['casting']
+      t = int(time.time())
+
+      # If cache has expired
+      if t > (SCREENX_CACHE['lastChecked'] + SCREENX_CACHE['interval']):
+          SCREENX_CACHE['lastChecked'] = t
+          r = requests.get("http://screenx.tv/screens/status/joequery", allow_redirects=False)
+          # If not 200, assume API error and try again the next interval
+          if r.status_code == 200:
+              if r.content == 'null':
+                  SCREENX_CACHE['streaming'] = False
+              else:
+                  # Example json: {u'casting': True, u'title': u'infinite `date`'}
+                  js = json.loads(r.content)
+                  SCREENX_CACHE['streaming'] = js['casting']
+          else:
+              SCREENX_CACHE['streaming'] = False
+              SCREENX_CACHE['lastChecked'] = t
+      g.streaming = SCREENX_CACHE['streaming']
 
   get_env()
   set_assets_dir()
