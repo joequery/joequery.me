@@ -1,6 +1,4 @@
-{% extends "templates/post.html" %}
-{% block post %}
-{% filter markdown %}
+{% from "macros" import img, blogimg %}
+{% extends "templates/post.html" %} {% block post %} {% filter markdown %}
 
-{% endfilter %}
-{% endblock post %}
+{% endfilter %} {% endblock post %}
