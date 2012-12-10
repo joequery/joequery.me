@@ -47,7 +47,7 @@ Other examples of dynamic programming
 * Floyd's algorithm for all-pairs shortest paths
 * Some instances of difficult discrete optimization problems
 
-### Computing a binomial coefficient
+## Computing a binomial coefficient
 
 <u>def</u>: binomial coefficient
 
@@ -70,9 +70,9 @@ other `C(n,k)` values calculated above, and you'll find they are properly
 positioned on Pascal's Triangle.
 {{blogimg(g,post,"pascal.png")|safe}}
 
-#### Algorithm
+### Algorithm
 
-The generic algorithm for finding `C(n,k)`
+The algorithm for finding `C(n,k)`
 
     def binomial(n,k)
         for i=0 to n do
@@ -83,14 +83,15 @@ The generic algorithm for finding `C(n,k)`
                     C[i,j] = C[i-1, j-1] + C[i-1, j]
         return C[n,k]
 
-#### Manual runs through the algorithm
+### Algorithm hand-trace
 {{blogimg(g,post,"img6.jpg")|safe}}
 
-#### A Python implementation
+### A Python implementation
 
     def binomial(n,k):
         C = []
         i = 0
+        x = 0
         while i <= n:
             j = 0
             C.insert(i, [])
@@ -100,23 +101,26 @@ The generic algorithm for finding `C(n,k)`
                 else:
                     C[i].insert(j, C[i-1][j-1] + C[i-1][j])
                 j += 1
+                x += 1
             i += 1
+        print("Number of additions: %d" % x)
         return C[n][k]
-    print(binomial(5,2)) # 10
 
-#### Analysis
+    print(binomial(5,2)) # 10 
 
-The basic operation is Addition. Now observe that the algorithm has two
-"stages".  In the first stage, we have `i<k`. This means `min(i,k)==i`, so the
-inner loop gets executed `i` times for each iteration of `i` while `i<k`. Once
-`i>=k`, though, `min(i,k)==k`, so the inner loop gets executed `k` times for
-each iteration of `i` while `i<=n`. Since a single addition occurs for each
-execution of the inner loop, we now have all the information we need to come
-up with a formula for the number of additions performed by our `binomial(n,k)`
-algorithm.
+### Analysis
+
+The basic operation is addition, which occurs once each time the inner loop is
+executed. The algorithm essentially has two "stages".  In the first stage, we
+have `i<k`. This means `min(i,k)==i`, so the inner loop gets executed `i`
+times for each iteration of `i` while `i=<k`. Once `i>k`, though,
+`min(i,k)==k`, so the inner loop gets executed `k` times for each iteration of
+`i` while `i<=n`. Since a single addition occurs for each execution of the
+inner loop, we now have all the information we need to come up with a formula
+for the number of additions performed by our `binomial(n,k)` algorithm.
 
 Here are a few example tables produced by various calls to `binomial(n,k)`.
-Pay close attention to the shape of the table.
+Pay close attention to the shape of the tables.
 {{blogimg(g,post,"img7.jpg")|safe}}
     
 Could you find the pattern of the shapes?
@@ -129,8 +133,104 @@ understand of how our algorithm builds the table, we can now come up with a
 summation for the number of additions executed by `binomial(n,k)`,
 {{blogimg(g,post,"img9.jpg")|safe}}
 
-{% endfilter %}
+Warshall's algorithm: transitive closure
+----------------------------------------
 
+<u>def</u>: adjacency matrix
+
+> The adjacency matrix A = {a<sub>ij</sub>} of a directed graph is the boolean
+matrix that has 1 in its i-th row and j-th column iff there is a directed
+edge from the i-th vertex to the j-th vertex.
+
+<u>def</u>: transitive closure
+
+> The transitive closure of a directed graph with n vertices is an n x n
+boolean matrix T = {t<sub>ij</sub>}, where the element in the i-th row and
+j-th column is 1 if there exists a nontrivial path from the i-th vertex to the
+j-th vertex, and is 0 otherwise.
+
+Example:
+{{blogimg(g,post,"img10.jpg")|safe}}
+
+### Generating the transitive closure
+
+We can naively generate the transitive closure of a digraph by doing a
+depth-first or breadth-first traversal starting from every vertex. This
+introduces a lot of overlap. Warshall's algorithm rectifies this problem by
+constructing the transitive closure through a series of `n`x`n`matrices (with
+the assumption that the digraph's vertices are numbered from 1 to `n`.)
+
+The series is as follows:
+
+> R<sup>(0)</sup>,...R<sup>(k-1)</sup>,R<sup>(k)</sup>,...R<sup>(n)</sup>
+
+The element r<sub>ij</sub><sup>(k)</sup> is located at the i-th row and j-th
+column of the matrix R<sup>(k)</sup>, with `i,j = 1,2,...,n` and
+`k=0,1,...,n`. This element is equal to 1 iff there is a nontrivial path from
+the i-th vertex to the j-th vertex with each intermediate vertex intermediate
+vertex (if any) numbered less than or equal to k. 
+
+Since the vertices are numbered 1 to `n`, elements of R<sup>(0)</sup> equal 1
+iff there is a nontrivial path from the i-th vertex to the j-th vertex with no
+intermediate vertices. This is the **same thing** as the adjacency matrix.
+
+Elements of R<sup>(1)</sup> equal 1 iff there is a nontrivial path from the
+i-th vertex to the j-th vertex, with the vertex `1` allowed as an
+intermediate. 
+
+Elements of R<sup>(2)</sup> equal 1 iff there is a nontrivial path from the
+i-th vertex to the j-th vertex, with vertices `1` and `2` allowed as
+intermediates. 
+
+And so on.
+
+As the `k in R<sup>(k)</sup> increases, we have fewer "restrictions" on what
+vertices we can use as intermediates. Thus, we can expect each subsequent
+matrix in the series to have more 1's. 
+
+R<sup>(n)</sup> is the transitive closure.
+
+Example:
+{{blogimg(g,post,"img11.jpg")|safe}}
+
+Notice how all the elements that are 1's in R<sup>(0)</sup> are 1's in
+R<sup>(1)</sup>. Similarly, all the elements that are 1's in R<sup>(1)</sup>
+are 1's in R<sup>(2)</sup>.  We can actually compute all elements of each
+matrix R<sup>(k)</sup> from its immediate predecessor R<sup>(k-1)</sup>
+
+### Relating the matrices in the series
+
+So how exactly can we relate R<sup>(k)</sup> to R<sup>(k-1)</sup>? Here's how.
+
+Let r<sub>ij</sub><sup>(k)</sup> = 1. By how we've defined `R(k)`, this means
+there exists a nontrivial path from the i-th vertex v<sub>i</sub> to the j-th
+vertex v<sub>j</sub>, with all intermediate vertices &le; `k`. Let `L` be this
+list of intermediate vertices. We can thus describe the path from
+v<sub>i</sub> to v<sub>j</sub> as 
+
+**v<sub>i</sub>, L, v<sub>j</sub>**
+
+There are two possible scenarios from this point.
+
+#### First scenario
+
+In the first scenario, the k-th vertex, v<sub>k</sub>, is not in the list of
+intermediate vertices `L`. Since all vertices in `L` are less than or equal to
+`k` but `k` is not in `L`, all vertices in `L` are less than or equal to
+`k-1`. So we have a path **v<sub>i</sub>, L, v<sub>j</sub>** with all vertices
+in `L` less than or equal to `k-1`. These conditions are sufficient to
+conclude that r<sub>ij</sub><sup>(k-1)</sup> = 1.
+
+#### Second scenario
+
+In the second scenario, the k-th vertex, v<sub>k</sub>, is in the list of
+intermediate vertices `L`. We can assume v<sub>k</sub> only occurs once in
+`L`. If v<sub>k</sub> does actually appear more than once in `L`, we can
+simply reconstruct the list to meet our requirements by eliminating all
+vertices between the first and last occurrences of v<sub>k</sub>.
+{{blogimg(g,post,"img12.jpg")|safe}}
+
+{% endfilter %}
 {% endblock post %}
 
 

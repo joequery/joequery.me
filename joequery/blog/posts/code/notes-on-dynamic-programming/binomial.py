@@ -13,7 +13,7 @@ def binomial(n,k):
             j += 1
             x += 1
         i += 1
-    print("Additions: %d" % x)
+    print("Number of additions: %d" % x)
     return C[n][k]
 
 print(binomial(5,2)) # 10 
