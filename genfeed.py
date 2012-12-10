@@ -27,6 +27,8 @@ def write_index_pages(postsPerPage):
       while posts:
         for post in posts:
           post['pubDate'] = time.strftime("%B %d, %Y", post['pubDate'])
+          # needed for blog index pages to avoid broken links
+          post['url']  = os.path.join("/", post['url']) 
 
         pagePath = os.path.join(BLOG_SYS_PATH, "pages", category, "page%d.static" % i)
         with app.test_request_context():
@@ -108,8 +110,8 @@ def write_home_page_posts(app):
     print("Generated sample posts for the home page")
 
 
-#posts = get_posts(app, 10)
-#rss = gen_rss_feed(app, posts)
-#write_rss_feed(rss)
+posts = get_posts(app, 10)
+rss = gen_rss_feed(app, posts)
+write_rss_feed(rss)
 write_index_pages(10)
 write_home_page_posts(app)

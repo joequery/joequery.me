@@ -29,7 +29,7 @@ def before_first_request():
   # Determine cloudfront vs local assets delivery
   def set_assets_dir():
     if FLASK_ENV == "production":
-      g.assets = "https://s3.amazonaws.com/assets.joequery.me"
+      g.assets = "https://s3.amazonaws.com/assets.joequery.me/"
     else:
       g.assets = app.static_url_path
 

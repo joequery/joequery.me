@@ -4,6 +4,7 @@ import re
 import imp
 import time
 from flask import render_template
+import joequery
 from pyquery import PyQuery
 import copy
 import markdown
@@ -86,13 +87,14 @@ def get_post_by_url(url, app):
     postDict = {
     'title' : metaData.title,
     'description' : description,
-    'url': os.path.join("/", url),
+    'url': url,
     'pubDate': time.strptime(metaData.time, "%Y-%m-%d %a %H:%M %p")
     }
     postDict['comments'] = postDict['url'] + "#comments"
 
     with app.test_request_context():
         # Get the blog post body
+        joequery.before_first_request()
         content = render_template(bodyPath, post=postDict)
         jQuery = PyQuery(content)
         body = jQuery("#blogPost .entry").eq(0).html()
@@ -117,6 +119,7 @@ def gen_rss_feed(app, postList):
     post['pubDate']=time.strftime("%a, %d %b %Y %H:%M:%S +0000",post['pubDate'])
  
   with app.test_request_context():
+    joequery.before_first_request()
     rss = render_template("templates/rssfeed.html", 
           lastBuild=lastBuild, 
           posts=posts)
