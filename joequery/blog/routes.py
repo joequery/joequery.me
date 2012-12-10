@@ -64,8 +64,8 @@ def get_article(category, post):
     related = []
     if hasattr(metaData, 'related'):
       for postTitle, postURL in metaData.related:
-        newURL = os.path.join(category, postURL)
-        related.append((postTitle, newURL))
+        postURL = os.path.join("/", postURL)
+        related.append((postTitle, postURL))
 
     # Get the timestamp into a time object so we can display it however we want
     postTime = time.strptime(metaData.time, "%Y-%m-%d %a %H:%M %p")
