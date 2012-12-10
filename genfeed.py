@@ -47,9 +47,17 @@ def write_index_pages(postsPerPage):
             title = "Programming blog"
           else:
             title = "Programming blog | Page %d" % i
-          html = render_template("templates/blog_index.html", 
+          blogIndexHTML = render_template("templates/blog_index_bodygen.html", 
               posts=posts, prevPage=prevPage, nextPage=nextPage, title=title,
               category=category)
+
+          # This keeps things "relatively" static while allowing for dynamic messages
+          # in the header for things like ScreenX TV
+          blogIndexTemplate = os.path.join(currentDir, "joequery", "blog", "templates", "blog_index.html")
+          f = open(blogIndexTemplate, 'r')
+          template = f.read()
+          f.close()
+          html = template.replace("REPLACEME", blogIndexHTML)
 
           f = open(pagePath, 'w')
           f.write(html)
@@ -83,9 +91,15 @@ def write_home_page_posts(app):
     # Render the blog samples template with our posts. Write the output
     # to be used as the home page
     with app.test_request_context():
-        before_first_request()
-        html = render_template("templates/home_blog_samples.html", posts=posts)
+        blogSampleHTML = render_template("templates/home_blog_samples_bodygen.html", posts=posts)
 
+    # This keeps things "relatively" static while allowing for dynamic messages
+    # in the header for things like ScreenX TV
+    homeTemplatePath = os.path.join(currentDir, "joequery", "blog", "templates", "home_blog_samples.html")
+    f = open(homeTemplatePath, 'r')
+    template = f.read()
+    f.close()
+    html = template.replace("REPLACEME", blogSampleHTML)
     homePagePath = os.path.join(currentDir, "joequery", "static_pages", "templates", "home.static")
     f = open(homePagePath, 'w')
     f.write(html)
@@ -94,8 +108,8 @@ def write_home_page_posts(app):
     print("Generated sample posts for the home page")
 
 
-posts = get_posts(app, 10)
-rss = gen_rss_feed(app, posts)
-write_rss_feed(rss)
+#posts = get_posts(app, 10)
+#rss = gen_rss_feed(app, posts)
+#write_rss_feed(rss)
 write_index_pages(10)
 write_home_page_posts(app)
