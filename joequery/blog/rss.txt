@@ -1,3 +1,4 @@
+code/notes-on-dynamic-programming-part-2
 code/notes-on-dynamic-programming-part-1
 code/screenx-tv-first-impressions
 math/thoughts-on-proof-strategies

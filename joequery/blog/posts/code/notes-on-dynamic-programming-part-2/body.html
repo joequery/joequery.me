@@ -1,0 +1,282 @@
+{% from "macros" import img, blogimg %}
+{% extends "templates/post.html" %} {% block post %} {% filter markdown %}
+
+These notes are based on the content of [Introduction to the Design and
+Analysis of Algorithms (3rd Edition)][0].
+
+[0]: http://www.amazon.com/Introduction-Design-Analysis-Algorithms-Edition/dp/0132316811/
+
+The ideas behind Warshall's algorithm, which was discussed in the [previous
+notes][1] on dynamic programming, can be applied to the more general problem of
+finding lengths of shortest paths in weighted graphs.
+
+[1]: /code/notes-on-dynamic-programming-part-1/ 
+
+<u>def</u>: weighted graph
+
+> A graph which associates a label (called a weight) with every edge in the graph.
+
+Example:
+{{blogimg(g,post,"img1.jpg")|safe}}
+
+
+<u>def</u>: all-pairs shortest-path problem
+
+> Given a weighted connected graph, find the distances from each vertex to all
+other vertices.
+
+Shortest-path algorithms play important parts in
+
+* communications
+* transportation networks
+* operations research
+* motion planning in video games
+
+<u>def</u>: length of a path
+
+> The length of a path of a weighted graph is the accumulation of the weights
+of all the edges in the path.
+
+<u>def</u>: weight matrix
+
+> The distance matrix is an n x n matrix W. The element w<sub>ij</sub> in the
+i-th row and j-th column of the matrix indicates the weight of the edge
+from the i-th vertex to the j-th vertex.
+
+<u>def</u>: distance matrix
+
+> The distance matrix is an n x n matrix D. The element d<sub>ij</sub> in the
+i-th row and j-th column of the matrix indicates the length of the shortest
+path from the i-th vertex to the j-th vertex.
+{{blogimg(g,post,"img2.jpg")|safe}}
+
+<u>def</u>: shortest path
+
+> The shortest path from v<sub>i</sub> to v<sub>j</sub> is the path from 
+v<sub>i</sub> to v<sub>j</sub> with the smallest length. In other words, it
+is the path with the lowest sum of all the edges in the path.
+
+Note that the distance from a vertex to itself is 0. For the weight matrix
+`W`, the distance from a vertex `A` to a vertex `B` is infinity if there is
+no edge from vertex `A` to vertex `B`. For directed graphs, remember that an
+edge from `A` to `B` does not mean there is also an edge from `B` to `A`.
+That is why w<sub>ab</sub> is infinity while w<sub>ba</sub> is 2. That is not
+the case with undirected graphs, where the edge from `A` to `B` is by
+definition equal to the edge from `B` to `A`.
+
+For the distance matrix `D`, the value of d<sub>ij</sub> is the length of the
+path from the vertex `i` to the vertex `j`. Here are some examples to
+demonstrate how we filled out the distance matrix table.
+{{blogimg(g,post,"img3.jpg")|safe}}
+
+The distance matrix can be generated with an algorithm that is similar to
+Warshall's algorithm. It's called Floyd's algorithm.
+
+Floyd's algorithm
+-----------------
+
+Floyd's algorithm computes the distance matrix of a weighted graph with `n`
+vertices through a series of `n`x`n` matrices (with the assumption that the
+graph's vertices are numbered from 1 to `n`.)
+
+> D<sup>(0)</sup>,...D<sup>(k-1)</sup>,D<sup>(k)</sup>,...D<sup>(n)</sup>
+
+The algorithm works for digraphs and undirected graphs, but the graphs must
+not contain a negative cycle. Note how familiar the series above is to that
+of Warshall's algorithm.
+
+<u>def</u>: negative cycle
+
+> A cycle whose edges sum to a negative value
+
+The element d<sub>ij</sub><sup>(k)</sup> is located at the i-th row and j-th
+column of the matrix D<sup>(k)</sup> in the series, with `i,j=1,2,...,n` and
+`k=0,1,...,n` . This element is equal to the length of the shortest possible
+path from the i-th vertex to the j-th vertex, with all intermediate vertices
+less than or equal to k.
+
+Since the vertices are numbered 1 to `n`, elements of D<sup>(0)</sup>, which
+are of the form d<sub>ij</sub><sup>(0)</sup>, are equal to the length of the
+shortest path from the i-th vertex to j-th vertex, with no intermediates
+allowed. This is exactly the **same thing** as the weight matrix.
+
+Elements of D<sup>(1)</sup>, which are of the form
+d<sub>ij</sub><sup>(1)</sup>, are equal to the length of the shortest path
+from the i-th vertex to the j-th vertex with the vertex `1` allowed as an
+intermediate.
+
+Elements of D<sup>(2)</sup>, which are of the form
+d<sub>ij</sub><sup>(2)</sup>, are equal to the length of the shortest path
+from the i-th vertex to the j-th vertex with the vertices `1,2` allowed as
+intermediates.
+
+And so on.
+
+Eventually we arrive at D<sup>(n)</sup>, which is the distance matrix.
+
+In order to avoid confusion between vertex numbers and weights, our vertices
+are "numbered" with letters. `a=1`, `b=2`, and so on. So, for example,
+D<sup>(2)</sup> would allow for the vertices `a,b` as intermediates.
+
+Example:
+{{blogimg(g,post,"img4.jpg")|safe}}
+
+### Relating the matrices in the series
+
+Just like with Warshall's algorithm, we can relate D<sup>(k)</sup> to
+D<sup>(k-1)</sup>. Here's how we do that.
+
+Let d<sub>ij</sub><sup>(k)</sup> be the element in the i-th row and j-th
+column of matrix D<sup>(k)</sup>. Then by definition,
+d<sub>ij</sub><sup>(k)</sup> is equal to the length of the shortest path from
+the i-th vertex v<sub>i</sub> to the j-th vertex v<sub>j</sub>, with all
+intermediate vertices <= `k`. Let `L` be this list of intermediate vertices.
+We can thus describe the path from v<sub>i</sub> to v<sub>j</sub> as
+
+** v<sub>i</sub>, L, v<sub>j</sub> **
+
+Just like with Warshall's algorithm, there are two possible scenarios at this
+point:
+
+#### First scenario
+
+In the first scenario, the k-th vertex, v<sub>k</sub>, is not in the list of
+intermediate vertices `L`. Since all vertices in `L` are less than or equal to
+`k` but `k` is not in `L`, we can conclude all vertices in `L` are less than
+or equal to `k-1`. So we have a set of paths, each of the form
+**v<sub>i</sub>, L, v<sub>j</sub>** with all vertices in `L` <= `k-1`. By how
+we've defined the matrices in the series, the shortest of these paths is equal
+to d<sub>ij</sub><sup>(k-1)</sup>
+
+
+#### Second scenario
+
+In the second scenario, the k-th vertex, v<sub>k</sub>, is in the list of
+intermediate vertices `L`. Since we've explicitly stated that the graph
+contains no negative cycles, we can conclude that v<sub>k</sub> occurs in `L`
+only once for the shortest path. Otherwise, the second occurrence of
+v<sub>k</sub> would imply an unnecessary cycle -- the path could not possibly
+be the shortest possible path. Consequently, we can split `L` into three
+groups: `L1`, a list of vertices <= `k-1` (since v<sub>k</sub> only appears
+once in `L`), v<sub>k</sub>, and `L2`, another list of vertices <= `k-1`.
+Finally, we conclude that candidates for the shortest path from v<sub>i</sub>
+to v<sub>j</sub> are of the form **v<sub>i</sub>, L1, v<sub>k</sub>, L2,
+v<sub>j</sub>**.
+
+With this information, we can conclude a couple of things. First, note that
+above we've shown that there exist paths from v<sub>i</sub> to v<sub>k</sub>
+with all intermediate vertices <= `k-1`. The shortest of these paths by
+definition is equal to d<sub>ik</sub><sup>(k-1)</sup>. Similarly, we've also
+shown there exist paths from v<sub>k</sub> to v<sub>j</sub> with all
+intermediate vertices <= `k-1`. The shortest of these paths by definition is
+equal to d<sub>kj</sub><sup>(k-1)</sup>. Since the shortest path from
+v<sub>i</sub> to v<sub>k</sub> is d<sub>ik</sub><sup>(k-1)</sup> and the
+shortest path from v<sub>k</sub> to v<sub>j</sub> is
+d<sub>kj</sub><sup>(k-1)</sup>, we can conclude the shortest path from
+v<sub>i</sub> to v<sub>j</sub> is (d<sub>ik</sub><sup>(k-1)</sup> +
+d<sub>kj</sub><sup>(k-1)</sup>)
+{{blogimg(g,post,"img5.jpg")|safe}}
+
+#### What we've shown
+
+We've just shown for both cases (v<sub>k</sub> in `L` and not in `L`) that we
+can express d<sub>kj</sub><sup>(k)</sup> in terms of
+d<sub>kj</sub><sup>(k-1)</sup>. The first scenario tells us that as we
+increase the `k` in D<sup>(k)</sup>, the shortest path from v<sub>i</sub> to
+v<sub>j</sub> is guaranteed to remain the same despite this bigger `k` **if**
+the new v<sub>k</sub> is not an intermediate vertex in a path from
+v<sub>i</sub> to v<sub>j</sub>. This makes sense because by definition, the
+only paths d<sub>ij</sub><sup>(k)</sup> has that d<sub>ij</sub><sup>(k-1)</sup>
+does not are paths that involve v<sub>k</sub> as an intermediate vertex.
+
+For example:
+{{blogimg(g,post,"img6.jpg")|safe}}
+
+If the introduction of v<sub>k</sub> as an allowed intermediate creates new
+paths from v<sub>i</sub> to v<sub>j</sub>, then it seems like we would have to
+calculate the length of all such paths and compare them with eachother to
+determine the shortest of these new paths, which we'll call `p`. We would then
+need to compare `p` to d<sub>ij</sub><sup>(k-1)</sup> to see if this new path
+is actually shorter than what already existed before the introduction of
+v<sub>k</sub> as an allowed intermediate. However, we already proved that the
+length of the shortest path that has v<sub>k</sub> as an intermediate is
+exactly (d<sub>ik</sub><sup>(k-1)</sup> + d<sub>kj</sub><sup>(k-1)</sup>),
+thus `p` = (d<sub>ik</sub><sup>(k-1)</sup> + d<sub>kj</sub><sup>(k-1)</sup>).
+This reduces our work load to simply comparing `p` with
+d<sub>ij</sub><sup>(k-1)</sup>, and choosing the smaller of the two as the
+shortest path from v<sub>i</sub> to v<sub>j</sub>.
+
+This gives us the information we need to finally construct an algorithm.
+
+### Algorithm
+
+> d<sub>ij</sub><sup>(k)</sup> = min{(d<sub>ik</sub><sup>(k-1)</sup> +
+d<sub>kj</sub><sup>(k-1)</sup>), d<sub>ij</sub><sup>(k-1)</sup>} for k>=1.
+d<sub>ij</sub><sup>(0)</sup> is just the weight matrix.
+
+### Pseudocode
+
+This pseduocode overwrites the matrix D each iteration, unlike the Warshall
+algorithm from part 1. This is more space efficient than keeping track of
+multiple multiple matrices since we only intend on returning the last matrix
+D<sup>(n)</sup>.
+
+    # W is the nxn weight matrix, indexed at 1
+    def Floyd(W[1..n, 1..n]):
+        D = W
+        for k = 1 to n do
+            for i = 1 to n do
+                for j = 1 to n do
+                    D[i,j] = min{D[i,j], D[i,k]+D[k,j]}
+        return D
+    
+
+### Python implementation
+
+The example weight matrix in the implementation represents the following
+graph, shown earlier in the notes:
+{{blogimg(g,post,"img2.jpg")|safe}}
+
+    import sys
+    import copy
+    INF = sys.maxint # use max_int as 'infinity'
+
+    def floyd(W, n):
+        D = copy.deepcopy(W)
+        k = 0
+        while k < n:
+            i = 0
+            while i < n:
+                j = 0
+                while j < n:
+                    D[i][j] = min(D[i][j], D[i][k] + D[k][j])
+                    j += 1
+                i += 1
+            k += 1
+        return D
+                    
+
+
+    # weight matrix of the graph used through the examples in the notes.
+    W = [
+        [0,INF,3,INF],
+        [2,0,INF,INF],
+        [INF,7,0,1],
+        [6,INF,INF,0],
+    ]
+
+    print(floyd(W, 4))
+
+### Analysis
+
+Similar to Warshall's algorithm, the time efficiency of Floyd's algorithm is
+O(n<sup>3</sup>). 
+
+Next time
+---------
+
+Next time, we'll apply dynamic programming concepts to searching and optimal
+binary search trees.
+
+
+{% endfilter %} {% endblock post %}

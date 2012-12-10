@@ -6,4 +6,6 @@ and Warshall's algorithm. Python implementations of the algorithms are
 provided.
 """
 time="2012-12-10 Mon 02:48 AM"
-# related=[("Some article", "its/url")]
+related=[
+     ("Notes on dynamic programming - part 2", "code/notes-on-dynamic-programming-part-2/")
+ ]
