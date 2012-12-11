@@ -14,6 +14,9 @@ import joequery.blog.routes
 app.register_blueprint(joequery.blog.routes.bp)
 app.register_blueprint(joequery.static_pages.routes.bp)
 
+# Use a ghetto cache when developing locally, but use uwsgi's cache on
+# production
+
 SCREENX_CACHE = {
     "interval": 60, # seconds
     "lastChecked": 0,
@@ -32,16 +35,6 @@ def before_first_request():
       g.assets = "https://s3.amazonaws.com/assets.joequery.me"
     else:
       g.assets = app.static_url_path
-
-  # Determine if we're streaming on streenxtv
-  def get_streaming_status():
-      r = requests.get("http://screenx.tv/screens/status/joequery")
-      if r.content == 'null':
-          g.streaming = False
-      else:
-          # Example json: {u'casting': True, u'title': u'infinite `date`'}
-          js = json.loads(r.content)
-          g.streaming = js['casting']
 
   # Determine if we're streaming on streenxtv
   def get_streaming_status():
