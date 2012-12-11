@@ -10,7 +10,7 @@ from markdown import markdown
 import os
 import imp
 import time
-from helpers import get_posts, get_excerpt
+from helpers import get_posts, get_excerpt, BLOG_CAT_NAMES
 import inspect
 import pprint
 import base64
@@ -39,7 +39,8 @@ def redirect_to_blog_index(category):
 @bp.route('/<category>/<int:pagenum>/')
 def blog_index_page(category, pagenum):
   try:
-    return render_template("pages/%s/page%d.static" % (category, pagenum))
+    return render_template("pages/%s/page%d.static" % (category, pagenum),
+            category=BLOG_CAT_NAMES[category])
   except (TemplateNotFound, IOError) as e:
     return render_template('404.html'), 404
 

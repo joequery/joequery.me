@@ -11,6 +11,11 @@ import markdown
 
 BLOG_SYS_PATH = os.sep.join(os.path.realpath(__file__).split('/')[:-1])
 BLOG_CATEGORIES = ["code", "math", "screencast"]
+BLOG_CAT_NAMES = {
+    "code": "Programming",
+    "math": "Math",
+    "screencast": "Screencasts"
+}
 
 def get_posts_by_category(app, numPosts, category=None, start=0):
   with open(os.path.join(BLOG_SYS_PATH, "rss.txt"), 'r') as f:
