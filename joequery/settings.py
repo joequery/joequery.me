@@ -22,3 +22,9 @@ if FLASK_ENV == "production":
 else:
     app.debug = True
 
+# Is uwsgi running this app?
+try:
+    import uwsgi
+    UWSGI_ENV = True
+except:
+    UWSGI_ENV= False

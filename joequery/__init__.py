@@ -1,27 +1,21 @@
 # Personal website
 
-from joequery.settings import FLASK_ENV, app
+from joequery.settings import FLASK_ENV, app, UWSGI_ENV
 from flask import (
  request, g, abort, flash, redirect, 
- render_template, url_for
+ render_template, url_for 
 )
 import requests
 import json
 import time
+from joequery.screenx.screenx import (
+    screenx_cache_expired, screenx_cache_set, screenx_cache_get
+)
 
 import joequery.static_pages.routes
 import joequery.blog.routes
 app.register_blueprint(joequery.blog.routes.bp)
 app.register_blueprint(joequery.static_pages.routes.bp)
-
-# Use a ghetto cache when developing locally, but use uwsgi's cache on
-# production
-
-SCREENX_CACHE = {
-    "interval": 60, # seconds
-    "lastChecked": 0,
-    "streaming": False
-}
 
 @app.before_request
 def before_first_request():
@@ -40,22 +34,23 @@ def before_first_request():
   def get_streaming_status():
       t = int(time.time())
 
-      # If cache has expired
-      if t > (SCREENX_CACHE['lastChecked'] + SCREENX_CACHE['interval']):
-          SCREENX_CACHE['lastChecked'] = t
-          r = requests.get("http://screenx.tv/screens/status/joequery", allow_redirects=False)
-          # If not 200, assume API error and try again the next interval
+      if screenx_cache_expired(t):
+          screenx_cache_set('lastChecked', t)
+          r = requests.get("http://screenx.tv/screens/status/joequery")
           if r.status_code == 200:
               if r.content == 'null':
-                  SCREENX_CACHE['streaming'] = False
+                  screenx_cache_set('streaming', False)
               else:
                   # Example json: {u'casting': True, u'title': u'infinite `date`'}
                   js = json.loads(r.content)
-                  SCREENX_CACHE['streaming'] = js['casting']
+                  screenx_cache_set('streaming', js['casting'])
+
+          # If not 200, assume API error and try again the next interval
           else:
-              SCREENX_CACHE['streaming'] = False
-              SCREENX_CACHE['lastChecked'] = t
-      g.streaming = SCREENX_CACHE['streaming']
+              screenx_cache_set('streaming', False)
+              screenx_cache_set('lastChecked', t)
+
+      g.streaming = screenx_cache_get('streaming')
 
   get_env()
   set_assets_dir()
