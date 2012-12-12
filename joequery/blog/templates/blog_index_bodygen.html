@@ -10,16 +10,18 @@
     </div>
 </article>
 {% endfor %}
-{% if prevPage %}
+{% if nextPage or prevPage %}
    <article class="page">
         <div class="entry">
+            {% if prevPage %}
             <a href="/{{category}}/{{prevPage}}">&laquo; Newer Articles</a> 
             {% endif %}
             {% if prevPage and nextPage %}
               &#8212;
-            {% endif%}
+            {% endif %}
             {% if nextPage %}
             <a href="/{{category}}/{{nextPage}}">Older Articles &raquo;</a> 
+            {% endif %}
         </div>
    </article>
 {% endif %}
