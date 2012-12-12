@@ -21,15 +21,15 @@ BLOG_SYS_PATH = os.sep.join(ThisFilePath.split('/')[:-1])
 bp = Blueprint('blog', __name__, template_folder="./")
 
 # I feel dirty hardcoding this, but I really don't care at this point.
-@bp.route('/math')
+@bp.route('/math/')
 def blog_math_index():
     return redirect_to_blog_index("math")
 
-@bp.route('/code')
+@bp.route('/code/')
 def blog_code_index():
     return redirect_to_blog_index("code")
 
-@bp.route('/screencast')
+@bp.route('/screencast/')
 def blog_screencast_index():
     return redirect_to_blog_index("screencast")
 

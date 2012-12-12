@@ -1,6 +1,7 @@
 # Static page blueprint
 from flask import (
- Blueprint, render_template, abort, request, flash, redirect, url_for
+ Blueprint, render_template, abort, request, flash, redirect, url_for,
+ make_response
 )
 from jinja2 import TemplateNotFound
 
@@ -25,6 +26,12 @@ def contact_page():
 @bp.route("/stream")
 def stream_page():
     return static_page("stream.html")
+
+@bp.route("/sitemap")
+def sitemap():
+    response = make_response(render_template("sitemap.static"))
+    response.headers['Content-Type'] = "text/xml; charset=UTF-8"
+    return response
 
 def static_page(slug, **kwargs):
     # Since we're accepting all routes in the form of /url, we have to

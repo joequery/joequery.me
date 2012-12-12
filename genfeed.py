@@ -107,9 +107,24 @@ def write_home_page_posts(app, numPosts):
 
     print("Generated sample posts for the home page")
 
+def write_xml_sitemap():
+    rssPath = os.path.join(BLOG_SYS_PATH, "rss.txt")
+    with open(rssPath, 'r') as f:
+        posts = [x.strip() for x in f.readlines()]
+
+    with app.test_request_context():
+        html = render_template("sitemap.html", posts=posts, categories=BLOG_CATEGORIES)
+        sitemapPath = os.path.join(currentDir, "joequery", "static_pages",
+                      "templates", "sitemap.static")
+        f = open(sitemapPath, 'w')
+        f.write(html)
+        f.close()
+        print("Generated xml sitemap")
+
 
 posts = get_posts(app, 10)
 rss = gen_rss_feed(app, posts)
 write_rss_feed(rss)
 write_index_pages(10)
 write_home_page_posts(app, 10)
+write_xml_sitemap()
