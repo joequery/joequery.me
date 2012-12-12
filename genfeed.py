@@ -4,7 +4,7 @@ from joequery import before_first_request
 from joequery.settings import app
 from joequery.blog.helpers import (
     get_posts_by_category, BLOG_SYS_PATH, gen_rss_feed, _alter_rss, get_excerpt,
-    BLOG_CATEGORIES, get_posts, get_post_by_url
+    BLOG_CATEGORIES, get_posts, get_post_by_url, BLOG_VIEW_MORE_NAMES
 )
 from flask import render_template, current_app,g 
 import copy
@@ -68,27 +68,25 @@ def write_index_pages(postsPerPage):
           posts = newposts
   print("Generated static blog pages")
 
-def write_home_page_posts(app):
+def write_home_page_posts(app, numPosts):
     '''
     Get a post from each category
     '''
     categories = BLOG_CATEGORIES[:]
     rssPath = os.path.join(BLOG_SYS_PATH, "rss.txt")
-    posts = {}
-    f = open(rssPath, 'r')
-    line = f.next().strip()
-    while categories:
-        try:
-            category = line.split('/')[0]
-            if category in categories:
-                categories.remove(category)
-                post = get_post_by_url(line, app)
-                post['pubDate'] = time.strftime("%B %d, %Y", post['pubDate'])
-                posts[category] = post
-            line = f.next().strip()
-        except StopIteration:
-            break
-    f.close()
+    with open(rssPath, 'r') as f:
+        postURLs = f.readlines(numPosts)
+
+    posts = []
+    for url in postURLs:
+        # Remove trailing newline caused by readlines
+        url = url.strip()
+        category = url.split('/')[0]
+        post = get_post_by_url(url, app)
+        post['pubDate'] = time.strftime("%B %d, %Y", post['pubDate'])
+        post['category'] = category
+        post['viewMore'] = BLOG_VIEW_MORE_NAMES[category]
+        posts.append(post)
 
     # Render the blog samples template with our posts. Write the output
     # to be used as the home page
@@ -114,4 +112,4 @@ posts = get_posts(app, 10)
 rss = gen_rss_feed(app, posts)
 write_rss_feed(rss)
 write_index_pages(10)
-write_home_page_posts(app)
+write_home_page_posts(app, 10)

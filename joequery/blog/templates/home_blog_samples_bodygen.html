@@ -1,4 +1,4 @@
-{% macro blog_preview(category, catTitle, post) %}
+{% macro post_preview(post) %}
     <article class="page">
         <h1 class="title"><a href="{{post['url']}}">{{post['title']}}</a></h1>
         <div class="entry">
@@ -7,20 +7,12 @@
         <div class="entry">
             <p>{{post['pubDate']}} | 
             <a href="{{post['url']}}">Read the full article</a> |
-            <a href="{{category}}">View more {{catTitle}}s</a>
+            <a href="{{post['category']}}">View more {{post['viewMore']}}</a>
             </p>
         </div>
     </article>
 {% endmacro %}
 
-{% if posts['code'] %} 
-    {{blog_preview("code", "programming article", posts['code'])|safe}}
-{% endif %}
-
-{% if posts['screencast'] %} 
-    {{blog_preview("screencast", "screencast", posts['screencast'])|safe}}
-{% endif %}
-
-{% if posts['math'] %} 
-    {{blog_preview("math", "math article", posts['math'])|safe}}
-{% endif %}
+{% for post in posts %}
+    {{ post_preview(post)|safe}}
+{% endfor %}
