@@ -8,10 +8,9 @@
         {% block post %}
         {% endblock post %}
     </div>
-    <div class="entry">
-        {{ post['date'] }}
-    </div>
-  </div>
+</article>
+<article>
+    Date published - {{ post['date'] }}
 </article>
 
 {% if post['related'] %}
