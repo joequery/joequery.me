@@ -1,7 +1,7 @@
 # Screenx functions and variables
 from joequery.settings import UWSGI_ENV
 
-SCREENX_API_CHECK_INTERVAL = 60
+SCREENX_API_CHECK_INTERVAL = 90
 
 # Use ghetto caching if working locally with werkzeug, use UWSGI caching
 # if this app is running under UWSGI
