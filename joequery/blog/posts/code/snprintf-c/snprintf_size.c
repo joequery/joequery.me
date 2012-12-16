@@ -1,39 +1,37 @@
     #include<stdio.h>
-    #include<string.h>
-    #define BUFSIZE 10
+    #define BUFSIZE 9
 
-    void init_to_1(char *buf, size_t size);
+    void init_buf(char *buf, size_t size);
     void print_buf(char *buf);
 
     int main(){
         char buf[BUFSIZE];
-        init_to_1(buf, BUFSIZE);
+        init_buf(buf, BUFSIZE);
         print_buf(buf);
 
-        // hello there! => 12 characters, > BUFSIZE
-        init_to_1(buf, BUFSIZE);
+        // hello there! == 12 characters, > BUFSIZE
+        init_buf(buf, BUFSIZE);
         snprintf(buf, BUFSIZE, "hello there!");
         print_buf(buf);
 
-        // turtles => 7 charaters, < BUFSIZE
-        init_to_1(buf, BUFSIZE);
-        snprintf(buf, BUFSIZE, "turtles");
+        // turtle == 6 charaters, < BUFSIZE
+        init_buf(buf, BUFSIZE);
+        snprintf(buf, BUFSIZE, "turtle");
         print_buf(buf);
 
-        // turtles => 7 charaters, > BUFSIZE - 5
-        init_to_1(buf, BUFSIZE);
-        snprintf(buf, BUFSIZE-5, "turtles");
+        // 2222220 == 7 charaters, > 5
+        init_buf(buf, BUFSIZE);
+        snprintf(buf, 5, "%d", 222222 * 10);
         print_buf(buf);
 
         return 0;
     }
 
-    void init_to_1(char *buf, size_t size){
+    void init_buf(char *buf, size_t size){
         int i;
-        for(i=0; i<size-1; i++){
-            buf[i] = '1';
+        for(i=0; i<size; i++){
+            buf[i] = i + '0'; // int to char conversion
         }
-        buf[size-1] = '\0';
     }
 
     void print_buf(char *buf){
@@ -50,5 +48,4 @@
             }
         }
         printf("\n");
-        printf("strlen of buf: %zd\n\n", strlen(buf));
     }

@@ -27,22 +27,82 @@ The function header for snprintf is
 `*str` is the buffer where printf output will be redirected to. `size` is the
 maximum number of bytes(characters) that will be written to the buffer,
 including the terminating null character that  snprintf **automatically**
-appends for you at. This means the buffer can hold a string up to length
-`size-1`, but not `size`! The `format` and the optional `...` arguments are
-just the string formats like `"%d", myint` as seen in [printf][3].
+places for you. The `format` and the optional `...` arguments are just the
+string formats like `"%d", myint` as seen in [printf][3].
 
 ### Understanding the effect of size
 
-In the following example, we take a buffer, initialize all elements to the
-character '1', and run some experiments. We'll alter both the `size` portion
-of the call to snprintf as well as the length of the string we're attempting
-to place into the buffer.
+In the following example, we take a buffer, initialize all its elements, and
+run some experiments. We'll alter both the `size` portion of the call to
+snprintf as well as the size of the string we're attempting to place into
+the buffer.
 
 {{ snippet(p, "snprintf_size.c")|safe}}
 
-> Upon successful return, these functions return the number of characters
-printed (not including the trailing '\0' used to end output to strings).
+The output:
 
+    012345678
+    hello th\0
+    turtle\078
+    2222\05678
+
+Let's say `n` is the index at which snprintf places the null character. `n`
+can be formulated as
+
+    n = min(size of format string after substitution, size-1)
+
+(By "after substitution", I mean if we had `"%d",1000`, the format string
+after substitution is "1000" and has a size of 4.)
+
+You should take a few minutes to verify this formula for all the examples
+above :)
+
+The return value
+----------------
+
+Now that we understand how the format string and the `size` argument influence
+where snprintf places the null character, we can now discuss the return value
+of snprintf and its usefulness.
+
+snprintf returns the size of the format string after substitution.  If the
+size of the format string after substitution is greater than or equal to
+`size`, that means the string was truncated.  If your buffer size is also
+equal to `size` (which it should be when using this function), then this
+truncation implies the string was too big to fit in the buffer.
+
+{{ snippet(p, "snprintf_return.c")|safe}}
+
+The output:
+
+    buf: An extrem
+    buf: 012345678
+
+The first if statement evaluates to false since the size of the string "hello"
+is 6, which is less than the `BUFSIZE` of 10. The second and third statements
+evaluate to true since the strings after substitution have a size greater than
+or equal to BUFSIZE.
+
+A conservative buffer
+---------------------
+
+A good way to demonstrate snprintf is to implement a "conservative buffer".
+We will allocate a small amount of memory for a buffer, attempt to place a
+string into it, and create a larger buffer if necessary. If the string still
+doesn't fit after we create the larger buffer, we'll exit the program.
+
+{{ snippet(p, "snprintf_conservative.c")|safe}}
+
+The output:
+
+    Not enough space. Trying 20 bytes
+    There was enough space!
+    buf: This is my string!
+
+However, if `bufSize` was initially set to 5, the output would be the
+following:
+
+    Not enough space. Trying 10 bytes
+    Still not enough space. Aborting
 
 [0]: http://www.kernel.org/doc/man-pages/online/pages/man3/snprintf.3.html
 [1]: http://www1.maths.leeds.ac.uk/~read/bofs.html
