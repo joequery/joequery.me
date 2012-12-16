@@ -1,3 +1,5 @@
+code/snprintf-c
+code/environment-variable-c
 code/notes-on-dynamic-programming-part-2
 code/notes-on-dynamic-programming-part-1
 code/screenx-tv-first-impressions
