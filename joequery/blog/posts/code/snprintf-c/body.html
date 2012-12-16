@@ -1,0 +1,52 @@
+{% from "macros" import img, blogimg, snippet %} {% set p = post %}
+{% extends "templates/post.html" %} {% block post %} {% filter markdown %}
+
+[snprintf][0] is essentially a function that redirects the output of printf
+to a buffer. This is particularly useful for avoiding repetition of a formatted
+string.  You can build a string once and use `printf("%s", mystr)` instead of
+`print("%d,%s,%f,%d", x,y,z,a)` every time, which gets cumbersome with actual
+variable names.
+ 
+snprintf vs sprintf
+-------------------
+
+snprintf is extremely similar to [sprintf][0], which can be found on the same
+manpage.  After all, the names of the functions only differ by the character
+'n'! This is actually a pretty common convention in C: the function with the 'n'
+will require an upper bound or maximum size as an argument. For the most part,
+the 'n' version of functions are safer and less susceptible to [buffer
+overflows][1]. A significant exception to this rule is [strncpy][2].
+
+Using snprintf
+--------------
+
+The function header for snprintf is
+
+    int snprintf(char *str, size_t size, const char *format, ...);
+
+`*str` is the buffer where printf output will be redirected to. `size` is the
+maximum number of bytes(characters) that will be written to the buffer,
+including the terminating null character that  snprintf **automatically**
+appends for you at. This means the buffer can hold a string up to length
+`size-1`, but not `size`! The `format` and the optional `...` arguments are
+just the string formats like `"%d", myint` as seen in [printf][3].
+
+### Understanding the effect of size
+
+In the following example, we take a buffer, initialize all elements to the
+character '1', and run some experiments. We'll alter both the `size` portion
+of the call to snprintf as well as the length of the string we're attempting
+to place into the buffer.
+
+{{ snippet(p, "snprintf_size.c")|safe }}
+
+> Upon successful return, these functions return the number of characters
+printed (not including the trailing '\0' used to end output to strings).
+
+
+[0]: http://www.kernel.org/doc/man-pages/online/pages/man3/snprintf.3.html
+[1]: http://www1.maths.leeds.ac.uk/~read/bofs.html
+[2]: http://udel.edu/~pconrad/UnixAtUD/strcpy.html
+[3]: http://www.cplusplus.com/reference/cstdio/printf/
+
+{% endfilter %} {% endblock post %}
