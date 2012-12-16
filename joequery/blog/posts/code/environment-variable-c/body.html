@@ -1,0 +1,60 @@
+{% from "macros" import img, blogimg, snippet %} {% set p = post %}
+{% extends "templates/post.html" %} {% block post %} {% filter markdown %}
+
+The function in charge of retrieving environment variables in C is [getenv][0].
+`getenv` takes a string representing the environment variable name as its only
+argument and returns a pointer to the corresponding value. If the environment
+variable name passed in does not exist, `getenv` returns NULL.
+
+Using getenv
+------------
+
+{{ snippet(p, "getpath.c")|safe }}
+
+First, we check the return value of getenv to make sure the environment variable
+even exists. Then, we use snprintf to make sure our `path` buffer actually has
+enough space to hold the value of our environment variable. Since snprintf
+returns the number of bytes that would be written to our `path` buffer if it had
+infinite space, a simple comparison with `BUFSIZE` lets us know if our buffer
+can hold the value.
+
+Further reading on snprintf
+---------------------------
+
+If you're unfamiliar with the snprintf function, you can consult the [man
+page][1], or even better, view my **[tutorial on snprintf][2]**.
+
+About snprintf
+--------------
+
+We then use [snprintf][1] to make sure the value of the PATH environment
+variable will fit into our buffer. You can think of snprintf as a function that
+redirects the output of printf to a buffer. The function header for snprintf is
+
+    int snprintf(char *str, size_t size, const char *format, ...);
+
+`*str` is the buffer where printf output will be redirected to. `size` is the
+maximum number of bytes(characters) that will be written to the buffer,
+including the terminating null character that  snprintf **automatically**
+appends for you at. This means you can only have `size-1` number
+of normal characters in your buffer. If we did 
+
+    char buf[5];
+    snprintf(buf, 5, "candy") 
+
+`buf` would look like 
+
+    ['c', 'a', 'n', 'd', '\0']
+
+
+
+
+> Upon successful return, these functions return the number of characters
+printed (not including the trailing '\0' used to end output to strings).
+
+
+[0]: http://www.kernel.org/doc/man-pages/online/pages/man3/getenv.3.html
+[1]: http://www.kernel.org/doc/man-pages/online/pages/man3/snprintf.3.html
+[2]: http://www.kernel.org/doc/man-pages/online/pages/man3/snprintf.3.html
+
+{% endfilter %} {% endblock post %}
