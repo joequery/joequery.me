@@ -32,5 +32,5 @@
 
 {% macro snippet(post, filename) %}
 {% set path = "posts/%s/%s" % (post['url'], filename) %}
-<pre>{% include path %}</pre>
+{% include path %}
 {% endmacro %}
