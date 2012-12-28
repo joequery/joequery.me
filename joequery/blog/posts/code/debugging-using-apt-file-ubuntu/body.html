@@ -1,0 +1,119 @@
+{% from "macros" import img, blogimg %} {% set p = post %}
+{% extends "templates/post.html" %} {% block post %} {% filter markdown %}
+
+Thanks to the high standards of many open source projects, I rarely receive 
+compilation errors when `./configure`ing or `make`ing a project. When I do 
+receive compilation errors, though, 99% of them are due to a missing header
+file / function. Ubuntu's `apt-file` program makes it extremely simple to track
+down the package containing the header file / function needed by the source
+you're compiling.
+
+Installing apt-file on Ubuntu
+-----------------------------
+
+Installaing and configuring apt-file is extremely simple.
+
+    $ sudo apt-get install apt-file
+    $ apt-file update # sudo optional
+
+As hinted in the comment above, you have the choice of using sudo with apt-file.
+I prefer to not use sudo, but it's really just a personal preference.
+
+Using apt-file to find the right package
+----------------------------------------
+
+Here's a real world compilation error you may come across if you're installing
+a Python library that uses native extensions:
+
+    ...c:125: fatal error: Python.h: No such file or directory
+
+So Python.h is some header file, and we need to find what package it belongs
+to. To search for the package containing this exact file, we do
+
+    $ apt-file -x search "/Python.h$"
+    pypy-dev: /usr/lib/pypy/include/Python.h
+    python2.7-dbg: /usr/include/python2.7_d/Python.h
+    python2.7-dev: /usr/include/python2.7/Python.h
+    python3.2-dbg: /usr/include/python3.2dmu/Python.h
+    python3.2-dev: /usr/include/python3.2mu/Python.h
+
+The correct package is either `pypy-dev`, `python2.7-dev`, or `python3.2-dev`,
+depending upon which Python version you have installed. You can install the
+package via `apt-get` and finish your compliation.
+
+Let's analyze the `apt-file` call we did above. The `-x` flag indicates the
+pattern string will be a regular expression. This is necessary because just
+searching for "Python.h" will bring up results like
+
+    freecad-dev: /usr/include/freecad/Mod/Part/Gui/ViewProviderPython.h
+    libsidl-dev: /usr/include/c/sidl_Python.h
+    libsidl-dev: /usr/include/sidl_Python.h
+    libvtk5-dev: /usr/include/vtk-5.8/vtkPython.h
+
+(You can see this for yourself by running `apt-file search "Python.h"`)
+
+We then use the regular expression pattern "/Python.h$" to make sure we match
+the filename exactly (Note the / and the $ symbols). 
+
+Here's another example where things weren't so straightforward, but still end
+up being pretty easy thanks to apt-file and apt-cache.
+
+Here I was initially attempting to compile Vim 7.3. 
+
+    /tmp/vim73$ ./configure
+    configure: loading cache auto/config.cache
+    checking whether make sets $(MAKE)... yes
+    checking for gcc... gcc
+    checking whether the C compiler works... yes
+    ...
+    ...
+    checking for tgetent in -ltermlib... no
+    checking for tgetent in -ltermcap... no
+    checking for tgetent in -lcurses... no
+    no terminal library found
+    checking for tgetent()... configure: error: NOT FOUND!
+
+Compilation failed due to the absence of a function called `tgetent()`. We can
+use `apt-file` to find the package containing this function.
+
+    $ apt-file search tgetent
+    ncurses-doc: /usr/share/man/man3/tgetent.3ncurses.gz
+    ncurses-doc: /usr/share/man/man3/tgetent_sp.3ncurses.gz
+
+Unfortunately, only documentation packages were found instead of lib/dev
+packages. We can still use this, though! We know the ncurses-doc package
+contains documentation regarding `tgetent()`, so  we can then conclude the
+ncurses package, or some form of it, contains the function.  So now let's look
+for an "ncurses" package. To search for package by its name instead of its
+contents, we use `apt-cache` instead of `apt-file`. We use the `--names-only`
+flag to limit our search to only the name of the package and not its
+description.
+
+    $ sudo apt-cache search --names-only "ncurses"
+    libncurses5 - shared libraries for terminal handling
+    libncurses5-dbg - debugging/profiling libraries for ncurses
+    libncurses5-dev - developer's libraries for ncurses
+    libncursesw5 - shared libraries for terminal handling 
+    libncursesw5-dbg - debugging/profiling libraries for ncursesw
+    libncursesw5-dev - developer's libraries for ncursesw
+    ncurses-base - basic terminal type definitions
+    ncurses-bin - terminal-related programs and man pages
+    ncurses-doc - developer's guide and documentation for ncurses
+    ...
+
+So which one do we choose? Applying the strategy explained above concerning
+"lib"/"dev" and the simplest package name, our options are `libncurses5` and
+`libncurses5-dev`. Recall that "dev" packages are more likely to have the 
+function, so `libncurses5-dev` is our most likely candidate.
+
+After installing the `libncurses5-dev` package, I was able to successfully
+compile the project.
+
+Is this *really* faster than Google?
+------------------------------------
+
+That's a fair question, to which I answer "usually". If you only get
+back doc packages from your `apt-file` search, I would go ahead and Google.
+Thankfully, most of the time `apt-file` will return an obvious candidate.
+
+{% endfilter %} {% endblock post %}
