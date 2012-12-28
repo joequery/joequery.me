@@ -1,3 +1,4 @@
+code/install-python27-pip-virtualenv
 code/snprintf-c
 code/environment-variable-c
 code/notes-on-dynamic-programming-part-2

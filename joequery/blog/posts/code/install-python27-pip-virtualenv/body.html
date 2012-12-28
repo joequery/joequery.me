@@ -1,0 +1,89 @@
+{% from "macros" import img, blogimg %} {% set p = post %}
+{% extends "templates/post.html" %} {% block post %} {% filter markdown %}
+
+This post will quickly help you install Python2.7, pip, and virtualenv. 
+
+Installing Python
+-----------------
+
+First, download the Gzipped source tar from
+[http://www.python.org/download/releases/2.7/][0] (Direct link to the 
+source [here][1])
+
+Assuming you downloaded the tar to your `~/Downloads` directory, we
+do the following:
+
+    $ cd ~/Downloads
+    $ tar zxf Python-2.7.tgz
+    $ cd Python-2.7
+    $ ./configure 
+
+At this point, if you're on Ubuntu and see an error along the lines of
+`Python.h not found`, then you need to install the python-dev package.
+
+    $ sudo apt-get install python-dev
+
+Now we use `make` to finish the installation
+
+    $ make # This make take a few minutes
+    $ sudo make install
+
+If you come across any errors during the process, copying and pasting
+the error message into Google is almost guaranteed to help.
+
+Verify the installation has succeded by running
+
+    $ python --version
+
+The response should be "Python 2.7.3"
+
+Installing pip and virtualenv
+-----------------------------
+
+In order to install pip and virtualenv, we first have to install 
+[setuptools][2] so we can have access to `easy_install`. We need to
+download setuptools-0.6c11-py2.7.egg (Direct download link [here][3]). 
+
+Assuming you downloaded setuptools-0.6c11-py2.7.egg to your `~/Downloads`
+directory, execute the following
+
+    $ cd ~/Downloads
+    $ sudo bash setuptools-0.6c11-py2.7.egg
+
+
+We use the `which` command to verify setuptools correctly installed the
+`easy_install` executable. `which` simply tells you where an executable is
+located on the filesystem.  If you get an empty response back, that means the
+program is either not installed or not in your $PATH. 
+
+    $ which easy_install
+
+The response should be non-empty. My response was `/usr/local/bin/easy_install`
+
+Now we use `easy_install` to install pip
+
+    $ sudo easy_install pip
+
+We can once again verify pip's installation with the `which` command
+
+    $ which pip 
+
+Finally, we can install virtualenv with
+
+    $ sudo pip install virtualenv
+
+You no longer have to worry about using `easy_install`, which should be
+avoided since you cannot uninstall packages using `easy_install`.
+
+
+[0]: http://www.python.org/download/releases/2.7/
+[1]: http://www.python.org/ftp/python/2.7/Python-2.7.tgz
+[2]: http://pypi.python.org/pypi/setuptools
+[3]: http://pypi.python.org/packages/2.7/s/setuptools/setuptools-0.6c11-py2.7.egg
+
+
+
+{% endfilter %} {% endblock post %}
+
+
+
