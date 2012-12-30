@@ -1,0 +1,12 @@
+{% from "macros" import img, blogimg %} {% set p = post %}
+{% extends "templates/post.html" %} {% block post %} {% filter markdown %}
+
+In this short article, we proove that the sum of two odd numbers is even. 
+Previously, [we proved][0] that the sum of two even numbers is also even. We'll
+apply the same basic techniques in that proof.
+
+{{blogimg(g,post,"img1.jpg")|safe}}
+
+[0]: /math/proove-two-even-number-sums/
+
+{% endfilter %} {% endblock post %}
