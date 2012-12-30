@@ -1,0 +1,13 @@
+{% from "macros" import img, blogimg %} {% set p = post %}
+{% extends "templates/post.html" %} {% block post %} {% filter markdown %}
+
+In this short article, we prove the obvious fact that the sum of two even
+numbers is itself an even number. Since examples do not qualify as sufficient
+mathematic proof, we must clearly define what a number means to be even and use
+that definition to prove our claim. The only time examples qualify as proofs is
+when you use them to negate a claim (which is called providing a counter
+example)
+
+{{blogimg(g,post,"img1.jpg")|safe}}
+
+{% endfilter %} {% endblock post %}
