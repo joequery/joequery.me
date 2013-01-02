@@ -11,4 +11,3 @@ omit the strategies involved in formulating a proof leads to students lacking
 a sense of direction when tackling proofs on their own.
 """
 time="2012-12-07 Fri 11:40 PM"
-# related=[("Some article", "its/url")]

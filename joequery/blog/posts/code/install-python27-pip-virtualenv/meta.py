@@ -3,4 +3,3 @@ description="""
 A step by step tutorial on installing Python 2.7, pip, and virtualenv
 """
 time="2012-12-28 Fri 06:44 PM"
-# related=[("Some article", "its/url")]
