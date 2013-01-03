@@ -14,6 +14,7 @@ from helpers import get_posts, get_excerpt, BLOG_CAT_NAMES
 import inspect
 import pprint
 import base64
+import ConfigParser
 
 ThisFilePath = os.path.realpath(__file__)
 BLOG_SYS_PATH = os.sep.join(ThisFilePath.split('/')[:-1])
@@ -50,32 +51,33 @@ def get_article(category, post):
   # NOTE: Jinja can't handle full Absolute paths, only relative "Template" paths
   postTemplateDirPath = os.path.join("posts", category, post)
   postAbsDirPath = os.path.join(BLOG_SYS_PATH, postTemplateDirPath)
-  metaAbsPath = os.path.join(postAbsDirPath, 'meta.py')
+  metaAbsPath = os.path.join(postAbsDirPath, 'meta.txt')
   bodyTemplatePath = os.path.join(postTemplateDirPath, 'body.html')
 
   if not os.path.exists(postAbsDirPath):
     return render_template('404.html'), 404
 
-  # Use the 'imp' module to import the meta file as module
-  # This way, we can easily define metadata without having to parse!
-  # We pass a random token to load_source to make sure we don't hold on to
-  # any stale data. Without this, related stories from other posts somehow
-  # wind up in here.
-  token = base64.urlsafe_b64encode(os.urandom(30))
-  metaData = imp.load_source(token, metaAbsPath)
+  parser = ConfigParser.ConfigParser()
+  parser.read(metaAbsPath)
+
+  # Each meta file should begin with a [post] section
+  metaData = dict(parser.items("post"))
+
+  # Get rid of newlines in multi-line descriptions.
+  metaData['description'] = metaData['description'].replace("\n", "  ")
 
   # Get the related posts if provided
   related = []
   if hasattr(metaData, 'related'):
-    for postTitle, postURL in metaData.related:
+    for postTitle, postURL in metaData['related']:
       postURL = os.path.join("/", postURL)
       related.append((postTitle, postURL))
 
   # Get the timestamp into a time object so we can display it however we want
-  postTime = time.strptime(metaData.time, "%Y-%m-%d %a %H:%M %p")
+  postTime = time.strptime(metaData['time'], "%Y-%m-%d %a %H:%M %p")
   postData = {
-    'title' : metaData.title,
-    'description' : metaData.description,
+    'title' : metaData['title'],
+    'description' : metaData['description'],
     'date' : time.strftime("%B %d, %Y", postTime), # January 15, 2012
     'url': os.path.join(category, post),
     'related': related
