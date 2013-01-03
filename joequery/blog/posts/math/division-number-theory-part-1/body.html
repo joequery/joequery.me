@@ -1,0 +1,106 @@
+{% from "macros" import img, blogimg %} {% set p = post %}
+{% extends "templates/post.html" %} {% block post %} {% filter markdown %}
+
+I'm very excited to attempt venturing into the world of mathematics on my own. I
+have taken a few math courses at my university, but I honestly need some work.
+It seems like I'm much slower at grasping the concepts of the courses than my
+fellow peers, so I've decided to allocate some spare time to studying
+[Elementary Number Theory][0] by Gareth A. Jones and J. Mary Jones for the extra
+practice. I hope you find my notes useful! I aim to be as thorough as possible
+in my notes in order to demonstrate to myself that I fully understand the
+subject area. 
+
+I don't indent on using LaTeX because it seems awfully boring to learn. I will
+use a combination of typed notes and hand-written notes (that are hopefully
+somewhat legible). 
+
+I plan on skipping exercises that look boring or tedious.  But enough talk,
+it's time to do some math! The first topic of the book is divisibility. 
+
+1.1 Divisors
+------------
+
+We dive right in to talking about the division algorithm.
+
+### Theorem 1.1
+
+> If a and b are integers with b > 0, then there exist a unique pair of integers
+q and r such that a = bq+r and 0 <= r < b.
+
+### Example 1.1
+{{blogimg(g,post,"img1.png")|safe}}
+
+Note that `r` is always greater than or equal to 0 and strictly less than `b`. 
+
+### Proving the division algorithm (Theorem 1.1)
+
+The proof of the division algorithm takes advantage of something called the 
+[well-ordering principle][1]. 
+
+#### The well-ordering principle
+
+The well-ordering_principle simply states that every non-empty set of positive
+integers contains a least element. So take any arbitrary set of positive
+integers:
+
+* `{5,3,9,12}`
+* `{2,3}`
+* `{1,1,1}`  
+
+For each and every set of positive integers you could ever come up with, there
+will always be some number in the set that's the smallest.
+
+#### Back to the proof
+{{blogimg(g,post,"img2.png")|safe}}
+
+[0]: http://www.amazon.com/Elementary-Number-Springer-Undergraduate-Mathematics/dp/3540761977/
+[1]: http://en.wikipedia.org/wiki/Well-ordering_principle
+
+### Corollary 1.2
+
+If `a` and `b` are integers with `b` not equal to 0, then there exists unique
+`q` and `r` such that `a = qb + r` with 0 <= `r` < `|b|`.
+
+### Example 1.2
+
+To demonstrate usage of the division algorithm, we need to prove that if `n` is
+a square, then `n` leaves a remainder of 0 or 1 when divided by 4.
+{{blogimg(g,post,"img3.png")|safe}}
+
+What makes the division algorithm so useful is that, as demonstrated in this
+proof, we can easily take a number and put it in terms of any other number. We
+were able to directly associate `a` with the number `4` thanks to the division
+algorithm guaranteeing a unique `q` and `r` for any provided `a` and `b>0`.
+
+### Exercise 1.1
+
+> Find a shorter proof for Example 1.2, based on using b=2 in the division
+algorithm
+
+Here's my attempt:
+{{blogimg(g,post,"img4.png")|safe}}
+
+### Definition of "divides"
+
+> If a and b are any integers, and a = qb for some integer q, then we say that
+b divides a, or b is a factor of a, or a is a multiple of b. When b divides a,
+we write b|a. Every integer divides 0 (0 = 0b for all b), and 1 divides every
+integer.
+
+### Exercise 1.3
+
+Prove the following
+
+a) if a|b and b|c, then a|c
+{{blogimg(g,post,"img5.png")|safe}}
+
+b) if a|b and c|d, then ac|bd
+{{blogimg(g,post,"img6.png")|safe}}
+
+c) if m is not 0, then a|b iff ma|mb
+{{blogimg(g,post,"img7.png")|safe}}
+
+d) if d|a and a is not 0, then |d| <= |a|
+{{blogimg(g,post,"img8.png")|safe}}
+
+{% endfilter %} {% endblock post %}

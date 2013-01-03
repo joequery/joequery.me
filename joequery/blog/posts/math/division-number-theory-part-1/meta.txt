@@ -1,0 +1,7 @@
+[post]
+title: Division in number theory - part 1
+description: We begin our descent into introductory Number Theory material
+    with the help of the book "Elementary Number Theory" by Gareth A. Jones
+    and J. Mary Jones. The first topic is divisibility. This post discusses
+    the division algorithm and the definition of "divides".
+time: 2013-01-04 Fri 06:43 AM
