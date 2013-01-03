@@ -4,7 +4,6 @@ math/proove-two-odd-number-sums
 math/proove-two-even-number-sums
 code/debugging-using-apt-file-ubuntu
 code/install-python27-pip-virtualenv
-code/install-python27-pip-virtualenv
 code/snprintf-c
 code/environment-variable-c
 code/notes-on-dynamic-programming-part-2
