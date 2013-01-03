@@ -8,6 +8,7 @@ import joequery
 from pyquery import PyQuery
 import copy
 import markdown
+import ConfigParser
 
 BLOG_SYS_PATH = os.sep.join(os.path.realpath(__file__).split('/')[:-1])
 BLOG_CATEGORIES = ["code", "math", "screencast"]
@@ -84,28 +85,31 @@ def get_post_by_url(url, app):
     Pass in a post url (/code/apost) and get back the contents
     '''
     # Get all the data needed for the rss feed.
-    metaPath = os.path.join(BLOG_SYS_PATH, "posts", url, 'meta.py')
-    bodyPath = os.path.join("posts", url, 'body.html')
-    metaData = imp.load_source('data', metaPath)
+    metaAbsPath = os.path.join(BLOG_SYS_PATH, "posts", url, 'meta.txt')
+    bodyTemplatePath = os.path.join("posts", url, 'body.html')
+    parser = ConfigParser.ConfigParser()
+    parser.read(metaAbsPath)
 
-    # Old posts used a custom excerpt. Now the excerpt and description
-    # are the same, labeled under "description".
-    description = metaData.description or metaData.excerpt
-    description = markdown.markdown(description)
+    # Each meta file should begin with a [post] section
+    metaData = dict(parser.items("post"))
 
-    postTime = time.strptime(metaData.time, "%Y-%m-%d %a %H:%M %p")
+    # Get rid of newlines in multi-line descriptions.
+    metaData['description'] = metaData['description'].replace("\n", "  ")
+    description = markdown.markdown(metaData['description'])
+
+    postTime = time.strptime(metaData['time'], "%Y-%m-%d %a %H:%M %p")
     postDict = {
-    'title' : metaData.title,
+    'title' : metaData['title'],
     'description' : description,
     'url': url,
-    'pubDate': time.strptime(metaData.time, "%Y-%m-%d %a %H:%M %p")
+    'pubDate': time.strptime(metaData['time'], "%Y-%m-%d %a %H:%M %p")
     }
     postDict['comments'] = postDict['url'] + "#comments"
 
     with app.test_request_context():
         # Get the blog post body
         joequery.before_first_request()
-        content = render_template(bodyPath, post=postDict)
+        content = render_template(bodyTemplatePath, post=postDict)
         jQuery = PyQuery(content)
         body = jQuery("#blogPost .entry").eq(0).html()
     postDict['body'] = body
