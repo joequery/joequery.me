@@ -1,0 +1,35 @@
+{% from "macros" import img, blogimg %} {% set p = post %}
+{% extends "templates/post.html" %} {% block post %} {% filter markdown %}
+
+If you've ever restarted your Lubuntu machine and been met with the error
+
+> "Xsession: unable to launch /usr/bin/startlubuntu Xsession
+/usr/bin/startlubuntu not found; falling back to default session"
+
+after logging in, then you most likely accidentally deleted your Lubuntu
+install. Don't worry! Reinstalling Lubuntu is a breeze.
+
+Reinstalling Lubuntu
+-------------------
+
+While you're at the login screen, Press `CTRL`+`ALT`+`F1`. This will bring up a
+terminal for you to work with. Log in with your credentials, and then execute
+
+    $ sudo apt-get install lubuntu-desktop
+
+Then reboot your machine
+
+    $ sudo reboot
+
+When you log in, everything should be operational now! Even your openbox
+configureations should still be preserved
+
+How did this happen anyway?
+---------------------------
+
+Most likely an `apt-get autoremove` or an `apt-get purge` operation went
+a little too far and actually deleted the Lubuntu package. Be careful next 
+time!
+
+
+{% endfilter %} {% endblock post %}
