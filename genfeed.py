@@ -77,6 +77,9 @@ def write_home_page_posts(app, numPosts):
     with open(rssPath, 'r') as f:
         postURLs = f.readlines(numPosts)
 
+    # Only display recent articles
+    postURLs = postURLs[0:10]
+
     posts = []
     for url in postURLs:
         # Remove trailing newline caused by readlines
