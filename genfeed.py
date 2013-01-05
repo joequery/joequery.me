@@ -1,6 +1,6 @@
 # Generate an RSS feed. This should be done after creating a blog post.
 import os
-from joequery import before_first_request
+from joequery import before_request
 from joequery.settings import app
 from joequery.blog.helpers import (
     get_posts_by_category, BLOG_SYS_PATH, gen_rss_feed, _alter_rss, get_excerpt,
@@ -32,7 +32,7 @@ def write_index_pages(postsPerPage):
 
         pagePath = os.path.join(BLOG_SYS_PATH, "pages", category, "page%d.static" % i)
         with app.test_request_context():
-          before_first_request()
+          before_request()
           start = postsPerPage * i
           newposts = get_posts_by_category(app, postsPerPage, category, start)
 

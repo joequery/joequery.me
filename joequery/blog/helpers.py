@@ -108,7 +108,7 @@ def get_post_by_url(url, app):
 
     with app.test_request_context():
         # Get the blog post body
-        joequery.before_first_request()
+        joequery.before_request()
         content = render_template(bodyTemplatePath, post=postDict)
         jQuery = PyQuery(content)
         body = jQuery("#blogPost .entry").eq(0).html()
@@ -133,7 +133,7 @@ def gen_rss_feed(app, postList):
     post['pubDate']=time.strftime("%a, %d %b %Y %H:%M:%S +0000",post['pubDate'])
  
   with app.test_request_context():
-    joequery.before_first_request()
+    joequery.before_request()
     rss = render_template("templates/rssfeed.html", 
           lastBuild=lastBuild, 
           posts=posts)

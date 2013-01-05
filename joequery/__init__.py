@@ -18,7 +18,7 @@ app.register_blueprint(joequery.blog.routes.bp)
 app.register_blueprint(joequery.static_pages.routes.bp)
 
 @app.before_request
-def before_first_request():
+def before_request():
   # Grant access to the dev/production environment variable
   def get_env():
     g.env = FLASK_ENV
