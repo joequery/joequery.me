@@ -1,6 +1,8 @@
 # Screenx functions and variables
 from joequery.settings import UWSGI_ENV
 import time
+import requests
+import json
 
 if UWSGI_ENV:
     import uwsgi

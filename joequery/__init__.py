@@ -5,8 +5,6 @@ from flask import (
  request, g, abort, flash, redirect, 
  render_template, url_for 
 )
-import requests
-import json
 import time
 from joequery.screenx.screenx import (
     screenx_cache_expired, screenx_cache_set, screenx_cache_get,
