@@ -9,13 +9,21 @@ import requests
 import json
 import time
 from joequery.screenx.screenx import (
-    screenx_cache_expired, screenx_cache_set, screenx_cache_get
+    screenx_cache_expired, screenx_cache_set, screenx_cache_get,
+    screenx_check_status
 )
 
 import joequery.static_pages.routes
 import joequery.blog.routes
 app.register_blueprint(joequery.blog.routes.bp)
 app.register_blueprint(joequery.static_pages.routes.bp)
+
+@app.before_first_request
+def before_first_request():
+    # Initialize the cache for the screenxtv status checks
+    screenx_cache_set('lastChecked', 0)
+    screenx_cache_set('streaming', False)
+
 
 @app.before_request
 def before_request():
@@ -29,24 +37,7 @@ def before_request():
 
   # Determine if we're streaming on streenxtv
   def get_streaming_status():
-      t = int(time.time())
-
-      if screenx_cache_expired(t):
-          screenx_cache_set('lastChecked', t)
-          r = requests.get("http://screenx.tv/screens/status/joequery")
-          if r.status_code == 200:
-              if r.content == 'null':
-                  screenx_cache_set('streaming', False)
-              else:
-                  # Example json: {u'casting': True, u'title': u'infinite `date`'}
-                  js = json.loads(r.content)
-                  screenx_cache_set('streaming', js['casting'])
-
-          # If not 200, assume API error and try again the next interval
-          else:
-              screenx_cache_set('streaming', False)
-              screenx_cache_set('lastChecked', t)
-
+      screenx_check_status()
       g.streaming = screenx_cache_get('streaming')
 
   get_env()

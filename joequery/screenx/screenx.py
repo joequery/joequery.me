@@ -1,5 +1,11 @@
 # Screenx functions and variables
 from joequery.settings import UWSGI_ENV
+import time
+
+if UWSGI_ENV:
+    import uwsgi
+else:
+    SCREENX_CACHE = {}
 
 SCREENX_API_CHECK_INTERVAL = 90
 
@@ -27,13 +33,22 @@ def screenx_cache_get(k):
     else:
         v = SCREENX_CACHE[k]
     return v
-          
-if UWSGI_ENV:
-    import uwsgi
-else:
-    SCREENX_CACHE = {}
 
-# Initialize the cache
-screenx_cache_set('lastChecked', 0)
-screenx_cache_set('streaming', False)
+def screenx_check_status():
+  t = int(time.time())
+  if screenx_cache_expired(t):
+      screenx_cache_set('lastChecked', t)
+      r = requests.get("http://screenx.tv/screens/status/joequery")
+      if r.status_code == 200:
+          if r.content == 'null':
+              screenx_cache_set('streaming', False)
+          else:
+              # Example json: {u'casting': True, u'title': u'infinite `date`'}
+              js = json.loads(r.content)
+              screenx_cache_set('streaming', js['casting'])
+
+      # If not 200, assume API error and try again the next interval
+      else:
+          screenx_cache_set('streaming', False)
+          screenx_cache_set('lastChecked', t)
 
