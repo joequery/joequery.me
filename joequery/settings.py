@@ -19,8 +19,10 @@ else:
 
 if FLASK_ENV == "production":
     app.debug = False
+    ASSETS_DIR = "https://s3.amazonaws.com/assets.joequery.me"
 else:
     app.debug = True
+    ASSETS_DIR = app.static_url_path
 
 # Is uwsgi running this app?
 try:

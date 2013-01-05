@@ -1,6 +1,6 @@
 # Personal website
 
-from joequery.settings import FLASK_ENV, app, UWSGI_ENV
+from joequery.settings import FLASK_ENV, ASSETS_DIR, app, UWSGI_ENV
 from flask import (
  request, g, abort, flash, redirect, 
  render_template, url_for 
@@ -21,14 +21,11 @@ app.register_blueprint(joequery.static_pages.routes.bp)
 def before_request():
   # Grant access to the dev/production environment variable
   def get_env():
-    g.env = FLASK_ENV
+      g.env = FLASK_ENV
 
   # Determine cloudfront vs local assets delivery
   def set_assets_dir():
-    if FLASK_ENV == "production":
-      g.assets = "https://s3.amazonaws.com/assets.joequery.me"
-    else:
-      g.assets = app.static_url_path
+      g.assets = ASSETS_DIR
 
   # Determine if we're streaming on streenxtv
   def get_streaming_status():
