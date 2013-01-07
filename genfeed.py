@@ -9,6 +9,7 @@ from joequery.blog.helpers import (
 from flask import render_template, current_app,g 
 import copy
 import time
+import ConfigParser
 
 currentDir = os.sep.join(os.path.realpath(__file__).split('/')[:-1])
     
@@ -124,6 +125,52 @@ def write_xml_sitemap():
         f.close()
         print("Generated xml sitemap")
 
+def write_tags():
+    tagsPath = os.path.join(BLOG_SYS_PATH, "posts", "tags")
+    tagDirs = []
+    for f in os.listdir(tagsPath):
+        if os.path.isdir(os.path.join(tagsPath, f)):
+            tagDirs.append(f)
+
+    for d in tagDirs:
+        tag = os.path.basename(d)
+        entryPath = os.path.join(tagsPath, d, "posts.txt")
+        f = open(entryPath, 'r')
+        postList = [x.strip() for x in f.readlines()]
+        posts = []
+        f.close()
+
+        for p in postList:
+            parser = ConfigParser.ConfigParser()
+            parser.read(os.path.join(BLOG_SYS_PATH, "posts", p, "meta.txt"))
+            metaData = dict(parser.items("post"))
+            postTime = time.strptime(metaData['time'], "%Y-%m-%d %a %H:%M %p")
+
+            posts.append({"url":"/"+p, "title":metaData["title"], 
+                "pubDate": time.strftime("%B %d, %Y", postTime)})
+          
+
+        with app.test_request_context():
+            tagGenHTML = render_template("templates/tag_index_bodygen.html",
+                    posts=posts, tag=tag)
+
+
+        # Each meta file should begin with a [post] section
+        metaData = dict(parser.items("post"))
+
+        tagIndexTemplate = os.path.join(BLOG_SYS_PATH, "templates", "tag_index.html")
+        f = open(tagIndexTemplate, 'r')
+        template = f.read()
+        f.close()
+        html = template.replace("REPLACEME", tagGenHTML)
+        
+        pagePath = os.path.join(tagsPath, d, "index.static")
+        f = open(pagePath, 'w')
+        f.write(html)
+        f.close()
+
+        print("Generated tag index pages")
+
 
 posts = get_posts(app, 10)
 rss = gen_rss_feed(app, posts)
@@ -131,3 +178,4 @@ write_rss_feed(rss)
 write_index_pages(10)
 write_home_page_posts(app, 10)
 write_xml_sitemap()
+write_tags()

@@ -37,6 +37,14 @@ def blog_screencast_index():
 def redirect_to_blog_index(category):
     return redirect(url_for(".blog_index_page", category=category, pagenum=1))
 
+@bp.route('/tag/<tag>/')
+def tag_index_page(tag):
+    try:
+        return render_template("posts/tags/%s/index.static" % tag,tag=tag)
+    except (TemplateNotFound, IOError) as e:
+          return render_template('404.html'), 404
+
+
 @bp.route('/<category>/<int:pagenum>/')
 def blog_index_page(category, pagenum):
   try:
