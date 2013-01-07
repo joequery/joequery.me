@@ -69,10 +69,18 @@ def get_article(category, post):
   parser.read(metaAbsPath)
 
   # Each meta file should begin with a [post] section
-  metaData = dict(parser.items("post"))
+  try:
+      metaData = dict(parser.items("post"))
+  except ConfigParser.NoSectionError:
+      return render_template('404.html'), 404
+
 
   # Get rid of newlines in multi-line descriptions.
   metaData['description'] = metaData['description'].replace("\n", "  ")
+
+  # Get comma separated tags into list
+  if metaData.get("tags"):
+      metaData['tags'] = [x.strip() for x in metaData['tags'].split(',')]
 
   # Get the related posts if provided
   related = []
@@ -88,12 +96,10 @@ def get_article(category, post):
     'description' : metaData['description'],
     'date' : time.strftime("%B %d, %Y", postTime), # January 15, 2012
     'url': os.path.join(category, post),
-    'related': related
+    'related': related,
+    'tags':metaData.get('tags')
   }
-  return render_template(bodyTemplatePath, 
-      post=postData, 
-      title=postData['title'],
-      description=postData['description'])
+  return render_template(bodyTemplatePath, post=postData)
 
 @bp.route('/feed/')
 def rss_feed():

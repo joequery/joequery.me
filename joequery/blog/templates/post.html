@@ -9,21 +9,23 @@
         {% endblock post %}
     </div>
 </article>
+
+{% if post['tags'] %}
+    <article style="padding: 0px 0px;" class="page">
+        <div class="entry">
+            <h2 style="border: 0px;" class="title">Tagged as
+            {% for t in post['tags'] %}
+                <a href="/tag/{{t}}/">{{t}}</a>
+                {% if not loop.last %},{% endif %}
+            {% endfor %}
+            </h2>
+        </div>
+    </article>
+{% endif %}
+
 <article>
     Date published - {{ post['date'] }}
 </article>
 
-{% if post['related'] %}
-    <article class="page">
-        <div class="entry">
-            <h2 style="border-bottom: 0px;">Related Articles</h2>
-            <ul style="border: 0px;">
-              {% for postTitle,postURL in post['related'] %}
-                <li><a href="{{postURL}}">{{postTitle}}</a></li>
-              {% endfor %}
-            </ul>
-        </div>
-    </article>
-{% endif %}
 {% endblock body %}
 
