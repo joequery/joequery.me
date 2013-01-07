@@ -10,6 +10,14 @@ app = Flask(__name__)
 app.secret_key = SECRET_KEY
 Markdown(app)
 
+# Adding tabs allows for code inclusion from file to become indented and thus
+# represented as code by Markdown
+def code_filter(val):
+    mylist = val.split("\n")
+    return "\n\t".join(mylist)
+app.jinja_env.filters['code'] = code_filter
+
+
 # FLASK_ENV environment variable can be 'development' or 'production'
 if "FLASK_ENV" in os.environ.keys():
 	FLASK_ENV = os.environ["FLASK_ENV"]

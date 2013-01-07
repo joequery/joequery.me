@@ -31,6 +31,8 @@
 {% endmacro %}
 
 {% macro snippet(post, filename) %}
+{% filter code %}
 {% set path = "posts/%s/%s" % (post['url'], filename) %}
 {% include path %}
+{% endfilter %}
 {% endmacro %}
