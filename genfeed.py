@@ -169,7 +169,7 @@ def write_tags():
         f.write(html)
         f.close()
 
-        print("Generated tag index pages")
+    print("Generated tag index pages")
 
 
 posts = get_posts(app, 10)
