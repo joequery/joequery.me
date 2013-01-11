@@ -258,7 +258,6 @@ def write_related_txts():
         if tags:
             for tag in [x.strip() for x in tags.split(",")]:
                 tagFilePath = os.path.join(tagsPath, tag, "posts.txt")
-                print(tagFilePath)
                 with open(tagFilePath, 'a') as f:
                     f.write(os.path.join(post['category'], post['slug']) + "\n")
 
@@ -268,13 +267,9 @@ def write_related_txts():
         series = post['meta'].get('series')
         if series:
             seriesFilePath = os.path.join(seriesPath, series, "posts.txt")
-            print("SERIES: " + seriesFilePath)
             with open(seriesFilePath, 'a') as f:
                 f.write(os.path.join(post['category'], post['slug']) + "\n")
 
-
-
-    #print(posts)
     print("Generated related posts.txt files")
 
 
