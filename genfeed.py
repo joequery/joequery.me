@@ -215,21 +215,9 @@ def write_series_index():
 
     print("Generated series index pages")
 
-def write_related_txts():
-    postsPath = os.path.join(BLOG_SYS_PATH, "posts")
-    seriesPath = os.path.join(postsPath, "series")
-    tagsPath = os.path.join(postsPath, "tags")
-
-    # Create empty tags/series post files
-    for p in os.listdir(seriesPath):
-        with file(os.path.join(seriesPath, p, "posts.txt"), 'w') as f:
-            f.write("")
-
-    for p in os.listdir(tagsPath):
-        with file(os.path.join(tagsPath, p, "posts.txt"), 'w') as f:
-            f.write("")
-
+def get_posts_in_order(reverse=True):
     # Merge the posts from all the categries
+    postsPath = os.path.join(BLOG_SYS_PATH, "posts")
     categoryPaths = {}
     for c in BLOG_CATEGORIES:
         categoryPaths[c] = os.path.join(postsPath, c) 
@@ -249,8 +237,27 @@ def write_related_txts():
             posts.append({"path":path, "category":category, "slug":slug, 
                           "postTime":postTime, "meta":meta})
 
+
+    # sort the posts based on their date
+    posts = sorted(posts, key=lambda k: k['postTime'], reverse=reverse)
+    return posts
+
+def write_related_txts():
+    postsPath = os.path.join(BLOG_SYS_PATH, "posts")
+    seriesPath = os.path.join(postsPath, "series")
+    tagsPath = os.path.join(postsPath, "tags")
+
+    # Create empty tags/series post files
+    for p in os.listdir(seriesPath):
+        with file(os.path.join(seriesPath, p, "posts.txt"), 'w') as f:
+            f.write("")
+
+    for p in os.listdir(tagsPath):
+        with file(os.path.join(tagsPath, p, "posts.txt"), 'w') as f:
+            f.write("")
+
     # Now sort the posts based on their date, with newest first.
-    posts = sorted(posts, key=lambda k: k['postTime'], reverse=True)
+    posts = get_posts_in_order(reverse=True)
 
     # Write the posts.txt files
     for post in posts:
@@ -272,7 +279,17 @@ def write_related_txts():
 
     print("Generated related posts.txt files")
 
+def write_rss_txt():
+    posts = get_posts_in_order(reverse=True)
+    rssPath = os.path.join(BLOG_SYS_PATH, "rss.txt")
+    with open(rssPath, 'w') as f:
+        for post in posts:
+            f.write(os.path.join(post['category'], post['slug']) + "\n")
 
+    print("Generated rss.txt")
+
+
+write_rss_txt()
 posts = get_posts(app, 10)
 rss = gen_rss_feed(app, posts)
 write_rss_feed(rss)
