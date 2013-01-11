@@ -153,7 +153,7 @@ def write_tags():
         with app.test_request_context():
             title = "Posts tagged as %s" % tag
             tagGenHTML = render_template("templates/tag_index_bodygen.html",
-                    posts=posts, kind="series", title=title)
+                    posts=posts, kind="tag", title=title)
 
 
         # Each meta file should begin with a [post] section
@@ -172,6 +172,53 @@ def write_tags():
 
     print("Generated tag index pages")
 
+def write_series():
+    seriesPath = os.path.join(BLOG_SYS_PATH, "posts", "series")
+    seriesDirs = []
+    for f in os.listdir(seriesPath):
+        if os.path.isdir(os.path.join(seriesPath, f)):
+            seriesDirs.append(f)
+
+    for d in seriesDirs:
+        series = os.path.basename(d)
+        entryPath = os.path.join(seriesPath, d, "posts.txt")
+        f = open(entryPath, 'r')
+        postList = [x.strip() for x in f.readlines()]
+        posts = []
+        f.close()
+
+        for p in postList:
+            parser = ConfigParser.ConfigParser()
+            parser.read(os.path.join(BLOG_SYS_PATH, "posts", p, "meta.txt"))
+            metaData = dict(parser.items("post"))
+            postTime = time.strptime(metaData['time'], "%Y-%m-%d %a %H:%M %p")
+
+            posts.append({"url":"/"+p, "title":metaData["title"], 
+                "pubDate": time.strftime("%B %d, %Y", postTime)})
+          
+
+        with app.test_request_context():
+            title = "Posts in the %s series" % series
+            seriesGenHTML = render_template("templates/tag_index_bodygen.html",
+                    posts=posts, kind="series", title=title)
+
+
+        # Each meta file should begin with a [post] section
+        metaData = dict(parser.items("post"))
+
+        seriesIndexTemplate = os.path.join(BLOG_SYS_PATH, "templates", "tag_index.html")
+        f = open(seriesIndexTemplate, 'r')
+        template = f.read()
+        f.close()
+        html = template.replace("REPLACEME", seriesGenHTML)
+        
+        pagePath = os.path.join(seriesPath, d, "index.static")
+        f = open(pagePath, 'w')
+        f.write(html)
+        f.close()
+
+    print("Generated series index pages")
+
 
 posts = get_posts(app, 10)
 rss = gen_rss_feed(app, posts)
@@ -180,3 +227,4 @@ write_index_pages(10)
 write_home_page_posts(app, 10)
 write_xml_sitemap()
 write_tags()
+write_series()

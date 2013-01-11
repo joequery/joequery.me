@@ -5,3 +5,4 @@ description: Part 2 of dynamic programming notes. We'll learn about weight
   to find the shortest paths in a weighted graph with the help of Floyd's
   algorithm.
 time: 2012-12-12 Wed 07:01 AM
+series: dynamic-programming

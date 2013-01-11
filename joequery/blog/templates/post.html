@@ -22,6 +22,16 @@
     </article>
 {% endif %}
 
+{% if post['series'] %}
+    <article style="padding: 0px 0px;" class="page">
+        <div class="entry">
+            <h2 style="border: 0px;" class="title">This post is part of the 
+                <a href="/series/{{post['series']}}/">{{post['series']}}</a> series.
+            </h2>
+        </div>
+    </article>
+{% endif %}
+
 <article>
     Date published - {{ post['date'] }}
 </article>

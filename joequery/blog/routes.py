@@ -45,6 +45,14 @@ def tag_index_page(tag):
     except (TemplateNotFound, IOError) as e:
           return render_template('404.html'), 404
 
+@bp.route('/series/<series>/')
+def series_index_page(series):
+    try:
+        title = "Posts in the %s series" % series
+        return render_template("posts/series/%s/index.static" % series,title=title)
+    except (TemplateNotFound, IOError) as e:
+          return render_template('404.html'), 404
+
 
 @bp.route('/<category>/<int:pagenum>/')
 def blog_index_page(category, pagenum):
@@ -83,6 +91,9 @@ def get_article(category, post):
   if metaData.get("tags"):
       metaData['tags'] = [x.strip() for x in metaData['tags'].split(',')]
 
+  if metaData.get("series"):
+      metaData['series'] = metaData.get("series").strip()
+
   # Get the related posts if provided
   related = []
   if hasattr(metaData, 'related'):
@@ -98,7 +109,8 @@ def get_article(category, post):
     'date' : time.strftime("%B %d, %Y", postTime), # January 15, 2012
     'url': os.path.join(category, post),
     'related': related,
-    'tags':metaData.get('tags')
+    'tags':metaData.get('tags'),
+    'series':metaData.get('series')
   }
   return render_template(bodyTemplatePath, post=postData)
 
