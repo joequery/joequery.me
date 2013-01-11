@@ -151,8 +151,9 @@ def write_tags():
           
 
         with app.test_request_context():
+            title = "Posts tagged as %s" % tag
             tagGenHTML = render_template("templates/tag_index_bodygen.html",
-                    posts=posts, tag=tag)
+                    posts=posts, kind="series", title=title)
 
 
         # Each meta file should begin with a [post] section

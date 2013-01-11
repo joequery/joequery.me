@@ -15,8 +15,7 @@
         <div class="entry">
             <h2 style="border: 0px;" class="title">Tagged as
             {% for t in post['tags'] %}
-                <a href="/tag/{{t}}/">{{t}}</a>
-                {% if not loop.last %},{% endif %}
+                <a href="/tag/{{t}}/">{{t}}</a>{% if not loop.last %},{% endif %}
             {% endfor %}
             </h2>
         </div>

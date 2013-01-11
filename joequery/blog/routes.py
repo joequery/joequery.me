@@ -40,7 +40,8 @@ def redirect_to_blog_index(category):
 @bp.route('/tag/<tag>/')
 def tag_index_page(tag):
     try:
-        return render_template("posts/tags/%s/index.static" % tag,tag=tag)
+        title = "Posts tagged as %s" % tag
+        return render_template("posts/tags/%s/index.static" % tag,title=title)
     except (TemplateNotFound, IOError) as e:
           return render_template('404.html'), 404
 
