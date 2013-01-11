@@ -125,7 +125,7 @@ def write_xml_sitemap():
         f.close()
         print("Generated xml sitemap")
 
-def write_tags():
+def write_tags_index():
     tagsPath = os.path.join(BLOG_SYS_PATH, "posts", "tags")
     tagDirs = []
     for f in os.listdir(tagsPath):
@@ -172,7 +172,7 @@ def write_tags():
 
     print("Generated tag index pages")
 
-def write_series():
+def write_series_index():
     seriesPath = os.path.join(BLOG_SYS_PATH, "posts", "series")
     seriesDirs = []
     for f in os.listdir(seriesPath):
@@ -202,10 +202,6 @@ def write_series():
             seriesGenHTML = render_template("templates/tag_index_bodygen.html",
                     posts=posts, kind="series", title=title)
 
-
-        # Each meta file should begin with a [post] section
-        metaData = dict(parser.items("post"))
-
         seriesIndexTemplate = os.path.join(BLOG_SYS_PATH, "templates", "tag_index.html")
         f = open(seriesIndexTemplate, 'r')
         template = f.read()
@@ -219,6 +215,68 @@ def write_series():
 
     print("Generated series index pages")
 
+def write_related_txts():
+    postsPath = os.path.join(BLOG_SYS_PATH, "posts")
+    seriesPath = os.path.join(postsPath, "series")
+    tagsPath = os.path.join(postsPath, "tags")
+
+    # Create empty tags/series post files
+    for p in os.listdir(seriesPath):
+        with file(os.path.join(seriesPath, p, "posts.txt"), 'w') as f:
+            f.write("")
+
+    for p in os.listdir(tagsPath):
+        with file(os.path.join(tagsPath, p, "posts.txt"), 'w') as f:
+            f.write("")
+
+    # Merge the posts from all the categries
+    categoryPaths = {}
+    for c in BLOG_CATEGORIES:
+        categoryPaths[c] = os.path.join(postsPath, c) 
+
+    posts = []
+    for x,c in categoryPaths.iteritems():
+        for p in os.listdir(c):
+            path = os.path.join(c,p)
+            parser = ConfigParser.ConfigParser()
+            parser.read(os.path.join(path, "meta.txt"))
+            meta = dict(parser.items("post"))
+            postTime = time.strptime(meta['time'], "%Y-%m-%d %a %H:%M %p")
+            del meta['time']
+            
+            category = path.split("/")[-2]
+            slug = path.split("/")[-1]
+            posts.append({"path":path, "category":category, "slug":slug, 
+                          "postTime":postTime, "meta":meta})
+
+    # Now sort the posts based on their date, with newest first.
+    posts = sorted(posts, key=lambda k: k['postTime'], reverse=True)
+
+    # Write the posts.txt files
+    for post in posts:
+        tags = post['meta'].get('tags')
+        if tags:
+            for tag in [x.strip() for x in tags.split(",")]:
+                tagFilePath = os.path.join(tagsPath, tag, "posts.txt")
+                print(tagFilePath)
+                with open(tagFilePath, 'a') as f:
+                    f.write(os.path.join(post['category'], post['slug']) + "\n")
+
+    # We want series to go in chronological order
+    posts.reverse()
+    for post in posts:
+        series = post['meta'].get('series')
+        if series:
+            seriesFilePath = os.path.join(seriesPath, series, "posts.txt")
+            print("SERIES: " + seriesFilePath)
+            with open(seriesFilePath, 'a') as f:
+                f.write(os.path.join(post['category'], post['slug']) + "\n")
+
+
+
+    #print(posts)
+    print("Generated related posts.txt files")
+
 
 posts = get_posts(app, 10)
 rss = gen_rss_feed(app, posts)
@@ -226,5 +284,6 @@ write_rss_feed(rss)
 write_index_pages(10)
 write_home_page_posts(app, 10)
 write_xml_sitemap()
-write_tags()
-write_series()
+write_related_txts()
+write_tags_index()
+write_series_index()
