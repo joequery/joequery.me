@@ -3,3 +3,4 @@ env/
 *.swp
 *.static
 *.o
+posts.txt
