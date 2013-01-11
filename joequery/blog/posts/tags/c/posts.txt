@@ -1,3 +1,0 @@
-screencast/intro-c-pointers
-code/environment-variable-c
-code/snprintf-c

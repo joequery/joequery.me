@@ -1,2 +1,0 @@
-code/notes-on-dynamic-programming-part-1
-code/notes-on-dynamic-programming-part-2

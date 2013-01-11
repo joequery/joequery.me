@@ -1,2 +1,0 @@
-code/debugging-using-apt-file-ubuntu
-code/unable-to-launch-startlubuntu
