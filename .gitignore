@@ -4,3 +4,4 @@ env/
 *.static
 *.o
 posts.txt
+rss.txt
