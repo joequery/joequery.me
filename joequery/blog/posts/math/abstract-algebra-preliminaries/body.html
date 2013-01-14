@@ -1,0 +1,77 @@
+{% from "macros" import img, blogimg %} {% set p = post %}
+{% extends "templates/post.html" %} {% block post %} {% filter markdown %}
+
+This post begins a series of notes on Abstract algebra. These notes are based
+off the book [Contemporary Abstract Algebra 7th ed][0]. I'll attempt to make
+these notes as readable, usable, and study-able as possible.
+
+[0]: http://www.amazon.com/Contemporary-Abstract-Algebra-Joseph-Gallian/dp/0547165099
+
+Well Ordering Principle
+-----------------------
+
+> Every nonempty set of positive integers contains a smallest member.
+
+Thm 0.1: Division Algorithm
+---------------------------
+
+> Let a and b be integers with b > 0. Then there exist unique integers q and r
+with the property that a=bq+r, where 0<=r<b.
+
+Thm 0.2: GCD as a linear combination
+------------------------------------
+
+> For any nonzero integers a and b, there exist integers s and t such that
+gcd(a,b)=as+bt. Also, gcd(a,b) is the smallest positive integer of the form
+as+bt.
+
+### Corollary
+
+> If a and b are relatively prime, then there exist integers s and t such that
+as+bt=1.
+
+Euclid's Lemma
+--------------
+
+> If p is a prime that divides ab, then p divides a or p divides b
+
+Thm 0.3: Fundamental Theorem of Arithmetic
+-----------------------------------------
+
+> Every integer greater than 1 is a prime or a product of primes. This product
+is unique, except for the order the factors appear.
+
+Modular Arithmetic
+------------------
+{{ blogimg(g,p, "img1.png")|safe }}
+
+Equivalence Relations
+---------------------
+
+A relation(a set of ordered pairs) R on a set S is an equivalence relation if
+
+1. aRa for all a in S (reflexive)
+2. aRb implies bRa (symmetric)
+3. aRb and bRc implies aRc (transitive)
+
+Partition
+---------
+
+> A partition of a set S is a collection of nonempty, disjoint subsets of S
+whose union is S
+
+Functions 
+----------
+
+{{ blogimg(g,p, "img2.png")|safe }}
+
+Thm 0.7: Properties of Functions
+--------------------------------
+{{ blogimg(g,p, "img3.png")|safe }}
+
+
+
+
+
+
+{% endfilter %} {% endblock post %}

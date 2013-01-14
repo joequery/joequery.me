@@ -1,0 +1,7 @@
+[post]
+title: Abstract algebra preliminaries 
+description: A refresher on basic definitions and theorems needed to begin
+    studying abstract algebra. Items of interest include computing gcd, 
+    the division algorithm, and modular arithmetic. 
+time: 2013-01-13 Sun 11:19 PM
+series: algebra-notes
