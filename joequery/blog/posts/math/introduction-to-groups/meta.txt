@@ -1,0 +1,7 @@
+[post]
+title: Introduction to groups
+description: Introduction to group theory. Includes definitions related to
+    groups, examples of groups, theorems of basic proof properties along with
+    proofs of the theorems.
+time: 2013-01-16 Wed 08:19 AM
+series: algebra-notes

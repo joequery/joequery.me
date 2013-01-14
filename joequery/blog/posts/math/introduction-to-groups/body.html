@@ -1,0 +1,150 @@
+{% from "macros" import img, blogimg %} {% set p = post %}
+{% extends "templates/post.html" %} {% block post %} {% filter markdown %}
+
+Binary operations
+-----------------
+
+> Let G be a set. A binary operation on G is a function that assigns each
+ordered pair of elements of G an element of G.
+
+In other words, a binary operation on G is a function `f` such that `f(a,b)=c`
+with a,b,c as elements of G.
+
+### Examples
+
+Addition, subtraction, and multiplication are all binary operations on the set
+of integers. These three operations are in fact functions! You can define a
+function `+` from the set of integers *to* the set of integers defined by
+
+    +(a,b)=the addition of a and b 
+
+We can then use infix notation instead of the function notation, and we arrive
+with `a+b`. 
+
+Note that division is **not** a binary operation on the set of integers. Why
+is that? Consider `1` divided by `3`. `1` and `3` are both integers, but `1/3`
+is not. 
+{{blogimg(g,p, "img1.png")|safe}}
+
+Group
+-----
+
+> Let G be a set together with a binary operation * (meaning a*b is an
+element of G for all a,b in G). G is called a group under * if the following
+three properties are all met:
+{{blogimg(g,p, "img2.png")|safe}}
+
+### Closure
+
+> If * is a binary operation on G, we say G is "closed" under *, or G has
+"closure" under *
+
+### Examples
+
+Prove the integers under addition is a group.
+{{blogimg(g,p, "img3.png")|safe}}
+
+Since the definition of a group explicitly says that groups deal with binary
+operations, we must first verify that the operation is *actually* closed.
+
+In this case, there wasn't much to show since the addition of integers is
+closed and associative under the integers by definition. However, for more
+complex functions, the proof is not always so easy.
+{{blogimg(g,p, "img4.png")|safe}}
+
+
+Elementary Properties of Groups
+-------------------------------
+
+There are some properties that all groups share, no matter what form their
+elements are in or how complex/simple the operation on that group is.
+
+### Thm 2.1: Uniqueness of the Identity
+
+> In a group G, there is only one identity element
+
+#### Proof strategy: Showing uniqueness
+
+A *very* common strategy in proving the uniqueness of some value is to suppose
+to the contrary that there are actually two values. You then maneuver your way
+through to show that the two values you chose are actually equal, meaning
+there really is just one unique value. In this proof, we will suppose there
+are two identities, show that they were equal to one another, which lets us
+conclude that there really is only one identity.
+{{blogimg(g,p, "img5.png")|safe}}
+
+So now we can safely refer to an identify of a group as **the** identity.
+
+### Thm 2.2: Cancellation
+
+> In a group G, the right and left cancellation laws hold; ba=ca implies b=c,
+and abc=ac implies b=c.
+{{blogimg(g,p, "img6.png")|safe}}
+
+We have to take special note to multiply equations on the same side because
+groups do not necessarily have the property of being commutative under their
+operation. That means there is no guarantee `ab` = `ba`, so in order to
+preserve equality in our arithmetic, we must multiply on the same sides of
+both sides of the equation.
+
+### Thm 2.3: Uniqueness of Inverses
+
+> For each element a in a group G, there is a unique element b in G such that
+ab=ba=e.
+
+In our initial definition, we stated that there must exist *an* element `b` in
+G such that `ab` = `e`. However, now we're going to show that this inverse is
+unique. 
+
+#### Reminder: Proving uniqueness
+
+Recall that a common proof strategy to showing uniqueness of a value is
+suppose that there are two, and conclude they are the same. In this case,
+we're trying to show that there is only one inverse of a. Thus, we start out
+by supposing a has two inverses, and then we work to show they are in fact the
+same.
+{{blogimg(g,p, "img7.png")|safe}}
+
+### Some notation
+
+Now that we have proven the uniqueness of inverses, we can now safely denote
+the inverse of the element <b>a</b> in the group G by <b>a<sup>-1</sup></b>.
+
+When `n` is a positive integer, a<sup>n</sup> represents n factors of
+`aa...a`. Non integer exponents are not defined for this group notation. 
+(a<sup>.5</sup> doesn't mean anything and should thus be avoided).
+
+When `n` is negative, g<sup>n</sup> can be expressed as
+(g<sup>-1</sup>)<sup>|n|</sup>. For example, g<sup>-3</sup> =
+(g<sup>-1</sup>)<sup>3</sup>.
+
+g<sup>0</sup> is defined as the identity `e`.
+
+Some familiar laws of exponents hold for groups, such as
+
+* g<sup>m</sup><sup>n</sup> = g<sup>m+n</sup>
+* (g<sup>m</sup>)<sup>n</sup> = g<sup>mn</sup>
+
+Not all laws hold, though. For example, it's not guaranteed that
+(ab)<sup>n</sup> equals a<sup>n</sup>b<sup>n</sup>.
+
+Groups operations are usually represented with a multiplicative notation. Make
+sure to not get confused when dealing with additive operations! 
+
+### Thm 2.4: Socks-shoes property
+
+> For group elements a and b, (ab)<sup>-1</sup>=b<sup>-1</sup>a<sup>-1</sup>
+
+#### Proof strategy: Showing equality of elements within groups
+
+Sometimes you want to show that elements `a` and `b` of a group G are equal.
+In the event you know the values, it's pretty straight forward to just compare
+them. However, in this case, we know very little about `a` and `b`, but we can
+prove their equality using our knowledge of groups. We recently proved that
+the inverse of an element `g` in G is unique. This means if `ga=e` and `gb=e`,
+then `a`=`b`. We use this fact to prove theorem 2.4.
+{{blogimg(g,p, "img8.png")|safe}}
+
+
+
+{% endfilter %} {% endblock post %}
