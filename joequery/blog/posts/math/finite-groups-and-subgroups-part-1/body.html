@@ -1,0 +1,89 @@
+{% from "macros" import img, blogimg %} {% set p = post %}
+{% extends "templates/post.html" %} {% block post %} {% filter markdown %}
+
+Terminology and Notation
+------------------------
+
+### Order of a Group
+
+> The number of elements of a group (finite or infinite) is called its order.
+> |G| denotes the order of G.
+
+For example, U(10) = {1,3,7,9} is of order 4.
+
+### Order of an Element
+
+> The order of an element g in a group G is the smallest positive integer n such
+> that g<sup>n</sup>=e. If no such integer exists, we say g has infinite order.
+
+#### Examples
+{{blogimg(g,p,"img1.png")|safe}}
+
+### Subgroup
+
+> If a subset H of a group G is itself a group under the operation of G, we say
+> that H is a subgroup of G.
+
+#### Subgroup notation
+
+H <= G means H is a subgroup of G. If we want to specify that H is a subgroup of
+G but not equal to G, we write H<G to indicate a *proper subgroup*. 
+
+The subgroup {e} is the *trivial subgroup* of G.
+
+Subgroup Tests
+--------------
+
+To prove if a subset of G is a subgroup of G, we don't have to verify all the
+group axioms (closure, associativity, identity, inverses). We can use special
+subgroup tests.
+
+### One-Step subgroup Test
+
+> Let G be a group and H a nonempty subset of G. If ab<sup>-1</sup> is in H
+> whenever a,b are in H, then H is a subgroup of G. 
+{{blogimg(g,p,"img2.png")|safe}}
+
+#### Examples using the one-step subgroup test
+{{blogimg(g,p,"img3.png")|safe}}
+
+When proving a group H is a subgroup of G, the very first thing you do is show H
+is nonempty. After that, you suppose you have elements `a` and `b` in H and
+attempt to show that ab<sup>-1</sup> is in H. When you are supposing that `a`
+and `b` are in H, the very first thought you should have is "What does it mean
+for these elements to be in H? What do they look like? What properties to they
+have?". These properties are usually spelled out in the definition of the group
+itself. In the above example, the property of elements of H was that
+x<sup>2</sup>=e. Almost immediately after supposing `a` and `b` were in H, we
+spelled out what exactly that meant in terms of what those elements looked like.
+Without taking the time to evaluate what these elements look like, we have no
+clear direction to take the proof.
+
+The next thought you should have is "How do I know when I've arrived? When am I
+finished? What is the end goal?". For the one-step subgroup test, the overall
+goal is to show that ab<sup>-1</sup> is in H. However, similar to when you let
+`a` and `b` be in H, you should ask yourself "What does it mean for
+ab<sup>-1</sup> to be in H? What does it look like? What properties does it
+have?". In the above example, since elements of H had the property that
+x<sup>2</sup>=e, we concluded that if ab<sup>-1</sup> were to actually be an
+element of H, it would need to have the property that
+(ab<sup>-1</sup>)<sup>2</sup>=e, and verifying that would finish the proof. By
+taking the time to figure out what the end of the proof would look like, we
+created a road map for ourselves to help us solve the problem. 
+
+**Trying to prove something while not having a sense of direction for the proof
+is a recipe for frustration.**
+
+Here is another example which ends up being a bit similar.
+{{blogimg(g,p,"img4.png")|safe}}
+
+If you're not certain why we get to say that xy<sup>-1</sup> is an element of G,
+it's because we're guaranteed closure by the fact that G is a group.
+
+Next time
+---------
+
+In the next article of the series, we'll discuss the two-step subgroup test, the
+finite subgroup test, and provide many more examples of subgroups.
+
+{% endfilter %} {% endblock post %}

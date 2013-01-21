@@ -1,0 +1,6 @@
+[post]
+title: Finite groups and subgroups - part 1
+description: We continue our discussion of groups by learning about subgroups,
+    the order of a group, subgroup tests, and more properties of groups.
+time: 2013-01-26 Sat 10:15 PM
+series: algebra-notes
