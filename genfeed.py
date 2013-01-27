@@ -17,6 +17,7 @@ currentDir = os.sep.join(os.path.realpath(__file__).split('/')[:-1])
 def write_rss_feed(rss):
   feedPath = os.path.join(BLOG_SYS_PATH, "templates", "rssfeed.static")
   f = open(feedPath, 'w')
+  rss = rss.encode("ascii", "xmlcharrefreplace")
   f.write(rss)
   f.close()
   print("Generated static rss feed")

@@ -1,0 +1,6 @@
+[post]
+title: Finite groups and subgroups - part 2
+description: In continuing the discussion of finite groups and subgroups,
+    we look at the two-step subgroup test and more examples of groups.
+time: 2013-01-28 Mon 02:24 PM
+series: algebra-notes
