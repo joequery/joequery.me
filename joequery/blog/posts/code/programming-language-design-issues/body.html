@@ -1,0 +1,879 @@
+{% from "macros" import img, blogimg %} {% set p = post %}
+{% extends "templates/post.html" %} {% block post %} {% filter markdown %}
+
+These notes are based on [Programming Languages: Design and Implementation][0].
+[0]: http://www.amazon.com/Programming-Languages-Design-Implementation-Edition/dp/0130276782/
+
+Section 1.1: Why study programming languages?
+---------------------------------------------
+
+#### 1. To improve your ability to develop effective algorithms
+
+Many languages provide features that can be extremely useful when used properly
+but waste a large amount of time when used improperly. Algorithms behave
+similarly, so the habit of making correct decisions with a programming
+language can carry over to making correct decisions with an algorithm.
+
+#### 2. To improve your use of your existing programming language
+
+By understanding exactly how the features in a programming language are
+implemented, you learn how to effectively use them. When you know how the
+language components such as lists/arrays/strings work, you can use them more
+efficiently.
+
+#### 3. To increase your vocab of useful programming constructs
+
+When thinking about a set of data/program structures to solve a problem, it's
+typical to only think about the structures that are immediately available within
+the programming language you're working with. By knowing the constructs of other
+programming languages, you can find one that fits your scenario better and
+possibly implement it yourself.
+
+#### 4. To allow a better choice of programming language
+
+Some languages are better suited than others for particular projects. You can
+reduce effort by picking the one that works best.
+
+#### 5. To make it easier to learn a new language
+
+A thorough knowledge of programming language constructs and implementation
+techniques allows programmers to learn new languages more easily.
+
+#### 6. To make it easier to design a new language
+
+Though you may not be making the next C or Java programming language, it's
+actually fairly common to create a form of programming language on a small scale
+within a project. 
+
+### Studying features and their implementations
+
+There's a lot more to studying programming languages than just comparing their
+features. Some languages may share the same features, but those features could
+be implemented in entirely different ways, with some implementations possibly more
+efficient than others
+
+Section 1.2: A short history of programming languages
+-----------------------------------------------------
+
+* 1950s: FORTRAN, LISP
+* 1970s: Ada, C, Pascal, Prolog, Smalltalk
+* 1980s: C++, ML, Perl, Postscript
+* 1990s: Java
+
+In a survey conducted by the US DoD in the 1970s, it found that over 500
+languages were being used on defense projects.
+
+### Section 1.2.1: Development of Early Languages
+
+We'll summarize language development from the mid 1950s to the early 1970s.
+Later developments will be covered throughout the series.
+
+#### Numerically based languages
+
+In the 1940s, the main role for computers during WWII was solving differential
+equations to determine ballistics trajectories.  
+
+In the 1950s, symbolic notations started to appear:
+
+* Grace Hopper developed the A-0 language
+* John Backus developed Speedcoding
+
+Both A-0 and Speedcoding were designed to compile simple arithmetic expressions
+into executable machine language. 
+
+#### FORTRAN
+
+In 1957, Backus managed a team to develop FORTRAN, meaning FORmula TRANSlator.
+While FORTRAN was oriented around numerical calculations, its goal was a
+full-fledged programming language including:
+
+* control structures
+* conditionals
+* input/output statements
+
+Many doubted FORTRAN would compete with hand-coded assembly, so much effort was
+put into making FORTRAN execution extremely efficient. Some of this efficiency
+came from making statements specifically for the IBM 704. FORTRAN was extremely
+successful and dominated in the 1970s.
+
+In 1958, FORTRAN was revised as FORTRAN II, and FORTRAN IV came a few years
+later. Soon, many manufacturers had implemented a version of the language, as
+there was no standard. In 1966, FORTRAN IV became the standard, and went by the
+name FORTRAN 66. FORTRAN 66 has been updated to FORTRAN 77 and then FORTRAN 90.
+
+#### ALGOL
+
+The success of FORTRAN caused fear of IBM's industry dominance. GAMM (the
+Germany Society of Applied Mathematics) organized a committee to design a
+universal language. The US's ACM, (Association f or Computing Machinery)
+organized a similar committee, and the two committees eventually merged. Under
+the leadership of Peter Naur, the International Algorithmic Language (IAL) was
+developed. The name was eventually changed to ALGOL, and became known as ALGOL
+58. The ALGOL 60 revision became the standard academic computing language from
+the 1960s to the early 1970s.
+
+FORTRAN was designed for efficient execution on the IBM 704 machine, but ALGOL
+had different goals.
+
+* ALGOL notation should be close to standard math notation
+* ALGOL should be useful for the description of algorithms
+* Programs in ALGOL should be compilable into machine language
+* ALGOL should not be bound to a single computer architecture
+
+These goals had large implications. This meant that, in the context of the time
+period, input/output was not included in the language, nor was special
+procedures. Implementations of ALGOL were incompatible. Subprograms were viewed
+as macro substitution, a concept named *call by name*.
+
+Backus was editor of the ALGOL report defining the language, and he used a
+notation similar to that developed by Chomsky for describing context free
+languages. This introduced formal grammar theory to programming languages.
+Peter Naur's and Backus' role in the development of ALGOL caused the notation
+used to represent the grammar of a language to be called Backus Naur Form (BNF).
+
+#### Business Languages
+
+After establishing domain of numerical calculations with computers, business
+data processing came soon after. Grace Hopper developed FLOWMATIC in 1955, with
+the goal of developing business applications with a form of English-like text.
+In 1959, The US DoD sponsored a meeting to develop the Common Business
+Language(CBL), a language whose goal was to use English as much as possible for
+its notation. The specifications for CBL designed in 1960 became the designs for
+COBOL (COmmon Business Oriented Language). Cobol was standardized in 1968.
+
+#### Artificial-intelligence languages
+
+The Information Processing Language (IPL) was developed by the Rand Corporation.
+IPL-V was widely known but had limited use. John McCarthy of MIT designed LIst
+PRocessing (LISP) for the IBM 704. LISP 1.5 became the standard LISP
+implementation for many years. 
+
+#### Systems languages
+
+In this early era, efficiency was required, so assembly language was mostly used
+in the systems area. CPL and BCPL were designed but never gained traction.  C
+changed the systems area, but that did not come until the 1970s.
+
+### Section 1.2.2: Evolution of Software Architectures
+
+The hardware that supports a language has a large impact language design.
+
+define operating/target environment: 
+> The external environment supporting the execution of a program
+
+define host environment:
+> The environment in which a program is designed, coded, tested, and debugged
+
+### The Mainframe Era
+
+The large mainframe dominated between the 1940s and 1970s. A single, expensive
+computer filled a roomed and required many technicians.
+
+#### Batch environments
+
+Only external files of data. A program would take a set of data files as input
+and produce a set of output files after processing. FORTRAN, COBOL and Pascal
+were initially designed for batch-processing.
+
+#### Interactive environments
+
+Interactive programming appeared in the early 1970s near the end of the
+mainframe era. CRT terminals were connected to the computer. Computers were able
+to divide computation time amongst all concurrent users, a process known as
+*time share*
+
+#### Effects on language design
+
+Languages were designed for batch processing bearing in mind that files were the
+basis for I/O. Other properties of languages designed for this era:
+
+* A terminated program must be completely rerun, but termination is acceptable
+* No external help from the user is possible
+* No way to monitor or change the speed of execution
+
+File I/O and interactive I/O end up being very different. Languages designed for
+batch-processing can have a hard time adapting to interactive environments. In
+interactive environments, termination is usually not acceptable.
+
+### Personal Computer Era
+
+Time sharing in mainframes did not last very long before personal computers came
+about.
+
+#### Personal Computers
+
+In the 1970s, computers became progressively smaller, cheaper, and faster. In
+1978, Apple released the Apple II, the first true commercial PC. It was a small
+desktop that ran BASIC, and had a major impact on the educational market. 
+
+In 1981, the PC was released by IBM. In January 1984, Apple announced the
+Macintosh computer during the US superbowl. It contained a windows-based GUI
+with a mouse. Although the technology was previously developed by Xerox, the
+Macintosh was the first commercial applications. Microsoft quickly mimicked
+Macintosh with the Windows OS. 
+
+#### Embedded-system environments
+
+define embedded computer:
+> A computer system that controls a larger system such as a plant, aircraft,
+> machine, etc.
+
+* Embedded system failure can be catastrophic
+* Reliability and correctness are essential
+* Ada, C, C++ used 
+
+#### Effects on language design
+
+* Performance is less of a concern in many domains
+* UI interfaces and low prices lead to single-user computers. No time share
+* Users are used to windows-based UI, which can be hard to program. OO makes it
+  easy via libraries and packages.
+
+In regards to embedded systems,
+
+* Programs must interact directly with device for I/O
+* Access to devices provided via registers, memory locations, subprograms
+* All errors must be handled. Termination is not acceptable
+* Embedded system must be able to work in real-time
+* Often a distributed system
+
+### Networking Era
+
+#### Distributed computing
+
+* Faster, cheaper, smaller computers in 1980s caused more to be used in business
+* Uses included 
+    + payroll 
+    + report writing
+    + order processing
+* Local Area Networks (LANs) developed to facilitate communication between 
+  computers.
+* LANs used a client-server model
+* Airline reservation client prime example of single server having multiple
+  clients.
+
+#### Internet
+
+* Mid 1990s, distributed LAN known as the Internet emerged
+* 1970s, Defense Advanced Research Projects Agency (DARPA) wanted to link
+  mainframes via network to aid military information transfer.
+* The network, ARPANET, evolved into the research-oriented Internet
+
+Early internet use required certain protocols to retrieve information.
+
+* telnet made user appear as part of a server
+* FTP allowed client to send or receive files
+* In both cases, the user had to already know what machine had the desired info
+* Simple Mail Transfer Protocol (SMTP)
+    + Basis for today's email
+    + Machines have unique names, users have unique logins
+    + Could send mail using SMTP client just knowing user and machine name.
+
+A goal in the late 1980s was to make information retrieval as easy as sending
+email.
+
+* 1989 at CERN, Bernerls-Lee developed the HTML hyperlink
+* Mosaic web browser in 1993 + HTTP led to the internet as we know it
+
+#### Effects on language design
+
+* Users access servers via local client machines for local processing
+* The language must allow interaction between server and client
+* Initial web pages were static. E-commerce needed two-way information flow
+    + Java and Perl provide such features
+* Security became very important
+* Performance in server-client communication became important
+* Servers could become overloaded with client requests
+    + A way of coping is to make client process information
+    + Required the sending of small executables
+    + Server doesn't know what client computer is like, so the executables must
+      work regardless of client computer type
+    + Java aimed to solve these problems
+
+### Section 1,2.3: Application Domains
+
+The best language to be used often depends on the application domain.
+
+### Applications of the 1960s
+
+#### Business processing
+
+* Large data processing applications running on *big iron* mainframes
+    + order-entry
+    + inventory
+    + payroll
+* Read in data on tape drives, write out new data
+* COBOL developed for these applications
+* COBOL devs needed months to compose a what-if application
+
+#### Scientific
+
+* Characterized by solution of math equations
+    + numerical analysis
+    + differential equations
+    + integral functions
+    + generating statistics
+* Computer first developed in the Scientific domain for WWII ballistics tables
+* FORTRAN dominated
+    + Syntax is close to math
+    + Scientists find it easy to use
+
+#### System
+
+* For building OSes and implementing compilers, no effective language existed
+* Assembly language was often the choice
+* JOVIAL, an ALGOL variant, was used on some U.S DoD projects
+* Forth was developed to address power station / assembly line control
+    + Assembly language was still the most often used in these domains
+
+#### Artificial Intelligence
+
+* AI relatively new research area
+* LISP dominated
+* Programs search through large data spaces
+    + Example: Playing chess, searching for the best move
+
+### Applications of the 21st century
+
+The programming language situation today is probably more complex than it was
+during the 60s.
+
+#### Business processing
+
+* COBOL dominated in the late 90s, though C(++) were sometimes used
+* Spreadsheet applications handle the what-if scenario COBOL struggled with
+* Fourth-generation languages (4GLs) have some market share
+    + languages designed for specific business application domains
+    + typically provide a window-based programmer interface
+    + provide easy access to database records
+    + Easy to generate input forms / output reports
+* E-commerce has large influences on business programming
+    + The need for interaction between user and vendor gave rise to new
+      languages
+      + Java, Perl, JavaScript used
+
+#### Scientific 
+
+* FORTRAN, C++, Java
+
+#### System
+
+* C and C++ dominate system programming
+    + efficient execution
+    + full access to the OS and hardware
+* Modula and modern BASIC variatons
+* Ada (though not a major shareholder)
+
+For real-time applications, C, C++, and Ada are used.
+
+Examples of real-time applications include
+
+* cars
+* microwave ovens
+* video games
+* digital watches
+
+#### Artificial Intelligence
+
+* LISP is still used, but modern versions are used in place of LISP 1.5
+    + Scheme
+    + Common Lisp
+    + Both are very good at searching applications
+
+#### Publishing
+
+* Relatively new application
+* Own syntax for input commands and output files
+* The TEX translator produces Postscript programs
+
+#### Process
+
+* Processes are programs that control another
+    + back up files every midnight
+    + sync time once an hour
+    + send automatic email reply on vacation
+    + automatically test a program when it compiles successfully
+* Unix Shell / Shell scripts
+* Other scripting languages such as TCL and Perl are used for similar purposes
+
+#### New paradigms
+
+* ML used to investigate type theory
+* Smalltalk has a large influence on language design
+    + Not used very much commercially, though
+    + OO features in C++ and Ada had origins in Smalltalk
+
+
+Section 1.3: Role of Programming Languages
+------------------------------------------
+
+* By mid 1960s, language priority became ease of use over efficiency
+* ALGOL is no longer used
+
+Newer languages like Java and C++ have been greatly influenced by the
+languages before them. These influences include:
+
+* Computer capabilities 
+    + Speed of modern computers 
+    + OS software between programming language and hardware
+* Applications
+    + Applications are no longer only for military, science, business
+    + PCs, Internet, and gaming have new requirements languages must fill
+* Programming methods
+    + Language designs have changed to reflect good programming practices
+* Implementation methods
+    + Better implementation methods affected feature choices in languages
+* Theoretical studies
+    + Formal mathematical methods have deepened our understanding of languages
+    + Strengths and weaknesses of language features have been deeply evaluated
+* Standardization
+    + The need for programs to move from computer to computer led to standards
+    + These standards shape how the language is designed
+
+### Section 1.3.1: What makes a good language?
+
+All languages have shortcomings, but some are still much better than others.
+External forces can influence language popularity, but programmers ultimately
+decide what languages live and die.
+
+### Attributes of a good language
+
+There are a lot of reasons why one programming language could be viewed as
+preferable to another.
+
+#### Clarity, simplicity, unity
+
+* The language must provide a framework for thinking about algorithms
+* The language must provide a way to express ideas of algorithm implementations
+* Its concepts should be simple so they can be used in developing algorithms
+* The language should have a minimum number of concepts (conceptual integrity)
+* Language syntax determines ease of writing, reading, testing, modifying code
+    + Cryptic syntax may be easy to write but is usually hard to read
+    + Constructs that mean different things *should* look different.
+
+#### Orthogonality
+
+define orthogonality
+> the attribute of being able to combine various features with all combinations
+> of features being meaningful.
+
+Ex: Language can evaluate expression to get boolean T/F. Language also has
+conditionals based on T/F. If any expression can be used/evaluated within a 
+conditional statement, these features are orthogonal.
+
+* Orthogonal features makes a language easier to learn
+* A negative aspect is that it may hide errors
+
+#### Naturalness for the application
+
+* Language syntax should allow the program structure to reflect the algorithm
+* Examples of algorithms differing in structure are:
+    + sequential
+    + concurrent
+    + logic
+* The language should provide the following tools for solving a problem:
+    + appropriate data structures
+    + appropriate operations
+    + appropriate control structures
+    + a natural syntax for the problem
+
+#### Support for abstraction
+
+* There is always a gap between abstract data structures and primitive data
+  structures.
+* The language should allow data structures, data types, and operations to be
+  defined and maintained as self-contained abstractions.
+* Ada developed for lack of abstraction in Pascal, C++ for lack of abstraction
+  in C
+
+#### Ease of program verification
+
+* Reliability of programs is a huge concern
+* Methods of testing program correctness:
+    + formal verification
+    + desk checking
+    + testing via input data
+* A combination of the above methods are used for large projects
+* Hard program verification may outweigh language features
+* Simple syntax/semantics makes program verification simpler
+
+
+#### Programming environment
+
+* A weak language with a good environment can be easier than a strong language
+* Factors that influence the programming environment include:
+    + reliable, efficient, well-documented implementation
+    + Special editors
+    + Special testing packages
+    + Version control
+* Smalltalk designed around a programming environment
+
+#### Portability of programs
+
+* Transportability of the computer a program is developed on to other computers
+* A language should be widely available
+* A language's definition is independent of a particular machine
+* ADA, FORTRAN, C have standardized definitions for portable application dev
+
+#### Cost of use
+
+* Cost of program execution
+    + Main focus of early programming years
+    + Speed not a high concern anymore
+    + 10% or 20% execution time tolerated for other benefits
+* Cost of program translation
+    + Student programs are compiled frequently but executed few times
+    + A fast compiler is important for programming education
+* Cost of program creation, testing, use
+    + Smalltalk and Perl can help solve problems with minimum investment in 
+      programmer time and energy.
+    + Programming time minimized, but execution time may be larger in
+      comparison to other languages.
+* Cost of program maintenance
+    + Studies show largest cost is over the life of the program, not initial
+    + Maintenance includes repair of errors and enhancements
+    + A language that makes it easy to adjust programs may be cheaper in the 
+      long run
+
+### Syntax and Semantics
+
+define syntax:
+> What the program looks like. How statements, declarations, and other 
+> language constructs are written.
+
+define semantics:
+> The meaning given to the various syntactic constructs.
+
+### Section 1.3.2: Language Paradigms
+
+There are four basic computational models that describe most programming.
+
+#### Imperative languages
+
+* Also known as procedural
+* Command-driven or statement-oriented
+* A program consists of a sequence of statements, execution causes machine to
+  enter a new state.
+
+Syntax of imperative languages is of the form
+
+    statement1;
+    statement2;
+    ...
+
+
+* Program development is building successive states to arrive at solution
+* Usually the first model one learns, and also the most widely used
+    + C
+    + C++
+    + FORTRAN
+    + ALGOL
+    + PL/I
+    + Pascal
+    + Ada
+    + Smalltalk
+    + COBOL
+* Model follows from the hardware of a computer that executes sequentially
+
+#### Applicative languages
+
+* Also known as functional languages
+* Look at the function the program represents
+* Look at the desired result rather than available data
+* Program develops by creating functions from previous functions that 
+  manipulate the initial data set until the solution is achieved.
+* Once the functions are created, we apply the initial data
+
+The syntax of function languages is of the form
+
+    function_n(...function_2(function_1(data))...)
+
+* LISP and ML are functional languages
+
+#### Rule-based languages
+
+* Also known as logical programming languages
+* Check for condition, executes an appropriate action
+* Most common rule-based language is Prolog
+* Set of filters to apply to data storage
+* Similar to imperative but statements are not sequential
+
+The syntax of rule-based languages is of the form
+
+    enabling condition_1 => action_1
+    enabling condition_2 => action_2
+    ...
+    enabling condition_n => action_n
+
+* Common business application of rules-based languages are decision tables
+* Programming often consists of building a matrix/table of conditions and
+  the appropriate actions
+* BNF parsing techniques and YACC are rule-based techniques
+
+
+#### Object-oriented programming
+
+* Complex data objects are ubilt, functions are designed to operate on the data
+* Complex objects are extensions of simpler objects, inheriting properties
+* A combination of the applicative and imperative models
+
+### Generality of the Computational Model
+
+* How one uses a language depends on a programmer
+* You can technically write "sequential LISP" or "functional C"
+* Applicative techniques provide effective ways to prove correctness
+
+### Section 1.3.3: Language Standardization
+
+* A concept of a programming language is tied to an implementation of it
+* Ex: Can you move a C program to another computer using a different compiler?
+* If you extend features of a language, is it still that language?
+
+To solve the above issues, many languages have standard definitions. All
+implementations should adhere to the standard. There are two types of standards:
+
+1. Proprietary standards: definitions by the company that developed and owns
+   the language. This doesn't work for widely used languages.
+2. Consensus standards: Documents produced by organizations on an agreement.
+   Currently the major method of ensuring uniformity. 
+
+* Almost every country has one or more organizations in charge of developing
+  standards.
+    + In US: American National Standards Institute (ANSI)
+    + Prog language standards: Committee X3 of Computer Business Equipment
+      Manufacturers Association.
+    + Institute of Electrical and Electronic Engineers (IEEE)
+    + In UK, British Standards Institute (BSI)
+    + Internationally, International Standards Organization (ISO)
+* Standards making is a consensus process. Not everyone gets their way
+* Creating standards is partially technical, partially political
+* To use standards effectively we need , timeliness, conformance, and Obsolescence
+
+#### Timeliness
+
+* *When* to standardize is important
+* FORTRAN standard came after there were many incompatible versions
+* ADA standard in 1983 came before any implementation
+    + No one knew if the language would even work
+    + First compilers did not even appear until 1987
+* Goal should be early enough to avoid incompatible implementations, but not so
+  early that no one has experience with the language.
+
+#### Conformance
+
+* A program is *conformant* if it only uses features defined in the standard
+* A conformant compiler produces correct output given a conformant program
+* The standard says nothing about computation results of non-conformant programs
+* Many compilers have features not addressed by the standard
+
+#### Obsolescence
+
+* Standards should be reviewed every so often
+* Most standards require backwards compatibility 
+    + Languages may get messy with so many obsolete constructs
+* Deprecation and obsolescent features have recently developed
+    + obsolescent features may be dropped in the next version
+    + deprecated features may be obsolescent in the next version
+    + This cycle provides a 10-20 year warning that new programs can't use the
+      old features.
+
+### Section 1.3.4: Internationalization
+
+* Programming increasingly a global activity
+    + Languages must be usable in multiple countries
+
+Local conventions on the storage and processing of data leads to some issues
+
+#### Collating sequences
+
+> In what collating sequence should the characters be order?
+
+* Sorting - The position of non-Roman characters is not uniformly defined
+* Case - Some languages don't have uppercase/lowercase
+    + Japanese
+    + Arabic
+    + Hebrew
+    + Thai
+* Scanning direction - Most languages read left to right, but some right to left
+
+#### Country specific date/time formats
+
+* 11/26/02 in the US is 26/11/02 in England, 26.11.02 in France
+* 5:40pm in the US is 17:40 in Japan, 17h40 in France
+
+#### Time zones
+
+* Some time zones are not a whole number apart.
+* Time changes do not occur uniformly around the world.
+* Translating local time to worldwide standard time is not easy.
+
+#### Ideographic systems
+
+* Some languages do not use characters forming an alphabet
+    + Japanese
+    + Chinese
+    + Korean
+* 16 bits might be needed to represent these languages
+
+#### Currency
+
+Representation of currency varies by country.
+
+Section 1.4: Programming Environments
+-------------------------------------
+
+* Programming environment is where programs are created, tested.
+* Usually consists of support tools and command language for invoking them
+* Typical tools include:
+    + editors
+    + debuggers
+    + verifiers
+    + pretty printers
+    + test data generators
+
+### Section 1.4.1: Effects on Language Design
+
+Programming environments have had two large effects on language design:
+   
+* Features aiding separate compilation/assembly from components
+* Features aiding program testing and debugging
+
+#### Separate compilation
+
+* For large programs, different programmers will be working on separate parts
+* This requires a language that can compile the parts and merge together later
+* Separate compilation can be difficult because subprograms might need each other
+* There are ways to provide information to subprograms during separate compilation:
+    1. Information may need to be redeclared (FORTRAN)
+    2. An order of compilation may be required (Ada)
+    3. A library containing relevant specifications may be required (Java/C++)
+
+Option 1 above uses *independent compilation*. The subprogram is entirely self
+contained. The disadvantage is inability to check inconsistency of data between
+external declaration and internal redeclaration. You will have assembly errors 
+even though the subprograms may have 0 errors.
+
+Options 2 and 3 require the use of libraries. The body is usually omitted
+during the compilation of subprograms.
+
+* Separate compilation has the side effect of enabling name collisions issues
+    + Several subprograms or portions of programs may have the same name
+    + This may not be determined until attempting to merge all subprograms
+* There are three main ways languages avoid these name collisions
+    + Use of naming conventions (obligation is the programmer's)
+    + Use of scoping rules (Used by Pascal, C, Ada)
+    + Add name definitions from external library(inheritance in Object oriented)
+
+#### Testing and debugging
+
+A few typical examples of testing and debugging features:
+
+* Execution trace
+    + Prolog, LISP, many others have execution tracing tools.
+    + Allows for statements and variables to be tagged for tracing
+    + When a tagged statement is called, program stops, debug trace is printed.
+* Breakpoints
+    + Specified by programmer
+    + When breakpoint is reached, execution is interrupted, control given to user
+    + User can inspect and modify variables and restart the program
+* Assertions
+    + A special conditional expression
+    + If assertion fails, program is interrupted.
+    + Exception handler may print or take other actions upon failed assertion
+    + After debugging, assertions may be disabled.
+
+### Section 1.4.2: Environment Frameworks
+
+* Support environment: Uses infrastructure services called environment framework
+* Environment framework: supplies data repository, GUI, security, communication
+* Ex: An environment framework would contain the following
+    + A window manager such as Motif
+    + VB and Visual Studio provide for libraries to build windows
+
+### Section 1.4.3 Job Control and Process Languages
+
+* Used to wait for each compilation step to finish before fixing/moving on
+* 1960s, programs began using return code
+    + This allowed for OS to process sequence of preloaded steps.
+* UNIX extended concept of job control
+    + Control language was more complex, not just job checking
+    + Programs could link together operations from other programs
+    + Programs could use results of previous operations and also file contents
+    + This led to UNIX shells such as Bash, C, Korn
+* The shell concept led to process/scripting languages
+    * Usually interpreted
+    * View programs and  files as primitive data
+    * AWK, Perl, TCL
+    * Scripting languages important for communicating with web server
+* Internet time: The process software dev needs to match speed of the Internet
+    + Scripting languages allows for rapid prototyping of applications
+
+Section 1.5: C Overview
+-----------------------
+
+### History of C
+
+* Developed 1972 by Dennis Ritchie and Ken Thompson
+    + AT&amp;T Bell Telephone Laboratories
+* Related to ALGOL/Pascal in style
+* General purpose language, but popular as systems programming language
+
+In late 1960s, Bell Labs dropped out of MIT and GE project to developer Multics
+OS. Ken Thompson began UNIX.
+
+* Multics programmed in PL/I. Thompson didn't want to use PL/I for UNIX.
+* Developed B, a minimal subset of BCPL.
+* Types, structures, and more were added to B, and B became C.
+
+C is general-purpose, but closely associated with systems programming.
+
+* First used to write UNIX kernel
+    + Tied to UNIX implementations ever since.
+* In 1970s, C mostly a university curiosity
+    + In 1980s, commercial UNIX OS's began to appear
+    + Commercial UNIX versions led to C popularity
+* 1989 ANSI C standard
+* Many new languages have syntax and semantics partially based on C
+
+### Brief overview of C
+
+The C Language: 
+
+* Relatively small
+* Limited number of features
+
+The C Preprocessor
+
+* Not part of the C language!
+
+The C interface assumptions
+
+* Set of conventions have grown
+* interface definitions assumed to be defined in header file
+
+The C library
+
+* Many important functions were written in C, and are not part of the language
+* ANSI C lists these functions as required library functions for compilers
+
+* A C module consists of global declarations and a sequence of functions.
+* Multiple modules loaded together to form executable
+* Each function can invoke a function and access local or global data
+    + Makes data storage simple
+    + Local data is dynamic, allows for recursion
+    + Each function has access to global data
+* C has pointers
+    + "Equivalence" between arrays and pointers
+    + Equivalence permits programs to use appropriate access method
+* Strings are arrays of characters
+* Large set of arithmetic operators
+* Flexible type definition
+* Strongly AND weakly typed?!
+    + Most data items are subtypes of integers
+    + Some type errors may be missed for this reason.
+* Compiler executes 
+    + Invokes preprocessor first
+    + \#define and \#include evaluated
+
+
+{% endfilter %} {% endblock post %}

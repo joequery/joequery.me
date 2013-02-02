@@ -1,0 +1,8 @@
+[post]
+title: Programming Language Design Issues
+description: We begin studying programming language design and implementations
+    by examining the history of programming languages, the role of programming
+    languages, and the details on programming environments.
+time: 2013-02-14 Thu 11:22 PM
+series: programming-languages-4th-edition
+tags: computer-science
