@@ -114,6 +114,31 @@ def get_article(category, post):
   }
   return render_template(bodyTemplatePath, post=postData)
 
+@bp.route('/<category>/<post>/src/<sourcefile>')
+def display_raw_source_file(category, post, sourcefile):
+  postTemplateDirPath = os.path.join("posts", category, post)
+  postAbsDirPath = os.path.join(BLOG_SYS_PATH, postTemplateDirPath)
+  sourceTemplatePath = os.path.join(postTemplateDirPath, sourcefile)
+  sourceAbsPath = os.path.join(postAbsDirPath, sourcefile)
+
+  if not os.path.exists(postAbsDirPath):
+    return render_template('404.html'), 404
+
+  if not os.path.exists(sourceAbsPath):
+    return render_template('404.html'), 404
+
+  srcWhitelist = [".sh", ".js", ".css", ".c", ".py", ".html", ".rb",
+  ".ini", ".conf"]
+
+  filePath, extension = os.path.splitext(sourceAbsPath)
+  if extension not in srcWhitelist:
+    return render_template('404.html'), 404
+
+
+  response = make_response(render_template(sourceTemplatePath))
+  response.headers['Content-Type'] = "text/plain; charset=UTF-8"
+  return response
+
 @bp.route('/feed/')
 def rss_feed():
   response = make_response(render_template("templates/rssfeed.static"))
