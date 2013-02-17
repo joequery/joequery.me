@@ -1,0 +1,76 @@
+{% from "macros" import img, blogimg, snippet %} {% set p = post %}
+{% extends "templates/post.html" %} {% block post %} {% filter markdown %}
+
+Minifying your JavaScript files is extremly important to decrease the resource
+footprint for those visiting your site or using your application. Google's
+[Closure Compiler](https://developers.google.com/closure/compiler/) is, in my
+opinion, the best JavaScript minifier I've ever used. Not only is it extremely
+accurate, it has the best compression of all the JavaScript minifiers I've used.
+
+Installing and using the closure compiler
+-----------------------------------------
+
+### Verifying Java is installed
+
+First, you must have Java installed on your machine. You can verify if you have
+Java by running the `which` command. `which` tells you the location of an
+executable if it exists in your `$PATH`, and returns nothing if it cannot find
+the executable.
+
+    $ which java
+
+If the result is nonempty, we're good. Otherwise, do a Google search on
+installing Java for your OS.
+
+### Downloading the compiler
+
+Download [compiler-latest.zip][1] and unzip it. The Closure compiler file is
+called `compiler.jar`. I thought this name was a bit too generic, so I renamed
+the file to `closure-compiler.jar`. I will refer to the Closure compiler file
+as such for the rest of the article.
+
+[1]: http://closure-compiler.googlecode.com/files/compiler-latest.zip
+
+By default, the Closure compiler does not have world readable permissions. This
+caused some issues for me, so I recommend making the file world readable.
+
+    $ chmod o+r closure-compiler.jar
+
+If you are still operating within your Downloads directory, move the compiler
+file somewhere else. Personally, I store all my `.jar` files in
+`/usr/local/jar`, but it's completely up to you where you would like to store
+the compiler file.
+
+### Downloading and using the wrapper script
+
+At this point, you are free to stop reading this tutorial and use the Closure
+compiler on your own. The `compiler-latest.zip` file we unzipped earlier
+contained a README with instructions on how to use the compiler. I have,
+however, created a simple bash script that works like so
+
+    $ minifyjs testing.js 
+    ./testing.js minified. Now located at ./testing.min.js
+
+You simply pass a javascript file to `minifyjs`, and it compresses the file
+using the Closure compiler and adds the conventional `.min.js` suffix to the
+output file.
+
+The source for `minifyjs`: 
+{{ snippet(p, "minifyjs.sh")|safe}}
+
+To use this script on your system, create a file called "minifyjs", paste in
+the script source above, save it, and make it executable.
+
+    $ chmod +x minifyjs
+
+Then move the newly created minifyjs file to some directory in your `$PATH`. I
+placed the script in `/usr/local/bin` 
+
+    $ sudo mv minifyjs /usr/local/bin
+
+You can now begin using the `minifyjs` script to quickly compress JavaScript
+files.
+
+    $ minifyjs path/to/myjavascript.js 
+
+{% endfilter %} {% endblock post %}

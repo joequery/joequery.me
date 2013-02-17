@@ -1,0 +1,6 @@
+[post]
+title: Minify JS from the command line 
+description: Quickly begin minifying JavaScript files from the command line
+    using Google's Closure compiler.
+time: 2013-02-17 Sun 02:02 PM
+tags: javascript, utilities
