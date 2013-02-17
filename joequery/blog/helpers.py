@@ -12,11 +12,6 @@ import ConfigParser
 
 BLOG_SYS_PATH = os.sep.join(os.path.realpath(__file__).split('/')[:-1])
 BLOG_CATEGORIES = ["code", "math", "screencast"]
-BLOG_VIEW_MORE_NAMES = {
-    "code": "programming articles",
-    "math": "math articles",
-    "screencast": "screencasts"
-}
 BLOG_CAT_NAMES = {
     "code": "Programming",
     "math": "Math",

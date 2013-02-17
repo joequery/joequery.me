@@ -296,6 +296,9 @@ article h1.title {
 article h1.title a {
 	color:#666
 }
+article h1.title a:hover{
+    text-decoration: underline;
+}
 article .entry {
 	line-height:2;
 	text-align:justify

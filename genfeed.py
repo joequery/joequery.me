@@ -4,7 +4,7 @@ from joequery import before_request
 from joequery.settings import app
 from joequery.blog.helpers import (
     get_posts_by_category, BLOG_SYS_PATH, gen_rss_feed, _alter_rss, get_excerpt,
-    BLOG_CATEGORIES, get_posts, get_post_by_url, BLOG_VIEW_MORE_NAMES
+    BLOG_CATEGORIES, get_posts, get_post_by_url, BLOG_CAT_NAMES
 )
 from flask import render_template, current_app,g 
 import copy
@@ -90,7 +90,7 @@ def write_home_page_posts(app, numPosts):
         post = get_post_by_url(url, app)
         post['pubDate'] = time.strftime("%B %d, %Y", post['pubDate'])
         post['category'] = category
-        post['viewMore'] = BLOG_VIEW_MORE_NAMES[category]
+        post['catName'] = BLOG_CAT_NAMES[category]
         posts.append(post)
 
     # Render the blog samples template with our posts. Write the output
