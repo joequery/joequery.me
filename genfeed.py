@@ -26,13 +26,21 @@ def write_index_pages(postsPerPage):
   for category in BLOG_CATEGORIES:
       i=1
       posts = get_posts_by_category(app, postsPerPage, category=category)
+      categoryPath = os.path.join(BLOG_SYS_PATH, "pages", category)
+
+      try:
+          os.makedirs(categoryPath)
+      except OSError as exception:
+          if exception.errno != errno.EEXIST:
+              raise
+
       while posts:
         for post in posts:
           post['pubDate'] = time.strftime("%B %d, %Y", post['pubDate'])
           # needed for blog index pages to avoid broken links
           post['url']  = os.path.join("/", post['url']) 
 
-        pagePath = os.path.join(BLOG_SYS_PATH, "pages", category, "page%d.static" % i)
+        pagePath = os.path.join(categoryPath, "page%d.static" % i)
         with app.test_request_context():
           before_request()
           start = postsPerPage * i
