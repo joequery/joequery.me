@@ -1,5 +1,6 @@
 # Generate an RSS feed. This should be done after creating a blog post.
 import os
+import errno
 from joequery import before_request
 from joequery.settings import app
 from joequery.blog.helpers import (
