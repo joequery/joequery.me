@@ -1,0 +1,9 @@
+[post]
+title: Programming Language Translation Issues
+description: In this article, we learn about the process of translating
+    programming languages. Topics covered include program-subprogram
+    structure, BNF grammers, finite-state automata, and recursive descent
+    parsing.
+time: 2013-02-27 Wed 03:29 AM
+series: programming-languages-4th-edition
+tags: computer-science
