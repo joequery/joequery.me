@@ -1,0 +1,6 @@
+[post]
+title: Isomorphisms and a proof of Cayley's Theorem
+description: We discuss the definition of a group isomorphism, some examples
+    of isomorphisms, and we construct an in-depth proof of Cayley's theorem.
+time: 2013-03-12 Tue 05:26 AM
+series: algebra-notes

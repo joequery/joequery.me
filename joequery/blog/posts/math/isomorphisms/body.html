@@ -1,0 +1,116 @@
+{% from "macros" import img, blogimg, tex %} {% set p = post %}
+{% extends "templates/post.html" %} {% block post %} {% filter markdown %}
+
+These notes are based on the book [Contemporary Abstract Algebra 7th ed][0].
+[0]: http://www.amazon.com/Contemporary-Abstract-Algebra-Joseph-Gallian/dp/0547165099
+
+The main idea of isomorphisms is that different groups and their operation may
+share a notion of equality, though they may be composed of different types of
+elements.
+
+Group Isomorphism
+-----------------
+
+define group isomorphism:
+
+> An isomorphism &Phi; from a group G to a group <span class="ov">G</span> is a
+one-to-one and onto function from G to <span class="ov">G</span> that preserves
+the group operation. That is: &Phi;(ab) = &Phi;(a)&Phi;(b) for all a,b&isin;G.
+
+See the "Functions" section of the [Abstract algebra
+preliminaries](/math/abstract-algebra-preliminaries/) article for a refresher on
+one-to-one and onto functions.
+
+Note that the &Phi;(ab) applies the operation of G, while &Phi;(a)&Phi;(b)
+applies the operation of <span class="ov">G</span>. For example, suppose we're
+trying to show G&asymp;<span class="ov">G</span>, with G a group under the
+operation "+" and <span class="ov">G</span> a group under "\*". Then when
+verifying operation preservation, we would need to verify that 
+&Phi;(a+b) = &Phi;(a)\*&Phi;(b)
+
+### The four steps to showing G&asymp;<span class="ov">G</span>
+
+1. Define a function &Phi; from G to <span class="ov">G</span> 
+2. Prove that &Phi; is 1-1 (one-to-one)
+3. Prove that &Phi; is onto
+4. Prove that &Phi; is operation preserving: &Phi;(ab) = &Phi;(a)&Phi;(b)
+
+### Examples of isomorphisms
+
+#### Example 1
+Let G be &real; under addition, and <span class="ov">G</span> be
+&real;<sup>+</sup> under multiplication. Show G&asymp;<span class="ov">G</span>
+under &Phi;(x) = 2<sup>x</sup>.
+{{tex(p, "iso-example1.tex")|safe}}
+
+#### Example 2
+Sometimes you can learn more about something by learning what it *isn't*. So
+let's describe something that is NOT an isomorphism. 
+Verify the function &Phi;(x)=x<sup>3</sup> is not an isomorphism from &real; to
+itself under addition.
+{{tex(p, "iso-example2.tex")|safe}}
+
+Take note: Just because you have shown a function does not form an isomorphism
+between G and <span class="ov">G</span> doesn't mean that the two groups are not
+isomorphic. You may simply be looking at a specific mapping that does not work!
+However, the existence of a single isomorphism is enough to call the two groups
+*isomorphic*, similar to how a group can be called *cyclic* if just one element
+generates the group.
+
+#### Properties of special functions
+
+As you may be able to tell from the examples, it's pretty important to know the
+properties of some special functions in order to create a mapping from one group
+to another. In the above examples, we were given &Phi;, but that won't always be
+the case! You must learn the domain/ranges of various functions in order to know
+when they could potentially work as a mapping. A good list of domains/ranges of
+important functions can be found here:
+
+[http://www.analyzemath.com/DomainRange/domain_range_functions.html](http://www.analyzemath.com/DomainRange/domain_range_functions.html)
+
+Cayley's Theorem
+----------------
+
+> Every group is isomorphic to a group of permutations
+
+define permutation:
+
+> A permutation of a finite set S is a 1-1 and onto function from S to S.
+
+### Proof of Cayley's Theorem
+
+{{tex(p, "cayley-1.tex")|safe}}
+
+#### Intermediate proof: $T_g$ is a permutation
+<blockquote>
+{{tex(p, "cayley-2.tex")|safe}}
+</blockquote>
+
+<p>
+So now we have for our use a permutation on $G$ constructed using an arbitrary
+element $g$ of $G$. We take advantage of this by constructing 
+$$
+\overline{G}=\{T_g \mid g \in G \}
+$$
+$\overline{G}$ is clearly a set of permutations, but is it a *group* of
+permutations? We have to verify.  
+</p>
+
+#### Intermediate proof: $\overline{G}$ is a group
+<blockquote>
+{{tex(p, "cayley-3.tex")|safe}}
+</blockquote>
+
+So not only have we verified that $T_g$ is a permutation, we have verified that 
+$\overline{G}$ is a group of permutations under the operation of function
+composition. All that's left for us to do is to find an isomorphism from
+$G \to \overline{G}$. Hopefully, it will be clear why we went through such an
+effort to construct a group of permutations based upon arbitrary elements of the
+group $G$. 
+{{tex(p, "cayley-4.tex")|safe}}
+
+If you're wondering why part 2 above follows from part 1, refer back to the
+intermediate proof of $\overline{G}$ being a group. The closure section will
+look familiar.
+
+{% endfilter %} {% endblock post %}

@@ -14,6 +14,13 @@ def code_filter(val):
     return "\n\t".join(mylist)
 app.jinja_env.filters['code'] = code_filter
 
+# Remove the \documentclass{article} and \begin{document} from the top of tex
+# files for embedding on the site, and remove the \end{document} from the end
+def tex_filter(val):
+    mylist = val.split("\n")[3:-2]
+    return "\n".join(mylist)
+app.jinja_env.filters['tex_filter'] = tex_filter
+
 
 # FLASK_ENV environment variable can be 'development' or 'production'
 if "FLASK_ENV" in os.environ.keys():

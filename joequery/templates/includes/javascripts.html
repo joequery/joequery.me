@@ -1,4 +1,25 @@
 {% from "macros" import js %}
+  <script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+      tex2jax: {
+        inlineMath: [['$','$'], ['\\(','\\)']],
+        processEscapes: true,
+      },
+      TeX: { equationNumbers: { autoNumber: "AMS" } },
+      "HTML-CSS":{
+        styles:{
+          ".MathJax_Display":{
+              "margin-top":"3px",
+              "margin-bottom":"3px",
+          }
+        }
+      }
+
+    });
+    </script>
+<script type="text/javascript"
+      src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
+  </script>
 <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js"></script>
 <!-- Start of StatCounter Code for Default Guide -->
 <script type="text/javascript">

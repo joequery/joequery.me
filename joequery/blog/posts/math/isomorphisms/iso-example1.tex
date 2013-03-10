@@ -1,0 +1,32 @@
+\documentclass{article}
+\begin{document}
+Step 1: Verify $\phi \colon G \to \overline{G}$. (Does the function makes sense? Does it have
+the correct domain and range?). It's clear that $\phi(x)=2^{x}$ has a domain of all real numbers.
+Does $2^{x}$ stay within the range of $\overline{G}$, the positive real numbers? Yes! This is because
+exponents cannot "change" a positive number to a negative number. \[\]
+Step 2: Verify $\phi$ is 1-1. Let $x,y \in G$ and suppose $\phi(x)=\phi(y)$. Then
+\begin{eqnarray*}
+2^{x} &=& 2^{y} \\
+\log_{2}2^{x} &=& \log_{2}2^{y} \\
+x &=& y
+\end{eqnarray*}
+Since $\phi(x) = \phi(y)$ implies $x = y$, $\phi$ is 1-1. \[\]
+Step 3: Verify $\phi$ is onto. Let $y \in G$. We must show $\exists x \in G$ such that $\phi(x) = y$. Since
+$y \in \overline{G}$, $y$ is a positive, real number. We can find this $x$ by
+\begin{eqnarray*}
+\phi(x) =y \Rightarrow 2^{x} &=& y \\
+log_{2}(2^{x}) &=& log_{2}(y) \\
+x &=& log_{2}(y)
+\end{eqnarray*} \[\]
+Step 4: Verify $\phi$ preserves the operation. Let $x,y \in G$. Then
+\begin{eqnarray}
+\phi(xy) &=& 2^{x+y} \\
+&=& 2^{x}2^{y} \\
+&=& \phi(x)\phi(y)
+\end{eqnarray}  
+As discussed earlier, when we are attempting to show that $\phi$ is operation-preserving, $\phi(xy)$
+applies the operation of $G$ while $\phi(x)\phi(y)$ applies the operation of $\overline{G}$. So, in
+this example, the $xy$ in $\phi(xy)$ evaluated to $\phi(x+y)$, which became $2^{x+y}$.
+
+
+\end{document}

@@ -37,3 +37,12 @@
 {% endfilter %}
 <a href="/{{post['url']}}/src/{{filename}}">Raw source of {{filename}}</a>
 {% endmacro %}
+
+{% macro tex(post, filename) %}
+{% set path = "posts/%s/%s" % (post['url'], filename) %}
+<p>
+{% filter tex_filter %}
+{% include path %}
+{% endfilter %}
+</p>
+{% endmacro %}

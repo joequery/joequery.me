@@ -5,3 +5,7 @@ env/
 *.o
 posts.txt
 rss.txt
+*.synctex.gz
+*.aux
+*.log
+*.pdf

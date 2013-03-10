@@ -1085,3 +1085,7 @@ th{
 td{
     border-top: 1px solid #666666;
 }
+
+.ov{
+    text-decoration: overline;
+}
