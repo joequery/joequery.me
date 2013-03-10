@@ -26,6 +26,10 @@ a {
 	outline-width:0;
 	color:#258fb8
 }
+
+article h1 a{
+	text-decoration:underline;
+}
 a.streaming{
 	color:#800517;
 }
