@@ -2,43 +2,43 @@
 \begin{document}
 We will attempt to show $\overline{G}$ is a group under function composition. For closure, suppose 
 $T_g, T_h \in \overline{G}$, implying $g,h \in G$. We aim to show that $T_{gh} \in \overline{G}$. Observe:
-\begin{eqnarray*}
-T_gT_h(x)&=&T_g(T_h(x)) \\
-&=& T_g(hx) \\
-&=& g(hx) \\
-&=& (gh)x) \\
-&=& T_{gh}(x)
-\end{eqnarray*}
+\begin{align*}
+T_gT_h(x)&=T_g(T_h(x)) \\
+&= T_g(hx) \\
+&= g(hx) \\
+&= (gh)x) \\
+&= T_{gh}(x)
+\end{align*}
 Since $T_g,T_h \in \overline{G}$ implies $T_{gh} \in \overline{G}$, we can conclude $\overline{G}$ is
 closed under composition. Now to verify $\overline{G}$ has an identity. Let $T_g \in \overline{G}$. Observe:
-\begin{eqnarray*}
-T_gT_e(x) &=& T_g(T_e(x)) \\
-&=& T_g(ex) \\
-&=& T_g(x)
-\end{eqnarray*} and
-\begin{eqnarray*}
-T_eT_g(x) &=& T_e(T_g(x)) \\
-&=& T_e(gx) \\
-&=& egx \\
-&=& gx \\
-&=& T_g(x)
-\end{eqnarray*} so $\overline{G}$ contains an identity, namely $T_e$. Now we will verify that $\overline{G}$
+\begin{align*}
+T_gT_e(x) &= T_g(T_e(x)) \\
+&= T_g(ex) \\
+&= T_g(x)
+\end{align*} and
+\begin{align*}
+T_eT_g(x) &= T_e(T_g(x)) \\
+&= T_e(gx) \\
+&= egx \\
+&= gx \\
+&= T_g(x)
+\end{align*} so $\overline{G}$ contains an identity, namely $T_e$. Now we will verify that $\overline{G}$
 is closed under inverses. Let $T_g \in \overline{G}$. Since $g \in G, g^{-1} \in G$  and 
 $T_{g^{-1}} \in \overline{G}$. Observe:
-\begin{eqnarray*}
-T_gT_{g^{-1}}(x) &=& T_g(T_{g^{-1}}(x)) \\
-&=& T_g(g^{-1}x) \\
-&=& g(g^{-1}x) \\ 
-&=& (gg^{-1})x \\ 
-&=& x \\ 
-&=& T_e(x)
-\end{eqnarray*} and
-\begin{eqnarray*}
-T_{g^{-1}}T_g(x) &=& T_{g^{-1}}(T_g(x)) \\
-&=& T_{g^{-1}}(gx) \\
-&=& g^{-1}(gx) \\
-&=& (g^{-1}g)x \\
-&=& x \\
-&=& T_e(x)
-\end{eqnarray*}
+\begin{align*}
+T_gT_{g^{-1}}(x) &= T_g(T_{g^{-1}}(x)) \\
+&= T_g(g^{-1}x) \\
+&= g(g^{-1}x) \\ 
+&= (gg^{-1})x \\ 
+&= x \\ 
+&= T_e(x)
+\end{align*} and
+\begin{align*}
+T_{g^{-1}}T_g(x) &= T_{g^{-1}}(T_g(x)) \\
+&= T_{g^{-1}}(gx) \\
+&= g^{-1}(gx) \\
+&= (g^{-1}g)x \\
+&= x \\
+&= T_e(x)
+\end{align*}
 \end{document}

@@ -3,18 +3,18 @@
 First, we need to verify that $T_g \colon G \to G$ is well defined. We know the domain of $T_g$ is all of $G$ by how we defined $T_g$. The range is at least a subset of $G$ since $gx \in G \mbox{ for each }x \in G$. So $T_g$ is well defined.
 
 We now verify $T_g$ is 1-1. Let $x,y \in G$. Suppose $T_g(x)=T_g(y)$. Then
-\begin{eqnarray*}
- gx &=& gy \\
- x &=& y
-\end{eqnarray*}
+\begin{align*}
+ gx &= gy \\
+ x &= y
+\end{align*}
 Since $T_g(x)=T_g(y)$ implies $x=y$, $T_g$ is 1-1.
 
 We now verify $T_g$ is onto. Let $y \in G$. Note $g^{-1} \in G$ since G is a group, and $g^{-1}y \in G$ since $G$ is closed. Observe:
-\begin{eqnarray*}
-T_g(g^{-1}y)&=&g(g^{-1}y) \\
-&=& (gg^{-1})y \\
-&=& ey \\
-&=& y
-\end{eqnarray*}
+\begin{align*}
+T_g(g^{-1}y)&=g(g^{-1}y) \\
+&= (gg^{-1})y \\
+&= ey \\
+&= y
+\end{align*}
 So for an arbitrary $y \in G$, $\exists x \in G$ such that $T_g(x)=y$, so $T_g$ is onto. Since we have shown $T_g$ is a well defined mapping from $G$ to $G$ that is 1-1 and onto, we have shown that $T_g$ is a permutation on $G$.
 \end{document}

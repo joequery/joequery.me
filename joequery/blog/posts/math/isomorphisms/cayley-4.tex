@@ -3,19 +3,19 @@
 $\forall g \in G$, define $\phi(g)=T_g$. It's clear that $\phi \colon G \to \overline{G}$. To show $\phi$ is
 an isomorphism, we must show that $\phi$ is 1-1, onto, and operation preserving. To verify $\phi$ is 1-1,
 suppose $\phi(g) = \phi(h)$, meaning $T_g = T_h$. Then
-\begin{eqnarray*}
-T_g(e) &=& T_h(e) \\
-ge &=& he \\
-g &=& h
-\end{eqnarray*}
+\begin{align*}
+T_g(e) &= T_h(e) \\
+ge &= he \\
+g &= h
+\end{align*}
 Since $\phi(g) = \phi(h)$ implies $g=h$, $\phi$ is 1-1. The onto property of $\phi$ is apparent by how
 $\phi$ was constructed to map every element $g$ to $T_g$. \[\] 
 All that's left to show is that $\phi$ is 
 operation-preserving. Let $a,b \in G$. Then
-\begin{eqnarray}
-\phi(ab) &=& T_{ab} \\
-&=& T_aT_b \\
-&=& \phi(a)\phi(b)
-\end{eqnarray}
+\begin{align}
+\phi(ab) &= T_{ab} \\
+&= T_aT_b \\
+&= \phi(a)\phi(b)
+\end{align}
 QED.
 \end{document}

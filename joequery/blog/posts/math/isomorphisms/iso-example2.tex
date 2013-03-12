@@ -1,11 +1,11 @@
-\documentclass{article}\usepackage{amssymb}
+\documentclass{article} \usepackage{amsmath}
 \begin{document}
 We can verify that $\phi$ is 1-1 and onto, but it turns out that $\phi$ is not operation
 preserving. To demonstrate, let $x,y \in G$. Then
-\begin{eqnarray*}
-\phi(xy) &=& (x+y)^{3} \\
-&=& (x^{2} + 2xy + y^{2})(x+y) \\
-&\ne& x^{3} + y^{3} = \phi(x)\phi(y)
-\end{eqnarray*}
+\begin{align*}
+\phi(xy) &= (x+y)^{3} \\
+&= (x^{2} + 2xy + y^{2})(x+y) \\
+&\ne x^{3} + y^{3} = \phi(x)\phi(y)
+\end{align*}
 
 \end{document}
