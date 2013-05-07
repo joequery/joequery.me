@@ -1,0 +1,7 @@
+[post]
+title: Guide to installing Arduino on Ubuntu Virtualbox Guest under Windows Host
+description: A step by step guide on getting an Arduino Uno board working
+    on a Virtualbox Ubuntu VM running in a windows Host. Includes ino
+    installation and configuration for command line compilation.
+time: 2013-05-07 Tue 03:05 AM
+tags: ubuntu, arduino

@@ -128,7 +128,7 @@ def display_raw_source_file(category, post, sourcefile):
     return render_template('404.html'), 404
 
   srcWhitelist = [".sh", ".js", ".css", ".c", ".py", ".html", ".rb",
-  ".ini", ".conf"]
+  ".ini", ".conf", ".ino"]
 
   filePath, extension = os.path.splitext(sourceAbsPath)
   if extension not in srcWhitelist:
