@@ -23,6 +23,10 @@ def resume_page():
 def contact_page():
     return static_page("contact.html")
 
+@bp.route("/tutoring")
+def tutoring_page():
+    return static_page("tutoring.html")
+
 @bp.route("/stream")
 def stream_page():
     return static_page("stream.html")
