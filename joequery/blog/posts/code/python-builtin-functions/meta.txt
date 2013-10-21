@@ -1,0 +1,6 @@
+[post]
+title: Python built-in function examples
+description: A list of Python built-in functions with concise, easy to apply
+    examples.
+time: 2013-11-14 Thu 04:10 AM
+tags: python

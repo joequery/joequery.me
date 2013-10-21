@@ -1,0 +1,1415 @@
+{% from "macros" import img, blogimg, snippet %} {% set p = post %}
+
+{% macro toggle() %}
+<a class="toggle">Click to toggle output &rArr;</a>
+{% endmacro %}
+
+{% macro header(fn, name) %}
+<h2 style="font-size: 28px;"><a name="{{name}}" href="#{{name}}"><i>{{fn}}</i></a>
+    &ndash;<a href="#index">&uArr;</a> </h2>
+{% endmacro %}
+
+{% macro fnlink(name) %}
+<a href="#{{name}}">{{name}}()</a>
+{% endmacro %}
+
+{% extends "templates/post.html" %} {% block post %} {% filter markdown %}
+
+The [official documentation](http://docs.python.org/2/library/functions.html) on
+Python's built-in functions feels lacking in the examples department. This post
+aims to provide concise, easy to apply examples of all the built in functions
+for Python 2.
+
+<a name="index" href="#index">Index</a>
+-----------
+
+Clicking any <a style="font-size: 20px;" href="#index">&uArr;</a>'s you see will return you here.
+
+<table>
+<tr>
+    <td>{{ fnlink("abs")|safe }}</td>
+    <td>{{ fnlink("all")|safe }}</td>
+    <td>{{ fnlink("any")|safe }}</td>
+    <td>{{ fnlink("basestring")|safe }}</td>
+    <td>{{ fnlink("bin")|safe }}</td>
+    <td>{{ fnlink("bool")|safe }}</td>
+</tr>
+<tr>
+    <td>{{ fnlink("bytearray")|safe }}</td>
+    <td>{{ fnlink("callable")|safe }}</td>
+    <td>{{ fnlink("chr")|safe }}</td>
+    <td>{{ fnlink("classmethod")|safe }}</td>
+    <td>{{ fnlink("cmp")|safe }}</td>
+    <td>{{ fnlink("compile")|safe }}</td>
+</tr>
+<tr>
+    <td>{{ fnlink("complex")|safe }}</td>
+    <td>{{ fnlink("delattr")|safe }}</td>
+    <td>{{ fnlink("dict")|safe }}</td>
+    <td>{{ fnlink("dir")|safe }}</td>
+    <td>{{ fnlink("divmod")|safe }}</td>
+    <td>{{ fnlink("enumerate")|safe }}</td>
+</tr>
+<tr>
+    <td>{{ fnlink("eval")|safe }}</td>
+    <td>{{ fnlink("exec")|safe }}</td>
+    <td>{{ fnlink("execfile")|safe }}</td>
+    <td>{{ fnlink("file")|safe }}</td>
+    <td>{{ fnlink("filter")|safe }}</td>
+    <td>{{ fnlink("float")|safe }}</td>
+</tr>
+</table>
+
+{{ header("abs(x)", "abs")|safe }}
+
+Return the absolute value of the number `x`. Floats as well as ints are accepted
+values.
+
+    >>> abs(-5)
+    5
+    >>> abs(5)
+    5
+    >>> abs(-2.5)
+    2.5
+    >>> abs(2.5)
+    2.5
+
+Additional information regarding usage of `abs()` with complex numbers can be
+found on this [stackoverflow answer](http://stackoverflow.com/a/8370696).
+
+{{ header("all(iterable)", "all")|safe }}
+
+Return True if all elements of the iterable are true (or if the iterable is
+empty).
+
+    >>> all(x for x in [0,1,2,3])
+    False
+    >>> all(x for x in [1,2,3])
+    True
+    >>> mylist = ["hello", "there", "how", "are", "you", ""]
+    >>> all(x for x in mylist)
+    False
+    >>> all(x for x in mylist[:-1])
+    True
+    >>> mycomprehension = [x.startswith("h") for x in mylist]
+    >>> mycomprehension
+    [True, False, True, False, False, False]
+    >>> all(x for x in mycomprehension)
+    False
+    >>> print(all([]))
+    True
+
+{{ header("any(iterable)", "any")|safe }}
+
+Return True if any element of the iterable is true. If the iterable is empty,
+return False.
+
+    >>> any(x for x in [0,1,2,3])
+    True
+    >>> any(x for x in [0, False, "", {}, []])
+    False
+    >>> any([])
+    False
+    >>> mycomprehension = [x for x in xrange(10) if x%2 == 0]
+    >>> mycomprehension
+    [0, 2, 4, 6, 8]
+    >>> any(mycomprehension)
+    True
+
+{{ header("basestring", "basestring")|safe }}
+
+Used with `isinstance()` to help determine if an object is of type `str` or of type `unicode`.
+
+    >>> mystr = "hello"
+    >>> myunicode = u"hello"
+    >>> myint = 10
+    >>> type(mystr)
+    <type 'str'>
+    >>> type(myunicode)
+    <type 'unicode'>
+    >>> type(mystr) == type(myunicode)
+    False
+    >>> isinstance(mystr, basestring)
+    True
+    >>> isinstance(myunicode, basestring)
+    True
+    >>> isinstance(myint, basestring)
+    False
+
+(Technically, `basestring` is the superclass of `str` and `unicode`, but it
+cannot be directly instantiated. Thus its direct use is mostly limited to type
+checking.)
+
+{{ header("bin(x)", "bin")|safe }}
+
+Convert an integer `x` to a binary string.
+
+    >>> x = 10
+    >>> b = bin(x)
+    >>> b
+    '0b1010'
+    >>> type(b)
+    <type 'str'>
+    >>> # b is just a string, we can't do arithmetic with it
+    >>> b + 0b10
+    Traceback (most recent call last):
+      File "<stdin>", line 2, in <module>
+    TypeError: cannot concatenate 'str' and 'int' objects
+    >>> # To convert a binary string to an int, we must specify a base to int()
+    >>> int(b)
+    Traceback (most recent call last):
+      File "<stdin>", line 2, in <module>
+    ValueError: invalid literal for int() with base 10: '0b1010'
+    >>> int(b, 2)
+    10
+    >>> # Can't use bin() on a float
+    >>> bin(5.5)
+    Traceback (most recent call last):
+      File "<stdin>", line 2, in <module>
+    TypeError: 'float' object cannot be interpreted as an index
+
+{{ header("bool(x)", "bool")|safe }}
+
+Convert a value `x` to Boolean - return values are either `True` or `False`.
+
+    >>> items = ["", "a string", 0, 1, False, True, None, [], [0], {}, {"x": ""}]
+    >>> for i in items:
+    ...     print(i, bool(i))
+    ... 
+    ('', False)
+    ('a string', True)
+    (0, False)
+    (1, True)
+    (False, False)
+    (True, True)
+    (None, False)
+    ([], False)
+    ([0], True)
+    ({}, False)
+    ({'x': ''}, True)
+    >>> # You can call bool() without an argument, which returns False
+    >>> bool()
+    False
+
+{{ header("bytearray()", "bytearray")|safe }}
+
+Returns a mutable sequence of integers with values limited to the range 0 to
+255 (inclusive). As implied by the range, the numeric elements of the sequence
+are intended to represent [ASCII characters](http://www.ascii-code.com/).
+bytearrays can be thought of as a hybrid of strings and lists (as bytearrays
+share many methods with strings and lists). They can be thought of as a mutable
+string type.
+
+    >>> # You can initialize a bytearray with a string
+    >>> b = bytearray("Hello, world!")
+    >>>
+    >>> # You can perform many string operations on a bytearray
+    >>> b.find(',')
+    5
+    >>> b.upper()
+    bytearray(b'HELLO, WORLD!')
+    >>> b.startswith("Hello")
+    True
+    >>> # You can also perform some list operations on a bytearray
+    >>> b.append("?")
+    >>> b
+    bytearray(b'Hello, world!?')
+    >>> # If you want to append multiple characters at a time, use extend
+    >>> b.append("test")
+    Traceback (most recent call last):
+      File "<stdin>", line 1, in <module>
+      ValueError: string must be of size 1
+    >>> b.extend("test")
+    >>> b
+    bytearray(b'Hello, world!?test')
+    >>> # Remember that the elements of a bytearray are integers, not strings
+    >>> b[0]
+    72
+    >>> chr(72)
+    'H'
+    >>> # Luckily, bytearray handles conversion of char to ascii for us
+    >>> b[0] = 'h'
+    >>> b
+    bytearray(b'hello, world!?test')
+    >>> b[0]
+    104
+    >>> # You can provide an ascii integer if you want, though
+    >>> b[0] = 72
+    >>> b
+    bytearray(b'Hello, world!?test')
+    >>> # A demonstration of bytearray being a mutable string
+    >>> for i in xrange(len(b)):
+    ...     b[i] = b[i]+1
+    ...
+    >>> b
+    bytearray(b'Ifmmp-!xpsme"')
+    >>> for i in xrange(len(b)):
+    ...     b[i] = 'x'
+    ...
+    >>> b
+    bytearray(b'xxxxxxxxxxxxx')
+
+{{ header("callable(object)", "callable")|safe }}
+
+Return True if the object argument appears callable, False if not. Note that
+classes are callable (calling a class returns a new instance);
+
+    >>> def sum(x,y):
+    ...     return x+y
+    ...
+    >>> callable(sum)
+    True
+    >>> x = 10
+    >>> callable(x)
+    False
+    >>> class MyClass(object):
+    ...     pass
+    ...
+    >>> callable(MyClass)
+    True
+    >>> obj = MyClass()
+    >>> callable(obj)
+    False
+
+{{ header("chr(i)", "chr")|safe }}
+
+Return a character whose ASCII code is the integer i. i must be in the range 0
+to 255 (inclusive). `chr()` is the inverse of the function `ord()`,
+
+    >>> # See asciitable.com
+    >>> chr(65)
+    'A'
+    >>> ord('A')
+    65
+    >>> ord('B')
+    66
+    >>> ord(chr(65))
+    65
+    >>> chr(-1)
+    Traceback (most recent call last):
+      File "<stdin>", line 1, in <module>
+    ValueError: chr() arg not in range(256)
+
+{{ header("@classmethod", "classmethod")|safe }}
+
+`@classmethod` is a decorator for a class method that makes the first parameter
+receive a reference to the class itself as opposed to the instance. A large
+distinction between `@classmethod` and `@staticmethod` is that if a static
+method wishes to reference a class variable or another class/static method, it
+must know the name of the class to do so.
+
+    >>> class MyClass(object):
+    ...     x = 10
+    ...     @classmethod
+    ...     def f1(cls):
+    ...         return 2 * cls.x
+    ...     @staticmethod
+    ...     def f2():
+    ...         return 2 * MyClass.x
+    ...
+    >>> MyClass.f1()
+    20
+    >>> MyClass.f2()
+    20
+
+Consequently, if we were to subclass `MyClass` and change the value of x, the
+class method `f1()` would automatically account for it while the static method
+`f2()` would still refer to the old x.
+
+    >>> class MySubClass(MyClass):
+    ...     x = 20
+    ...
+    >>> MySubClass.f1()
+    40
+    >>> MySubClass.f2()
+    20
+
+{{ header("cmp(x,y)", "cmp")|safe }}
+
+Returns an integer value based on the comparison of two objects, x and y. The
+integer value is negative if `x<y`, zero if `x==y`, and positive if `x>y`.
+Consequently, `cmp()` is NOT a commutative operation. In other words,
+`cmp(x,y)` is not the same as `cmp(y,x)`
+
+    >>> x = 1
+    >>> y = 2
+    >>> cmp(x,y)
+    -1
+    >>> cmp(y,x)
+    1
+    >>> import datetime
+    >>> now = datetime.datetime.now()
+    >>> later = now + datetime.timedelta(hours=1)
+    >>> cmp(now,later)
+    -1
+    >>> # Switching the order gives you the opposite sign
+    >>> cmp(later,now)
+    1
+    >>> # Equal values have a cmp() value of 0
+    ...
+    >>> a = 5
+    >>> b = 5
+    >>> cmp(a,b)
+    0
+    >>> # Switching the order doesn't make a difference in this case
+    >>> cmp(b,a)
+    0
+
+Most `cmp()` evaluations result in either a -1, 0, or 1. However, the comparison
+functions `cmp()` calls are only required to return a negative value for `x<y`,
+a 0 for `x==y`, and a positive value for `x>y`. So if you are using the return
+value of `cmp()` in a conditional, you should structure your conditionals to be
+based on whether the return value is less than 0, 0, or greater than 0.
+
+    >>> a = 1
+    >>> b = 1
+    >>> cmp_val = cmp(a, b)
+    >>> if cmp_val < 0:
+    ...     print("a < b")
+    ... elif cmp_val == 0:
+    ...     print("a == b")
+    ... else:
+    ...     print("a > b")
+    ...
+    a == b
+
+{{ header("compile(source, filename, mode)", "compile")|safe }}
+
+Compile a `source` string from `filename` into a code object, which can later be
+executed by `eval()` or `exec()`. `filename` is simply used for run-time error
+messages. It is recommended to use `'<string>'` as the filename if `source` was
+not read from a file. `mode` is a string which indicates the compilation mode
+with the following options available:
+
+* 'exec': indicates compliation is intended for an entire Python module
+* 'single': indicates compilation is intended for a single statement
+* 'eval': indicates compilation is intended for a single expression
+
+The author, at this point in time, cannot think of a good use for 'single' mode.
+Just throwing that out there...
+
+Consider this simple module
+{{ snippet(p, "simple_module.py", link=False)|safe}}
+
+Here is how we compile and exec
+
+    >>> with open('simple_module.py') as f:
+    ...     contents = f.read()
+    ...
+    >>> code_obj = compile(contents, 'simple_module.py', 'exec')
+    >>> exec(code_obj)
+    {"x": 30}
+
+Note that using 'single', or 'eval' would not yield the correct results
+
+    >>> code_obj = compile(contents, 'simple_module.py', 'single')
+    >>> exec(code_obj)
+    >>> code_obj = compile(contents, 'simple_module.py', 'eval')
+    Traceback (most recent call last):
+      File "<stdin>", line 1, in <module>
+      File "simple_module.py", line 1
+        import json
+             ^
+    SyntaxError: invalid syntax
+
+### Notes on single mode
+
+'single' mode in the example above doesn't technically *fail*, but since
+'single' mode only generates bytecode for the first statement it encounters,
+the only result of the `exec()` is that the json module is now loaded. Let's
+completely restart the interpretor and see for ourselves.
+
+    ~$ python
+    Python 2.7.3 (default, Sep 26 2012, 21:51:14)
+    [GCC 4.7.2] on linux2
+    Type "help", "copyright", "credits" or "license" for more information.
+    >>> with open('simple_module.py') as f:
+    ...     source = f.read()
+    ...
+    >>> json
+    Traceback (most recent call last):
+      File "<stdin>", line 1, in <module>
+    NameError: name 'json' is not defined
+    >>> code_obj = compile(source, '<string>', 'single')
+    >>> exec(code_obj)
+    >>> json
+    <module 'json' from '/usr/lib/python2.7/json/__init__.pyc'>
+    >>> # simple_module defines myfn and myfn2, but single mode didn't get
+    >>> # past the json import
+    >>> myfn
+    Traceback (most recent call last):
+      File "<stdin>", line 1, in <module>
+    NameError: name 'myfn' is not defined
+    >>> myfn2
+    Traceback (most recent call last):
+      File "<stdin>", line 1, in <module>
+    NameError: name 'myfn2' is not defined
+
+### Notes on eval mode
+
+'eval' mode is intended for compiling expressions. It is important to note that
+while all expressions are statements, not all statements are expressions.
+Attempting to compile a statement that is not an expression will result in a
+syntax error.  ([More information on expressions vs
+statements](http://stackoverflow.com/a/4728147) in Python.)
+
+    >>> an_expression = "5+5"
+    >>> a_statement = "print(5+5)"
+    >>> # This doesn't cause an error
+    >>> code_obj = compile(an_expression, '<string>', 'eval')
+    >>> # This does, however
+    >>> code_obj = compile(a_statement, '<string>', 'eval')
+    Traceback (most recent call last):
+      File "<stdin>", line 1, in <module>
+      File "<string>", line 1
+        print(5+5)
+            ^
+    SyntaxError: invalid syntax
+
+
+### Notes on syntax errors
+
+Suppose we have a module with a syntax error and we attempt to compile it.
+
+{{ snippet(p, "module_with_error.py", link=False)|safe}}
+
+The `compile()` function itself will raise a `SyntaxError`
+
+    >>> with open('module_with_error.py') as f:
+    ...     source = f.read()
+    ... 
+    >>> code_obj = compile(source, 'module_with_error.py', 'exec')
+    Traceback (most recent call last):
+      File "<stdin>", line 1, in <module>
+      File "module_with_error.py", line 4
+        def myfn(mydict:
+                       ^
+    SyntaxError: invalid syntax
+
+{{ header("complex(real, imag), complex(string)", "complex")|safe }}
+
+This function handles the creation of a complex, AKA "imaginary", number. There
+are two mechanisms for creating a complex number:
+
+### Method 1: Passing numeric values
+
+    >>> x = complex(4, 2)
+    >>> x
+    (4+2j)
+    >>> y = complex(4, -5)
+    >>> y
+    (4-5j)
+    >>> # We can perform mathematical operations on these numbers
+    ... 
+    >>> x + y
+    (8-3j)
+    >>> x * y
+    (26-12j)
+    >>> # We don't need to provide an imaginary part
+    >>> a = complex(4)
+    >>> a
+    (4+0j)
+
+### Method 2: From a string
+
+If you pass a single string `complex()`, it will attempt to parse the string
+into its real and imaginary parts.
+
+The official documentation notes that the string cannot contain whitespace
+around the + or - (if there is one).
+
+    >>> x = complex("4+2j")
+    >>> x
+    (4+2j)
+    >>> y = complex("4-5j")
+    >>> y
+    (4-5j)
+    >>> x+y
+    (8-3j)
+    >>> x*y
+    (26-12j)
+    >>> a = complex("4")
+    >>> a
+    (4+0j)
+    >>> # What happens if we have a space around + or -?
+    ... 
+    >>> b = complex("3+ 6j")
+    Traceback (most recent call last):
+      File "<stdin>", line 1, in <module>
+    ValueError: complex() arg is a malformed string
+    >>> b = complex("3 + 6j")
+    Traceback (most recent call last):
+      File "<stdin>", line 1, in <module>
+    ValueError: complex() arg is a malformed string
+    >>> b = complex("3 +6j")
+    Traceback (most recent call last):
+      File "<stdin>", line 1, in <module>
+    ValueError: complex() arg is a malformed string
+    >>> # What happens if we pass a completely invalid string?
+    ... 
+    >>> c = complex("lol")
+    Traceback (most recent call last):
+      File "<stdin>", line 1, in <module>
+    ValueError: complex() arg is a malformed string
+
+You can also call `complex()` with no arguments, which defaults to 0. I would
+recommend just providing 0 as the argument, for the sake of those reading your
+source.
+
+    >>> complex()
+    0j
+    >>> complex(0)
+    0j
+
+{{ header("delattr(object, attrname)", "delattr")|safe }}
+
+This function deletes the attribute with name `attrname` from the `object`.
+
+    >>> class MyClass(object):
+    ...     def __init__(self):
+    ...         self.x = 10
+    ... 
+    >>> obj = MyClass()
+    >>> obj.x
+    10
+    >>> delattr(obj, "x")
+    >>> obj.x
+    Traceback (most recent call last):
+      File "<stdin>", line 1, in <module>
+      AttributeError: 'MyClass' object has no attribute 'x'
+
+Note that if we attempt to delete a read-only attribute, such as a class
+variable, `delattr()` will raise an `AttributeError`
+
+    >>> class MyClass(object):
+    ...     x = 10
+    ...
+    >>> obj = MyClass()
+    >>> obj.x
+    10
+    >>> delattr(obj, "x")
+    Traceback (most recent call last):
+      File "<stdin>", line 1, in <module>
+      AttributeError: 'MyClass' object attribute 'x' is read-only
+
+Similarly, trying to delete an attribute that doesn't exist will raise an
+`AttributeError`
+
+    >>> class MyClass(object):
+    ...     def __init__(self):
+    ...         self.x = 10
+    ... 
+    >>> obj = MyClass()
+    >>> delattr(obj, "y")
+    Traceback (most recent call last):
+      File "<stdin>", line 1, in <module>
+    AttributeError: y
+
+{{ header("dict(**kwargs), dict(dictionary, **kwargs), dict(iterable, **kwargs)", "dict")|safe }}
+
+The `dict()` function allows you to create a dictionary from
+
+* keyword arguments alone
+* a dictionary in combination with optional keyword arguments
+* an iterable in combination with optional keyword arguments.
+
+(This section will not cover how to use dictionaries.)
+
+### Dictionaries from keyword arguments
+
+    >>> dict(x=10, y=15, hello="goodbye")
+    {'y': 15, 'x': 10, 'hello': 'goodbye'}
+    >>> dict(inner=dict(x=10, y=20))
+    {'inner': {'y': 20, 'x': 10}}
+
+### Dictionaries from dictionaries
+
+Creating dictionaries from dictionaries may sound silly at first, but examine
+the following:
+
+    >>> mydict = {"x": 10, "y": 20}
+    >>> newdict = mydict
+    >>> newdict
+    {'y': 20, 'x': 10}
+    >>> # newdict is not a copy of mydict, but a reference!
+    >>> newdict['x'] = 0
+    >>> newdict
+    {'y': 20, 'x': 0}
+    >>> mydict
+    {'y': 20, 'x': 0}
+
+Altering newdict changed mydict, which may not be intended behavior! A simple
+way to copy the contents of mydict to newdict instead of assigning a reference
+is to use the `dict()` function.
+
+    >>> mydict = {"x": 10, "y": 20}
+    >>> newdict = dict(mydict)
+    >>> newdict['x'] = "hello"
+    >>> newdict
+    {'y': 20, 'x': 'hello'}
+        >>> mydictpy
+    {'y': 20, 'x': 10}
+    >>> mydict['x'] = "goodbye"
+    >>> mydict
+    {'y': 20, 'x': 'goodbye'}
+    >>> newdict
+    {'y': 20, 'x': 'hello'}
+
+If you want to copy the contents of a dictionary to another dictionary and add
+some extra key/value pairs while you're at it, you can populate the **kwargs:
+
+    >>> mydict = {"x": 10, "y": 20}
+    >>> # The kwargs will take precedence in key collisions, like x below
+    >>> newdict = dict(mydict, z=30, x="hello")
+    >>> newdict
+    {'y': 20, 'x': 'hello', 'z': 30}
+
+### Dictionaries from iterables
+
+Any iterable type can be used to form a dictionary. The main condition is that
+the iterables must have elements of length 2. The first item of the element will
+be the key, the second will be the value. For example,
+
+    >>> dict([['x', 10], ['y', 20]])
+    {'y': 20, 'x': 10}
+    >>> dict([('x', 10), ('y', 20)])
+    {'y': 20, 'x': 10}
+    >>> # strings are iterables.
+    >>> dict(["a9", "b6"])
+    {'a': '9', 'b': '6'}
+    >>> myset = set([('x', 10), ('y', 20)])
+    >>> myset
+    set([('x', 10), ('y', 20)])
+    >>> dict(myset)
+    {'y': 20, 'x': 10}
+
+You can also add keyword arguments after the literal to add them to the
+dictionary.
+
+    >>> dict([('x', 10), ('y', 20)], z=15)
+    {'y': 20, 'x': 10, 'z': 15}
+
+{{ header("dir(object), dir()", "dir")|safe }}
+
+The `dir()` function is a great tool for debugging. It is mainly intended for
+use inside an interactive python shell to gather information.
+
+### dir() with an argument
+
+This function is extremely useful for discovering what methods or attributes an
+object has. For example,
+
+    >>> mystr = "hello"
+    >>> dir(mystr)
+    ['__add__', '__class__', '__contains__', '__delattr__', '__doc__', '__eq__',
+    '__format__', '__ge__', '__getattribute__', '__getitem__', '__getnewargs__',
+    '__getslice__', '__gt__', '__hash__', '__init__', '__le__', '__len__',
+    '__lt__', '__mod__', '__mul__', '__ne__', '__new__', '__reduce__',
+    '__reduce_ex__', '__repr__', '__rmod__', '__rmul__', '__setattr__',
+    '__sizeof__', '__str__', '__subclasshook__', '_formatter_field_name_split',
+    '_formatter_parser', 'capitalize', 'center', 'count', 'decode', 'encode',
+    'endswith', 'expandtabs', 'find', 'format', 'index', 'isalnum', 'isalpha',
+    'isdigit', 'islower', 'isspace', 'istitle', 'isupper', 'join', 'ljust',
+    'lower', 'lstrip', 'partition', 'replace', 'rfind', 'rindex', 'rjust',
+    'rpartition', 'rsplit', 'rstrip', 'split', 'splitlines', 'startswith', 'strip',
+    'swapcase', 'title', 'translate', 'upper', 'zfill']
+
+By convention, object members prefixed with underscores or double underscores
+(such as `__add__`), are not meant to be accessed directly. Here's a nice helper
+function to only return the members/methods intended for direct access:
+
+    >>> def mydir(myobj):
+    ...     return [x for x in dir(myobj) if not x.startswith("_")]
+    ... 
+    >>> mystr = "Hello"
+    >>> mydir(mystr)
+    ['capitalize', 'center', 'count', 'decode', 'encode', 'endswith', 'expandtabs',
+    'find', 'format', 'index', 'isalnum', 'isalpha', 'isdigit', 'islower',
+    'isspace', 'istitle', 'isupper', 'join', 'ljust', 'lower', 'lstrip',
+    'partition', 'replace', 'rfind', 'rindex', 'rjust', 'rpartition', 'rsplit',
+    'rstrip', 'split', 'splitlines', 'startswith', 'strip', 'swapcase', 'title',
+    'translate', 'upper', 'zfill']
+
+How does `dir()` know what to return?
+
+If an object provides a `__dir__()` method, `dir()` simply returns `__dir__()`s
+return value. If no `__dir__()` method is provided, `dir()` attempts to gather
+information about the object by examining the `__dict__` attribute of the
+object, or examining the type of the object itself. 
+
+Consider the following example:
+
+    >>> class MyClass(object):
+    ...     def __init__(self, x, y):
+    ...             self.x = x
+    ...             self.y = y
+    ...     def add(self):
+    ...             return self.x + self.y
+    ...     def subtract(self):
+    ...             return self.x - self.y
+    ... 
+    >>> obj = MyClass(5,7)
+    >>> obj.add()
+    12
+    >>> obj.subtract()
+    -2
+    >>> dir(obj)
+    ['__class__', '__delattr__', '__dict__', '__doc__', '__format__',
+    '__getattribute__', '__hash__', '__init__', '__module__', '__new__',
+    '__reduce__', '__reduce_ex__', '__repr__', '__setattr__', '__sizeof__',
+    '__str__', '__subclasshook__', '__weakref__', 'add', 'subtract', 'x', 'y']
+
+Notice that `dir()` does not make an effort to differentiate between methods and
+attributes. `add` and `x` have no clear differences, and generally only trial
+and error combined with a bit of common-sense can be used to determine whether
+an object member is a method or function.
+
+Since we provide no `__dir__()` method in the class, `dir()` attempts to gather
+information about the object based upon the object's `__dict__` attribute and
+its type. 
+
+    >>> obj.__dict__
+    {'y': 7, 'x': 5}
+
+Now we examine the dir of `object`, which our Class is built from, and we'll see
+many similarities.
+
+    >>> dir(obj)
+    ['__class__', '__delattr__', '__dict__', '__doc__', '__format__',
+    '__getattribute__', '__hash__', '__init__', '__module__', '__new__',
+    '__reduce__', '__reduce_ex__', '__repr__', '__setattr__', '__sizeof__',
+    '__str__', '__subclasshook__', '__weakref__', 'add', 'subtract', 'x', 'y']
+    >>> dir(object)
+    ['__class__', '__delattr__', '__doc__', '__format__', '__getattribute__',
+    '__hash__', '__init__', '__new__', '__reduce__', '__reduce_ex__', '__repr__',
+    '__setattr__', '__sizeof__', '__str__', '__subclasshook__']
+
+A lot of this information isn't particularly interesting, though, as we we have
+been discouraged from directly accessing a majority of these members.  It would
+be cumbersome to create the `mydir()` helper we made above every time we opened
+the shell.
+
+So let's alter our class to provide a useful `__dir__` method.
+
+    >>> class MyClass(object):
+    ...     def __init__(self, x, y):
+    ...             self.x = x
+    ...             self.y = y
+    ...     def add(self):
+    ...             return self.x + self.y
+    ...     def subtract(self):
+    ...             return self.x - self.y
+    ...     def __dir__(self):
+    ...             return ['add()', 'subtract()', 'x', 'y']
+    ...
+    >>> obj = MyClass(5,7)
+    >>> dir(obj)
+    ['add()', 'subtract()', 'x', 'y']
+
+The result of this `dir()` has much less noise, clearly indicates what is a
+method and what is an attribute, an consequently would prove much more
+enjoyable to use when debugging over the default list seen earlier.
+
+However, if we were to add methods or attributes to `MyClass`, we would have to
+make sure the `__dir__()` method is updated every time. It's extremely easy for
+small matters like these to be forgotten. Here is a fun little recipe for useful,
+dynamic `dir()` lists:
+
+{{ snippet(p, "dir_template.py")|safe}}
+
+Output:
+
+    [{'attributes': ['y', 'x', 'some_class_variable']}, {'methods': ['add()',
+    'subtract()']}]
+
+### dir() with no arguments
+
+Executing `dir()` with no arguments invokes different behavior. It will return a
+list of all the variables in the current local scope.
+
+Suppose we start a new interactive Python session. We can see the result of
+`dir()` change as we add more variables.
+
+    ~$ python
+    Python 2.7.3 (default, Sep 26 2012, 21:51:14)
+    [GCC 4.7.2] on linux2
+    Type "help", "copyright", "credits" or "license" for more information.
+    >>> dir()
+    ['__builtins__', '__doc__', '__name__', '__package__']
+    >>> mystr = "Hello"
+    >>> dir()
+    ['__builtins__', '__doc__', '__name__', '__package__', 'mystr']
+    >>> class MyClass(object):
+    ...     pass
+    ... 
+    >>> dir()
+    ['MyClass', '__builtins__', '__doc__', '__name__', '__package__', 'mystr']
+
+{{ header("divmod(a,b)", "divmod")|safe }}
+
+Returns the quotient and remainder when dividing the number `a` by the number
+`b`.
+
+    >>> a = 5
+    >>> b = 2
+    >>> divmod(a,b)
+    (2, 1)
+    >>> q,r = divmod(a,b)
+    >>> q
+    2
+    >>> r
+    1
+    >>> a == b*q+r
+    True
+
+Here's an example using floating point numbers:
+
+    >>> a = 15.64
+    >>> b = 4.63
+    >>> divmod(a,b)
+    (3.0, 1.7500000000000009)
+    >>> q,r = divmod(a,b)
+    >>> a == b*q+r
+    True
+
+And here's the classic [Euclidean algorithm](http://www.math.rutgers.edu/~greenfie/gs2004/euclid.html)
+for computing the greatest common divisor between two integers.
+
+{{ snippet(p, "euclidiean.py")|safe}}
+
+Output:
+
+    5
+    9
+
+{{ header("enumerate(sequence,start=0)", "enumerate")|safe }}
+
+It is easier to explain what `enumerate()` does after first seeing an example.
+
+    >>> people = ["joseph", "jordanne", "luke", "trevor"]
+    >>> enumerate(people)
+    <enumerate object at 0x7f6ce8d25d20>
+    >>> list(enumerate(people))
+    [(0, 'joseph'), (1, 'jordanne'), (2, 'luke'), (3, 'trevor')]
+
+So `enumerate()` returns an iterator which yields a tuple that keeps count of the
+elements in the sequence passed. Since the return value is an iterator, directly
+accessing it isn't particularly useful. A standard use case for `enumerate()` is
+keeping count within a for loop.
+
+    >>> for i,p in enumerate(people):
+    ...     print("Person number: " + str(i))
+    ...     print(p)
+    ...
+    Person number: 0
+    joseph
+    Person number: 1
+    jordanne
+    Person number: 2
+    luke
+    Person number: 3
+    trevor
+
+As you can see, the count starts at 0 by default, but we can use the start
+parameter to change that.
+
+    >>> for i,p in enumerate(people, 1):
+    ...     print("Person number: " + str(i))
+    ...     print(p)
+    ... 
+    Person number: 1
+    joseph
+    Person number: 2
+    jordanne
+    Person number: 3
+    luke
+    Person number: 4
+    trevor
+
+One common reason to use `enumerate()` is to modify elements of a list while
+iterating over the list. Notice that list elements do not change in the
+following example:
+
+    >>> mylist = range(10)
+    >>> mylist
+    [0, 1, 2, 3, 4, 5, 6, 7, 8, 9]
+    >>> for element in mylist:
+    ...     element += 10
+    ... 
+    >>> mylist
+    [0, 1, 2, 3, 4, 5, 6, 7, 8, 9]
+
+However, we can alter the element if we access it via list indexing.
+
+    >>> mylist
+    [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
+    >>> mylist = range(10)
+    >>> for i, element in enumerate(mylist):
+    ...     mylist[i] = element+10
+    ... 
+    >>> mylist
+    [10, 11, 12, 13, 14, 15, 16, 17, 18, 19]
+
+Note that a list comprehension would be a more elegant solution for this trivial
+example
+
+    mylist = [element+10 for element in mylist]
+
+But if you want to alter elements based on non trivial conditions, the
+`enumerate()` mechanism may work better.
+
+{{ header("eval(expr), eval(expr, globals), eval(expr, globals, locals)", "eval")|safe }}
+
+Evalute and return the result of an expression string. As a simple example,
+
+    >>> eval('5+5')
+    10
+    >>> y = eval('3*3')
+    >>> y
+    9
+
+Note that attempting to evaluate a statement that is not an expression will
+result in a `SyntaxError`.  ([More information on expressions vs
+statements](http://stackoverflow.com/a/4728147) in Python.)
+
+    >>> eval('import json')
+    Traceback (most recent call last):
+      File "<stdin>", line 1, in <module>
+      File "<string>", line 1
+        import json
+             ^
+    SyntaxError: invalid syntax
+
+You can use variables in an eval expression. 
+
+    >>> x = 10
+    >>> y = eval('x+15')
+    >>> y
+    25
+
+Functions are okay too. Here's an example, combined with string interpolation.
+
+    >>> def multiply_by_100(x):
+    ...     return x * 100
+    ...
+    >>> x = 10
+    >>> myvariable = "x"
+    >>> eval("multiply_by_100(%s)" % myvariable)
+    1000
+
+### Scope and eval()
+
+By default, eval expressions refer to variables in local scope (observable
+through the `locals()` dict), and if not found in the local scope, it looks in
+the global scope (observable through the `globals()` dict).
+
+    >>> x = 10
+    >>> y = 5
+    >>> def f():
+    ...     y = 20
+    ...     return eval('x+y')
+    ...
+    >>> eval('x+y')
+    15
+    >>> f()
+    30
+
+However, `eval()` allows you to override the `globals()` with your own
+dictionary. The consequences can be observed in the following example:
+
+    >>> x = 10
+    >>> y = 5
+    >>> eval('x+y')
+    15
+    >>> myglobals = {"x": 2, "y": 3}
+    >>> eval('x+y', myglobals)
+    5
+
+Note that if you provide a globals dictionary, `eval()` will not look to the
+calling environment's globals if a variable does not exists in the provided
+globals dictionary. 
+
+    >>> y = 5
+    >>> myglobals = {"x": -10}
+    >>> eval('x+y', myglobals)
+    Traceback (most recent call last):
+      File "<stdin>", line 1, in <module>
+      File "<string>", line 1, in <module>
+    NameError: name 'y' is not defined
+
+So be careful to pass in all the data that could potentially be needed within
+the expression.
+
+### locals() vs globals()
+
+In additional to globals, you can also provide locals. This is useful if you
+still want to access data from the calling environment but want to override
+particular variables. However, since `eval()` has no keyword arguments, we
+still have to manually pass `globals()` in.
+
+    >>> email = "joseph@vertstudios.com"
+    >>> balance = 200
+    >>> cost = 50
+    >>> eval('balance - cost')
+    150
+    >>> # This won't work, because the first argument is for globals and
+    >>> # will thus 'remove' balance from the scope of the expression
+    >>> mylocals = {'cost': 75}
+    >>> eval('balance - cost', mylocals)
+    Traceback (most recent call last):
+      File "<stdin>", line 1, in <module>
+      File "<string>", line 1, in <module>
+    NameError: name 'balance' is not defined
+    >>> # We can explicitly pass the globals of the calling environment, and then pass
+    >>> # in our locals dictionary
+    >>> eval('balance - cost', globals(), mylocals)
+    125
+
+### Use with compile()
+
+As discussed in the [compile()](#compile) section of this document, code
+objects generated via the `compile()` function can be passed to `eval()` if
+the 'eval' option was used.
+
+    >>> code_obj = compile('5+5', '<string>', 'eval')
+    >>> x = eval(code_obj)
+    >>> x
+    10
+
+{{ header("exec(statements), exec(statements, globals), exec(statements, globals, locals)", "exec")|safe }}
+
+`exec()` behaves extremely similarly to [eval()](#eval) with a few notable exceptions.
+
+### exec() accepts all statements, not just expressions.
+
+`eval()` is restricted to only accepting expressions, which are a kind of
+statement. `exec()`, however, can handle all statements.
+
+    >>> eval('print 5')
+    Traceback (most recent call last):
+      File "<stdin>", line 1, in <module>
+      File "<string>", line 1
+        print 5
+            ^
+    SyntaxError: invalid syntax
+    >>> exec('print 5')
+    5
+
+([More information on expressions vs
+statements](http://stackoverflow.com/a/4728147) in Python.)
+
+### exec() can result in side-effects
+
+When you run `eval()`, the only consequence is that a value is returned. However,
+since all statements can run under `exec()`, the calling environment can be changed
+in many ways after `exec()` is run. Some of these changes include:
+
+* New functions can be defined, old functions can be overridden
+
+<pre><code>>>> myfn = '''
+... def f(x):
+...     return x*2
+... '''
+>>> f(10)
+Traceback (most recent call last):
+  File "<stdin>", line 1, in <module>
+NameError: name 'f' is not defined
+>>> exec(myfn)
+>>> f(10)
+20
+</code></pre>
+
+* An object, or one of its attributes, may be deleted
+
+<pre><code>>>> myfn = '''
+>>> x = 10
+>>> x + 15
+25
+>>> exec('del x')
+>>> x
+Traceback (most recent call last):
+  File "<stdin>", line 1, in <module>
+NameError: name 'x' is not defined
+</code></pre>
+
+* New modules imported into the scope
+
+<pre><code>>>> myfn = '''
+>>> math
+Traceback (most recent call last):
+  File "<stdin>", line 1, in <module>
+NameError: name 'math' is not defined
+>>> mystatements = '''
+... import math
+... def area_of_circle(radius):
+...     return math.pi * radius * radius
+...
+... '''
+>>> exec(mystatements)
+>>> area_of_circle(5)
+78.53981633974483
+>>> # This was previously undefined...
+>>> math
+<module 'math' (built-in)>
+</code></pre>
+
+### exec() has no return value
+
+Unlike `eval()`, `exec()` does not return a value, even if you pass in an expression.
+
+    >>> y = eval('5+5')
+    >>> y
+    10
+    >>> # won't work with exec. This will actually raise a SyntaxError
+    >>> y = exec('5+5')
+      File "<stdin>", line 1
+        y = exec('5+5')
+               ^
+    SyntaxError: invalid syntax
+
+### namespacing with exec()
+
+When using `eval()`, you can prevent a variable in the expression string from
+referring to the scope of the calling environment via the `globals` and `locals`
+arguments.
+
+    >>> balance = 1000
+    >>> eval('balance-50')
+    950
+    >>> myvars = {"balance": 50}
+    >>> eval('balance-50', myvars)
+    0
+
+`exec()` exhibits the same behavior:
+
+    >>> balance = 1000
+    >>> exec('print(balance-50)')
+    950
+    >>> myvars = {"balance": 50}
+    >>> exec('print(balance-50)', myvars)
+    0
+
+However, since all statements are allowed using `exec()`, assignment statements
+passed to `exec()` may alter the variables within the calling environment.
+
+    >>> name = "Joseph"
+    >>> exec('name = "Justin"')
+    >>> name
+    'Justin'
+
+To prevent `exec()` from altering variables like this, we can store our results
+in a namespace like so:
+
+    >>> name = "Joseph"
+    >>> namespace = {}
+    >>> exec('name = "Justin"') in namespace
+    >>> namespace['name']
+    'Justin'
+    >>> name
+    'Joseph'
+
+### Use with compile()
+
+Similar to [eval()](#eval), we can pass code objects generated by
+[compile()](#compile) to the `exec()` function if the 'exec' mode is used.
+
+    >>> code_obj = compile("print(x)", "<string>", "exec")
+    >>> x = 10
+    >>> exec(code_obj)
+    10
+    >>> x = 20
+    >>> exec(code_obj)
+    20
+
+### Just for fun: exec() within exec()
+
+    >>> exec('exec("print(10)")')
+    10
+
+{{ header("execfile(filename), execfile(filename, globals), execfile(filename, globals, locals)", "execfile")|safe }}
+
+`execfile()` behaves similarly to [exec()](#exec), but it executes statements
+located within a file instead of dealing with raw strings.
+
+Suppose we have a file called `simple_functions.py`.
+
+{{ snippet(p, "simple_functions.py", link=False)|safe}}
+
+We will start up a new shell to demonstrate:
+
+    ~$ python
+    Python 2.7.3 (default, Sep 26 2012, 21:51:14)
+    [GCC 4.7.2] on linux2
+    Type "help", "copyright", "credits" or "license" for more information.
+    >>> math
+    Traceback (most recent call last):
+      File "<stdin>", line 1, in <module>
+    NameError: name 'math' is not defined
+    >>> execfile('simple_functions.py')
+    >>> math
+    <module 'math' (built-in)>
+    >>> is_perfect_square(144)
+    True
+    >>> even_numbers_only([0,5,8,12,55,48])
+    [0, 8, 12, 48]
+
+### Namespacing
+
+Similar to `exec()`, we can contain the statements in a namespace to prevent
+the executed statements from altering the calling environment. However, the
+mechanism is different: instead of using
+
+    >>> namespace = {}
+    >>> exec('x = 10') in namespace
+
+We pass in a namespace dictionary as the `globals` argument.
+
+    ~$ python
+    Python 2.7.3 (default, Sep 26 2012, 21:51:14)
+    [GCC 4.7.2] on linux2
+    Type "help", "copyright", "credits" or "license" for more information.
+    >>> namespace = {}
+    >>> execfile('simple_functions.py', namespace)
+    >>> namespace['is_perfect_square'](144)
+    True
+    >>> is_perfect_square
+    Traceback (most recent call last):
+      File "<stdin>", line 1, in <module>
+    NameError: name 'is_perfect_square' is not defined
+
+### A warning regarding locals()
+
+We've seen from the examples that `execfile()` can easily alter the global
+scope (AKA the `globals()` dictionary.
+
+However, the official documentation warns:
+
+> Note The default locals act as described for function locals() below:
+modifications to the default locals dictionary should not be attempted. Pass an
+explicit locals dictionary if you need to see effects of the code on locals
+after function execfile() returns. execfile() cannot be used reliably to modify
+a function's locals.
+
+In other words, `execfile()` will *not* modify the variables local
+to a function. You must pass a dictionary into `locals` to store all
+changes local to a function.
+
+Suppose we have a very simple file, `simple_file.py`.
+
+{{ snippet(p, "simple_file.py", link=False)|safe}}
+
+Now observe our attempt to change a local variable through `execfile()`,
+contrary to the warnings of the documentation:
+
+    >>> # Attempting to alter a variable local to a function
+    >>> def f():
+    ...     x = -1
+    ...     execfile('simple_file.py')
+    ...     return(x)
+    ...
+    >>> f()
+    -1
+    >>> # We try again, passing globals() in as globals argument
+    >>> def f():
+    ...     x = -1
+    ...     execfile('simple_file.py', globals())
+    ...     return(x)
+    ...
+    >>> f()
+    -1
+    >>> # We try again, passing both globals and locals
+    >>> def f():
+    ...     x = -1
+    ...     execfile('simple_file.py', globals(), locals())
+    ...     return(x)
+    ...
+    >>> f()
+    -1
+    >>> # It still doesn't work!
+
+Observe again, noting that if we pass in `globals()`, execfile will affect the
+global scope even though it will not affect the local scope:
+
+    ~$ python
+    Python 2.7.3 (default, Sep 26 2012, 21:51:14)
+    [GCC 4.7.2] on linux2
+    Type "help", "copyright", "credits" or "license" for more information.
+    >>> x
+    Traceback (most recent call last):
+      File "<stdin>", line 1, in <module>
+    NameError: name 'x' is not defined
+    >>> def f():
+    ...     x = -1
+    ...     execfile('simple_file.py')
+    ...     return(x)
+    ...
+    >>> f()
+    -1
+    >>> x
+    Traceback (most recent call last):
+      File "<stdin>", line 1, in <module>
+    NameError: name 'x' is not defined
+    >>> # If we pass in globals, x will appear in the global scope
+    ...
+    >>> def f():
+    ...     x = -1
+    ...     execfile('simple_file.py', globals())
+    ...     return(x)
+    ...
+    >>> f()
+    -1
+    >>> x
+    15
+
+{{ header("file()", "file")|safe }}
+
+It is not recommended to use the `file()` function. Instead, use
+[open()](#open).
+
+{{ header("filter(filter_function, iterable), filter(None, iterable)", "filter")|safe }}
+
+Returns a list of the elements of `iterable` that returns a `True` value when
+passed to `filter_function`.
+
+
+    >>> def starts_with_vowel(the_str):
+    ...     vowels = ['a', 'e', 'i', 'o', 'u']
+    ...     if len(the_str) == 0:
+    ...             return False
+    ...     return the_str[0].lower() in vowels
+    ...
+    >>> words = ["hello", "apple", "excellent", "dictionary", "our"]
+    >>> filter(starts_with_vowel, words)
+    ['apple', 'excellent', 'our']
+
+Additionally, if you pass `None` as the `filter_function`, all elements of
+`iterable` that are `True` will be returned.
+
+    >>> items = ["", {}, "hi", {"x": 10}, [], [""], None, False, True]
+    >>> filter(None, items)
+    ['hi', {'x': 10}, [''], True]
+
+### Equivalence with list comprehensions.
+
+`filter(filter_function, iterable)` is equivalent to `[x for x in iterable if filter_function(x)]`
+
+    >>> mylist = [0,1,2,3,4,5,6,7,8,9]
+    >>> def is_even(x):
+    ...     return x%2 == 0
+    ...
+    >>> filter(is_even, mylist)
+    [0, 2, 4, 6, 8]
+    >>> [x for x in mylist if is_even(x)]
+    [0, 2, 4, 6, 8]
+
+`filter(None, iterable)` is equivalent to `[x for x in iterable if x]`
+
+    >>> mylist = [True, False, {}, [], "hi", [0]]
+    >>> filter(None, mylist)
+    [True, 'hi', [0]]
+    >>> [x for x in mylist if x]
+    [True, 'hi', [0]]
+
+
+
+{% endfilter %} {% endblock post %}

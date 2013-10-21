@@ -1074,18 +1074,19 @@ figure.code .s1,.gist-highlight .s1 {
 	width: 100%;
 }
 
-table {
-    border: 1px solid #666666;
-}
 
 th{
     padding-right: 20px;
 }
 
 td{
-    border-top: 1px solid #666666;
+    padding: 10px;
 }
 
 .ov{
     text-decoration: overline;
+}
+
+a.toggle{
+    cursor: pointer;
 }

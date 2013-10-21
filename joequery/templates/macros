@@ -30,12 +30,14 @@
     </div>
 {% endmacro %}
 
-{% macro snippet(post, filename) %}
+{% macro snippet(post, filename, link=True) %}
 {% filter code %}
 {% set path = "posts/%s/%s" % (post['url'], filename) %}
 {% include path %}
 {% endfilter %}
+{% if link %}
 <a href="/{{post['url']}}/src/{{filename}}">Raw source of {{filename}}</a>
+{% endif %}
 {% endmacro %}
 
 {% macro tex(post, filename) %}
