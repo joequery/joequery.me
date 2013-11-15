@@ -1,0 +1,7 @@
+[post]
+title: Learning C (Part 1): The basics
+description: A general overview of the style and purpose of
+    the C programming language. 
+time: 2013-11-15 Fri 01:17 PM
+tags: c
+series: learning-c

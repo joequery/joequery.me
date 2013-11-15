@@ -1,0 +1,227 @@
+{% from "macros" import img, blogimg, snippet, toggle %} {% set p = post %}
+{% extends "templates/post.html" %} {% block post %} {% filter markdown %}
+
+This post kicks off a series of articles designed to teach myself C.
+As I have decent programming fundamentals, these articles will not
+cover important, introductory concepts such as good variable names, the purpose
+of control statements, how conditionals work, etc. If you consider yourself at
+least a somewhat competent programmer and would like to learn C without the
+fluff, I invite you to follow along my journey!
+
+Why learn C?
+------------
+
+C powers many extremely important projects. A tiny sample of these projects
+yields some very recognizable names:
+
+* Linux
+* NASA's [Curiosity Rover](http://programmers.stackexchange.com/a/159638).
+* Python
+* Ruby
+* Nginx
+* Redis
+
+If you want to contribute to projects such as these, which are truly changing
+the world, learning C would be a good first step!
+
+Additionally, C is the goto language for [Embedded Systems Programming][0].
+[0]: http://en.wikibooks.org/wiki/Embedded_Systems/C_Programming
+
+A very, very brief overview of the language
+-------------------------------------------
+
+This article in the series will quickly glance over many concepts of C,
+including iteration, strings, arrays, and more.
+
+Getting started: Compiling and executing a program
+--------------------------------------------------
+
+### Installing a compiler
+
+I will be using gcc as my compiler on an Ubuntu linux VM. You are free to use
+other compilers while following along with the examples. I will do my best to
+note when compiler-specific behavior is being discussed.
+
+If you are on Ubuntu and would like to see if gcc is available on your machine,
+execute
+
+    $ gcc -v
+
+You should see results similar to
+
+    Using built-in specs.
+    COLLECT_GCC=gcc
+    COLLECT_LTO_WRAPPER=/usr/lib/gcc/x86_64-linux-gnu/4.7/lto-wrapper
+    Target: x86_64-linux-gnu
+    Configured with: ../src/configure -v
+    --with-pkgversion='Ubuntu/Linaro 4.7.2-2ubuntu1'
+    --with-bugurl=file:///usr/share/doc/gcc-4.7/README.Bugs
+    --enable-languages=c,c++,go,fortran,objc,obj-c++ --prefix=/usr
+    --program-suffix=-4.7 --enable-shared --enable-linker-build-id
+    --with-system-zlib --libexecdir=/usr/lib --without-included-gettext
+    --enable-threads=posix --with-gxx-include-dir=/usr/include/c++/4.7
+    --libdir=/usr/lib --enable-nls --with-sysroot=/ --enable-clocale=gnu
+    --enable-libstdcxx-debug --enable-libstdcxx-time=yes --enable-gnu-unique-object
+    --enable-plugin --enable-objc-gc --disable-werror --with-arch-32=i686
+    --with-tune=generic --enable-checking=release --build=x86_64-linux-gnu
+    --host=x86_64-linux-gnu --target=x86_64-linux-gnu Thread model: posix gcc
+    version 4.7.2 (Ubuntu/Linaro 4.7.2-2ubuntu1)
+
+If you instead get the error
+
+    gcc: command not found
+
+Install gcc on the machine
+
+    sudo apt-get install gcc
+
+Run `gcc -v` afterwards to ensure the installation procedure was successful.
+
+### Hello, world!
+
+And now, we pay tribute to the classic "Hello, World!". To ensure our
+environment is working correctly, we will create a trivial program that simply
+prints `"Hello, world!"`.
+
+Create a file called "hello_world.c".
+
+{{ snippet(p, "hello_world.c")|safe}}
+
+We will now compile the file.
+
+    $ gcc hello_world.c -o hello_world.o
+
+(The above `hello_world.c` file has been verified to not have syntax errors, so
+if you encounter a compiler error after executing the command, ensure you have
+input the file correctly.)
+
+The above gcc command will create a `hello_world.o` output file, which we can
+directly execute. To do so, we run
+
+    $ ./hello_world.o
+
+And we observe the following output in our shell:
+
+    Hello world!
+
+So this very basic usage of gcc can be generalized as follows:
+
+    $ gcc some_c_file.c -o some_output_executable.o
+
+If `some_c_file.c` compiles successfully, we will be able to execute the program
+via
+
+    $ ./some_output_executable.o
+
+The specifics of how the `hello_world.c` works will be discussed later, for now
+you should celebrate that you can now compile C files on your machine!
+
+Article content
+---------------
+
+### Structure of a C program
+
+* The entry point of a program is the `main()` function.
+    + The `main()` function should be of type `int` and return 0 upon success.
+
+### Variables and expressions
+
+Variables must be declared, with their type preceding, before they are used.
+Consider the following example, which will fail to compile.
+
+{{ snippet(p, "ex1.c")|safe}}
+
+The compiler output the following error:
+
+    ex1.c: In function 'main':
+    ex1.c:3:5: error: 'x' undeclared (first use in this function)
+
+Declaring the `x` as `int` would compile successfully.
+
+{{ snippet(p, "ex2.c")|safe}}
+
+Here is an example of the formatters for `printf`
+
+{{ snippet(p, "ex3.c")|safe}}
+{{ toggle()|safe }}
+
+    x: 10
+    y: 10.000000
+    mystr: Hahah
+    x:    10
+    y: 10.00
+    y:      10.00
+
+### Data types
+
+* `char` - a character, a single byte
+* `short` - short integer
+* `long` - long integer
+* `double` - double-precision floating point
+* `float` - floating point, may be smaller than double
+
+### using #define
+
+`#define identifier replacementtext` will replace instances of `identifier` in
+your program with `replacementtext` (as long `identifier` is not between double
+quotes). 
+
+{{ snippet(p, "ex4.c")|safe}}
+{{ toggle()|safe }}
+
+    Hello YOURNAME, My name is MYNAME
+    Hello Dork, My name is Joseph
+
+### Using getchar
+
+`getchar()` reads text from the input stream. It returns the character read.
+However, the `EOF` (end of file) character can be outside the range of the
+`char` data type, so you should use `int` to store the return value of
+`getchar()`.
+
+{{ snippet(p, "ex5.c")|safe}}
+
+(CTRL-D is the default `EOF` character for Unix like systems)
+
+### I'm getting bored, so here's stuff I find interesting.
+
+Reading a line into a char array.
+
+{{ snippet(p, "ex6.c")|safe}}
+
+Copying one char array to another.
+
+{{ snippet(p, "ex7.c")|safe}}
+
+### External variables
+
+External variables can be accessed by any name in any functions. External
+variables must be defined once and only once, while they must also be declared
+wherever they will be used. They retain their values after functions have
+returned, in contrast to the standard automatic variables.
+
+External variables cannot be defined and declared at the same time.
+
+{{ snippet(p, "ex8.c", toggle=True)|safe}}
+
+    ex8.c: In function ‘main’:
+    ex8.c:3:16: error: ‘somevalue’ has both ‘extern’ and initializer
+
+An example of extern usage:
+
+{{ snippet(p, "ex9.c", toggle=True)|safe}}
+
+    10
+    15
+    25
+
+So when is extern useful? Mainly when dealing with multiple files. We'll get to
+that later!
+
+Joseph, this "tutorial" was useless!
+------------------------------------
+
+Sorry! I already knew about most of these concepts. Perhaps the upcoming
+tutorials will be more interesting!
+
+{% endfilter %} {% endblock post %}
