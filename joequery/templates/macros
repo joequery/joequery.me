@@ -31,7 +31,7 @@
 {% endmacro %}
 
 {% macro toggle() %}
-<a class="toggle">Click to toggle output &rArr;</a>
+<a class="toggle">Click to show output &dArr;</a>
 {% endmacro %}
 
 {% macro snippet(post, filename, link=True, toggle=False) %}
@@ -43,7 +43,7 @@
 {% include path %}
 {% endfilter %}
 {% if toggle %}
-<a class="toggle">Click to toggle output &rArr;</a>
+<a class="toggle">Click to show output &dArr;</a>
 {% endif %}
 {% endmacro %}
 

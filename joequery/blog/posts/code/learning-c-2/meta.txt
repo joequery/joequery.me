@@ -1,0 +1,7 @@
+[post]
+title: Learning C (Part 2): Types and Expressions
+description: Part 2 of my journey of teaching myself the C programming
+    language. We cover data types, operators, type conversions, and more!
+time: 2013-11-25 Mon 03:48 AM
+tags: c
+series: learning-c

@@ -1,0 +1,284 @@
+{% from "macros" import img, blogimg, snippet, toggle %} {% set p = post %}
+{% extends "templates/post.html" %} {% block post %} {% filter markdown %}
+
+In this article, I will note what I feel are the non-obvious information related
+to C types, operators, and expressions.
+
+Data Types
+----------
+
+* `char`: a single byte. Holds a single character.
+* `int`: an integer
+* `float`: single-precision floating point
+* `double`: double-precision floating point
+
+### Qualifiers
+
+The qualifiers `short` or `long` can be applied to an integer.
+
+* `short` and `int` must be at least 16 bits in size, but `int` may be larger
+  than `short` depending upon hardware and implementation.  
+  Also, `short <= int`.
+* `long` is at least 32 bits. Also, `int <= long`.
+
+
+Usage can be seen below:
+
+{{ snippet(p, "ex1.c", toggle=True)|safe}}
+
+    2
+    2
+    8
+    8
+
+Note that the output is in bytes, so see that `sizeof x` is 16 bits and
+`sizeof lx` is 64 bits.
+
+The qualifiers `signed` or `unsigned` can be used with a char or any integer
+type.
+
+* `unsigned` numbers are always &ge; 0.
+* `unsigned` numbers obey laws of arithmetic $\mod{2^n}$, where `n` is the
+number of bits in the type.
+* For example, for an 8-bit `unsigned char` type, the possible values are 0-255.
+* For an 8-bit `signed char` type, the possible values are -128-127.
+
+* `long double` specifies extended floating point precision.
+    + `float <= double <= long double`
+    + The sizes of the above could be distinct or similar. It's implementation
+      defined.
+
+Here's an example experimenting with these qualifiers.
+
+{{ snippet(p, "ex2.c", toggle=True)|safe}}
+
+    short: 2, int: 4, long: 8
+    float: 4, double: 8, long double: 16
+    c: 255, lc: 18446744073709551615
+
+Constants and literals
+----------------------
+
+* `int` - `1234`
+* `long` - `123456789L`
+* `unsigned` - `123U`
+* `unsigned long` - `123UL`
+
+{{ snippet(p, "ex3.c", toggle=True)|safe}}
+
+    123
+    123456789
+    123
+    123456789
+    1.230000
+    a88bcf
+    c as char: A
+    c as int: 65
+
+String literals have a null character (`'\0'`) at the end.
+
+{{ snippet(p, "ex4.c", toggle=True)|safe}}
+
+    H
+    e
+    l
+    l
+    o
+    \0
+
+
+Note: `'x'` != `"x"`
+
+Enums for symbol comparison
+---------------------------
+
+Enums are a great way to use symbols to represent constant, related data without
+the use of a define.  Enums allow for semantic, readable comparisons with
+symbols when their value doesn't necessarily matter.
+
+These concepts are described in the following example:
+
+{{ snippet(p, "ex7.c", toggle=True)|safe}}
+
+    Joseph
+    Odin
+    LUCY
+
+
+Implicit and explicit type conversions
+--------------------------------------
+
+When performing an operation where the items being operated on are of different
+types, they are converted to a common type before the operation occurs.
+
+For example, take the following simple program:
+
+{{ snippet(p, "ex5.c", toggle=True)|safe}}
+
+    30.000000
+
+The integer value of `x` was implicitly converted to a double when added to the
+double `y`. This conversion was "temporary" in that the variable `x` was not
+effected at all. `x` still remains an integer after the `printf()` statement has
+finished.
+
+In general, implicit conversions such as the one above will make the smaller
+data type match the larger one. This is because there is no data loss going
+from an `int` to a `float`, but there is definitely data loss going from `float`
+to `int` via truncation!
+
+{{ snippet(p, "ex6.c", toggle=True)|safe}}
+
+    Your rounded grade as a double: 70.00
+    You failed! Oh no!
+    Your final grade: 69
+
+### Chars are just numbers!
+
+{{ snippet(p, "ex8.c", toggle=True)|safe}}
+
+    B
+
+### Implicit conversions
+
+Suppose you have an operator that takes two numeric operands. The C standard
+specifies the following rules for conversions, in order (this is an exact quote
+of the standard):
+
+1. First, if either operand is long double, the other is converted to long double.
+2. Otherwise, if either operand is double, the other is converted to double.
+3. Otherwise, if either operand is float, the other is converted to float.
+4. Otherwise, the integral promotions are performed on both operands; then, if either operand is
+   unsigned long int, the other is converted to unsigned long int.
+5. Otherwise, if one operand is long int and the other is unsigned int, the
+   effect depends on whether a long int can represent all values of an unsigned
+   int; if so, the unsigned int operand is converted to long int; if not, both are
+   converted to unsigned long int.
+6. Otherwise, if one operand is long int, the other is converted to long int.
+7. Otherwise, if either operand is unsigned int, the other is converted to unsigned int.
+8. Otherwise, both operands have type int.
+
+Comparison between signed and unsigned values are machine-dependent.
+
+Note: "integral promotion" is a process that occurs when a `char`, `short`, or
+`enum` object are promoted to either `int` or `unsigned int` when used in an
+expression. If an `int` can represent the value of being converted, the value is
+converted to an `int` for the expression. Otherwise, it is converted to
+`unsigned int`.
+
+Rules 1-3, and 6-8 were demonstrated by example 5 above.
+
+The rules unsigned concerning integers are much more interesting, and they have
+very important implications! Consider a machine with a 32 bit `int` and 64 bit
+`long` along with the following example:
+
+{{ snippet(p, "ex9.c", toggle=True)|safe}}
+
+    sizeof unsigned int: 32
+    sizeof long: 64
+    sizeof long int: 64
+    -1 < 1. Duh!
+    -1 > 1?! WTF?!
+
+Let's explain this behavior using the rules listed above.
+
+#### -1L < 1U
+
+In the first comparison, we are comparing a long with an unsigned int. Rule 5
+tells us what we should expect when an unsigned int and a long are operands
+together:
+
+> Otherwise, if one operand is long int and the other is unsigned int, the
+effect depends on whether a long int can represent all values of an unsigned
+int; if so, the unsigned int operand is converted to long int; if not, both
+are converted to unsigned long int.
+
+So the question becomes: Can a 64 bit `long` represent all the values of a 32
+bit `unsigned int`? A `long` has to be able to represent both positive and
+negative numbers, whereas an `unsigned int` only has to represent positive
+numbers. So if the largest possible positive `long` value is greater than or
+equal to the largest possible `unsigned int` value, the standard says the
+`unsigned int` will be converted to `long`.
+
+Let's ask `<limits.h>` whether a 64 bit `long` can represent all the values of a
+32 bit `unsigned int`.
+
+{{ snippet(p, "ex10.c", toggle=True)|safe}}
+
+    UINT_MIN: 0
+    UINT_MAX: 4294967295
+    LONG_MAX: 9223372036854775807
+    LONG_MIN: -9223372036854775808
+    `long` can represent all values of `unsigned int`
+
+So the answer is yes, a `long` can represent all values of an `unsigned int`,
+thus the less-than operator `-1L < 1UL` will cause `unsigned int` to be
+converted to a `long` during the comparison. Let's see what the result of
+conversion would be.
+
+{{ snippet(p, "ex11.c", toggle=True)|safe}}
+
+    1
+
+This behavior isn't anything unexpected! But now, it's time for the fun part.
+
+#### -1L > 1UL
+
+Rule 4 in the conversion steps says
+
+> Otherwise, the integral promotions are performed on both operands; then, if
+either operand is unsigned long int, the other is converted to unsigned long
+int.
+
+So during the evaluation of the expression `-1L > 1UL`, integral promotion is
+performed. Remember, integral promotion is just taking the smaller int types,
+such as `char` and `short`, and converting them to `int` or `unsigned int`. So,
+since we are dealing with larger integer types, integral promotion does not
+occur in this example.
+
+The second part of Rule 4, though, states that if either operand is an
+`unsigned long`, the other operand is converted to an unsigned long. Thus, in
+the expression `-1L > 1UL`, the operand `-1L` will be converted to an unsigned
+long. Let's see what converting a negative `long` to an `unsigned long` looks
+like.
+
+{{ snippet(p, "ex12.c", toggle=True)|safe}}
+
+    18446744073709551615
+    18446744073709551615
+
+The C standard actually mandates that `-nUL == ULONG_MAX-n+1` for some integer n
+holds true for any standards-compliant compiler - this result is not machine
+dependent. Thus, converting a negative, signed `long` to an `unsigned long`
+yields a VERY big number. Identical behavior occurs for `UINT`.
+
+So, for the comparison of `-1L > 1UL`, Rule 4 states that `-1L` is converted to
+an `unsigned long`, and we have seen that such a conversion results in a very
+large number. So now, it makes sense that `-1L > 1UL`, since the largest
+`unsigned long` is certainly larger than the number 1!
+
+### Explicit conversions
+
+As you may have noticed in previous examples, we can explicitly convert data via
+a "cast". You simply prefix an expression with `(thetype)`, and that expression
+will be converted to that type.
+
+Consider this example, which will provide a compile-time warning due to
+formatter mismatch:
+
+{{ snippet(p, "ex13.c", toggle=True)|safe}}
+
+    ex13.c: In function ‘main’:
+    ex13.c:4:5: warning: format ‘%f’ expects argument of type ‘double’, but argument
+    2 has type ‘int’ [-Wformat]
+
+    The value: 0.00
+
+Instead of creating another variable to facilitate an implicit `int` to `float`
+conversion, we can explicitly convert the data ourselves.
+
+{{ snippet(p, "ex14.c", toggle=True)|safe}}
+
+    The value: 15.00
+
+{% endfilter %} {% endblock post %}
