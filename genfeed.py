@@ -236,6 +236,7 @@ def get_posts_in_order(reverse=True):
     for x,c in categoryPaths.iteritems():
         for p in os.listdir(c):
             path = os.path.join(c,p)
+            print(path)
             parser = ConfigParser.ConfigParser()
             parser.read(os.path.join(path, "meta.txt"))
             meta = dict(parser.items("post"))

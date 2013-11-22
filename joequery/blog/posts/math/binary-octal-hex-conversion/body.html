@@ -1,0 +1,40 @@
+{% from "macros" import img, blogimg %} {% set p = post %}
+{% extends "templates/post.html" %} {% block post %} {% filter markdown %}
+
+Converting Binary to Octal
+--------------------------
+
+Group the digits by three, starting from the right, and convert the sections to
+octal.
+
+{{blogimg(g,post,"img1.png")|safe}}
+
+Converting Octal to Binary
+--------------------------
+
+Simply expand each number into its binary equivalent and squish the results
+together.
+
+{{blogimg(g,post,"img2.png")|safe}}
+
+Converting Binary to Hex
+--------------------------
+
+First, recall counting to 15 in hex (the base 16 number system) is as follows:
+1, 2, 3, 4, 5, 6, 7, 8, 9, A, B, C, D, E, F
+
+So $47_{10} = (16^1 \times 2) + (16^0 \times 15) = 2F_{16}$
+
+Now, to convert binary to Hex, group the digits by four, starting from the
+right, and convert the decimal equivalent of the grouping to hex.
+
+{{blogimg(g,post,"img3.png")|safe}}
+
+Converting Hex to Binary
+--------------------------
+
+Similarly to octal to binary, simply take each number into its binary equivalent
+and squish the results together.
+{{blogimg(g,post,"img4.png")|safe}}
+
+{% endfilter %} {% endblock post %}

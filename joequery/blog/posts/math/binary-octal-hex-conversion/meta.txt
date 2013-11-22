@@ -1,0 +1,6 @@
+[post]
+title: Converting Oct/Hex to Binary
+description: A one minute tutorial on how to convert Octal/Hex values to
+    Binary(and back).
+time: 2013-11-24 Sun 03:25 PM
+tags: computer-science
