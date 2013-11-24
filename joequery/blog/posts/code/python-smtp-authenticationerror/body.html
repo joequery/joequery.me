@@ -1,0 +1,50 @@
+{% from "macros" import img, blogimg, snippet, toggle %} {% set p = post %}
+{% extends "templates/post.html" %} {% block post %} {% filter markdown %}
+
+This short article explains how to resolve a `SMTPAuthenticationError` exception
+thrown when you attempt to login to Gmail via Python's smtp library.
+
+The exception message may look similar to
+
+    SMTPAuthenticationError: (534, '5.7.14
+    <https://accounts.google.com/ContinueSignIn?sarp=1& scc=1&plt=stsnlll\n5.7.14
+    ...
+    j4_5F      kw> Please log in via your web browser and then try again.\n5.7.14
+    Learn more at https://s upport.google.com/mail/bin/answer.py?answer=787\n5.7.14
+    23 d26d88119.25 - gsmtp')
+
+Step 1: Ensure your Python code is correct
+------------------------------------------
+
+This [stackoverflow answer](http://stackoverflow.com/a/12424439/670823) serves
+as a perfect template for sending mails from your gmail account through a Python
+script. Double check your code to make sure you are performing all the necessary
+steps in the SMTP authentication process.
+
+Step 2: Ensure your password is correct
+---------------------------------------
+
+Copy and paste your password to ensure there are no typos. Don't think too
+highly of yourself to believe you are incapable of making this mistake!
+Additionally, if you are using 2-factor authentication, you will be required to
+use [application-specific
+passwords](https://support.google.com/accounts/answer/185833?hl=en) instead of
+your normal password.
+
+Step 3: Disabling CAPTCHA for clients
+-------------------------------------
+
+If you are not using 2-factor authentication and you have verified the
+credentials in your Python source are correct, follow these steps:
+
+1. Login to gmail in your browser
+2. Navigate to the
+[DisplayUnclockCaptcha](http://www.google.com/accounts/DisplayUnlockCaptcha)
+page.
+3.  Click the continue button, and you will see the message
+> Account access enabled
+Please try signing in to your Google account again from your new device or
+application.
+4. Run your Python script - your login attempt should be successful.
+
+{% endfilter %} {% endblock post %}
