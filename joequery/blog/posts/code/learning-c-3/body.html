@@ -1,0 +1,296 @@
+{% from "macros" import img, blogimg, snippet, toggle %} {% set p = post %}
+{% extends "templates/post.html" %} {% block post %} {% filter markdown %}
+
+This article will provide solutions and explanations of K&amp;R ch 1 exercises
+that I find interesting.
+
+Exercise 1-6
+------------
+
+> Verify that the expression `getchar() != EOF` is 0 or 1.
+
+The purpose of this exercise is to demonstrate that the resulting value of a
+conditional statement can only be 0 or 1.
+
+{{ snippet(p, "ex1-6.c", toggle=True)|safe}}
+
+    $ ./a.out
+    Input a character and press enter: h
+    expr_val: 1
+    $ ./a.out # I press CTRL-D to send EOF
+    Input a character and press enter: expr_val: 0
+
+Exercise 1-8
+------------
+
+> Write a program to count blanks, tabs, and newlines.
+
+The purpose of this exercise is to test your ability to do a few things:
+
+* continuously get input from the keyboard
+    + know when to stop
+* comparing the value from the keyboard with character literals
+* storing the count of the characters mentioned
+
+{{ snippet(p, "ex1-8.c", toggle=True)|safe}}
+
+    $ ./a.out
+    Enter text. Press CTRL-D when finished
+    > Hello there. How are you doing today?
+    > Really? That's great!
+    > EOF sent
+    num_tabs: 0
+    num_blanks: 8
+    num_newlines: 2
+
+    $ ./a.out
+    Enter text. Press CTRL-D when finished
+    > I     Love
+    > Whitespace    Formatting
+    > EOF sent
+    num_tabs: 2
+    num_blanks: 0
+    num_newlines: 2
+
+Exercise 1-12
+-------------
+
+We will naively consider the word separating characters to be ` `, `\n`, and
+`\t`. Also, as always, we must check for `EOF`.
+
+In this exercise, I will use a helper function named `is_word_separator`. This
+will be a good time to demonstrate writing simple tests via the standard
+library's `assert()` function. The `assert()` function takes an expression,
+generally some sort of comparison, and will stop program execution if the
+expression evaluates to False. Additionally, `assert()` will print out the
+failed assertion.
+
+{{ snippet(p, "assertion-ex.c", toggle=True)|safe}}
+
+    $ ./a.out 
+    a.out: assertion-ex.c:13: main: Assertion `account_balance > 0' failed.
+    Aborted (core dumped)
+
+The exercise solution:
+
+{{ snippet(p, "ex1-12.c", toggle=True)|safe}}
+
+    $ ./a.out
+    Type words! CTRL-D to exit.
+    > Hello there! How are you doing today?
+    Hello
+    there!
+    How
+    are
+    you
+    doing
+    today?
+    > I'm doing pretty awesome, thanks!
+    I'm
+    doing
+    pretty
+    awesome,
+    thanks!
+    > 
+    > 
+    > 
+    > 
+    > 
+    > Tabs  are     pretty  cool,   man
+    Tabs
+    are
+    pretty
+    cool,
+    man
+    > EOF sent.
+
+Exercise 1-13
+-------------
+
+> Write a program to print a histogram of the lengths of words in its input. It
+is easy to draw the histogram with the bars horizontal; a vertical orientation
+is more challenging.
+
+We'll skip the horizontal representation for now. To further clarify, if we
+recieve 1 word of length one, 2 words of length two, 3 words of length three,
+etc, the histogram would look like so:
+
+      |
+     ||
+    |||
+    123
+
+Here's an $O(n^2)$ way of solving it. Note that it's really important you don't
+attempt to take on the *entire* exercise at once. Here's an intermediate program
+that prints the histogram from a hardcoded array. This facilitates quicker
+development and testing since keyboard input is easy but time-consuming.
+
+{{ snippet(p, "ex1-13-p1.c", toggle=True)|safe}}
+
+     |
+     ||
+     ||
+    |||
+    |||
+    |||
+    123
+
+Now that we have verified the `make_histogram` function works as intended, lets
+make a separate intermediate program that can take user input and count words.
+We can use a majority of the code from exercise 1-12, with some slight
+modifications, to facilitate this.
+
+{{ snippet(p, "ex1-13-p2.c", toggle=True)|safe}}
+
+    $ ./a.out 
+    Type words! CTRL-D to exit.
+    > a ab abc a ab abc
+    > EOF sent.
+    Num words of length 1 - 2
+    Num words of length 2 - 2
+    Num words of length 3 - 2
+    Num words of length 4 - 0
+    Num words of length 5 - 0
+    Num words of length 6 - 0
+    Num words of length 7 - 0
+    Num words of length 8 - 0
+    Num words of length 9 - 0
+
+    $ ./a.out 
+    Type words! CTRL-D to exit.
+    > Hello there. How are you doing today?
+    > EOF sent.
+    Num words of length 1 - 0
+    Num words of length 2 - 0
+    Num words of length 3 - 3
+    Num words of length 4 - 0
+    Num words of length 5 - 2
+    Num words of length 6 - 2
+    Num words of length 7 - 0
+    Num words of length 8 - 0
+    Num words of length 9 - 0
+
+Now, with both the histogram and word length counting individually verified, we
+can combine them without much effort at all! I only made some minor output
+changes to the functions for presentational purposes.
+
+{{ snippet(p, "ex1-13-final.c", toggle=True)|safe}}
+
+    $ ./a.out 
+    Type words! CTRL-D to exit.
+    > a ab abc a ab abc
+    > 
+    |||      
+    |||      
+    123456789
+
+    $ ./a.out 
+    Type words! CTRL-D to exit.
+    > Hello there. How are you doing today?
+    > 
+      |      
+      | ||   
+      | ||   
+    123456789
+
+    $ ./a.out 
+    Type words! CTRL-D to exit.
+    > Hello there! How are you doing today, friend? I hope you are enjoying your
+    > C lessons. It is very good practice. These exercises will enhance your C skills for sure.
+    > 
+      ||     
+      ||     
+      |||    
+    | ||||   
+    |||||||||
+    |||||||||
+    123456789
+
+Exercise 1-19
+-------------
+
+> Write a function reverse(s) that reverses the character string
+s. Use it to write a program that reverses its input a line at a time.
+
+This will be a good time to draw a picture to get some ideas of how we would
+like to approach this. Consider the char array `['T', 'a', 'b', 'l', 'e', 't']`.
+This is what reversing it would look like.
+
+{{blogimg(g,post,"img1.png")|safe}}
+
+We can see that index 0 of `s` goes to index 5 of `reverse(s)`, and so on.
+Generalizing this mapping is key to coming up with an algorithm for an arbitrary
+length string. Let's look at another example and see if you can catch on the
+pattern. (Hint: Use the length of the string)
+
+{{blogimg(g,post,"img2.png")|safe}}
+
+So the index mapping can be formulized as `x => max_index - x`. So, for
+`['A', 'w', 'e', 's', 'o', 'm', 'e']`, a `char` array of length 8 (thus with max
+index 7), element 2 ('e') would go to `7-2 == 5`.
+
+Also important to note, you'll see pairs of mappings in the index mappings.
+You see in the `['T', 'a', 'b', 'l', 'e', 't']` example that 0 goes to 5, and 5
+goes to 0, 2 goes to 3, 3 goes to 2, etc. We can instead say 0 is swapped with
+5, and 2 is swapped with 3. We can essentially cut our index mapping in half and
+use "swaps" instead of "goes to", while still providing the same information
+
+A couple more warnings before we start coding.
+
+### Even/odd length char arrays
+
+I intentionally chose `char` arrays of even lengths since the index mapping is
+easier to explain that way. However, our `reverse()` function needs to be able
+to handle odd-length `char` arrays. So let's examine `['H', 'e', 'l', 'l', 'o']`.
+
+{{blogimg(g,post,"img3.png")|safe}}
+
+Verify for yourself that `max_index/2` stays put when reversing odd-length
+`char` arrays.
+
+### null-termination character
+
+All strings are `char` arrays, but not all `char` arrays are strings: The
+difference is the terminating null character '\0' present in the `char` array.
+These examples so far have not been strings. When dealing with reversing
+strings, we need to ensure the null character doesn't move. Reversing a string
+should not change its length, so there's no need to move the null character.
+
+{{blogimg(g,post,"img4.png")|safe}}
+
+### Solution exercise
+
+I will take advantage of the `assert()` function yet again to demonstrate the
+usefulness of automated testing. We can set up test-cases that let us know when
+we have reached our goal. Additionally, we can put ourselves in the "tester"
+mindset and focus on edge cases where our code may break.
+
+Let's write our tests. We will use the `strcmp()` standard library function for
+string comparison. `strcmp()` takes two strings and returns 0 when they are
+equal. Additionally, `strcpy` will be used to copy string literals into an
+array, since string literals are read only.
+
+{{ snippet(p, "ex1-19-testcases.c", toggle=True)|safe}}
+
+    a.out: ex1-19-testcases.c:32: test_reverse: Assertion `strcmp("olleh", str) ==
+    0' failed.
+    Aborted (core dumped)
+
+We have now set up our code in such a way that once all the assertions pass,
+(and we can thus make "reverse() works!" print out), we can be confident that
+our `reverse()` function is correct! It is *much* easier to program a solution
+when you have created a roadmap such as this for yourself.
+
+{{ snippet(p, "ex1-19-final.c", toggle=True)|safe}}
+
+    test 1 pass
+    test 2 pass
+    test 3 pass
+    test 4 pass
+    test 5 pass
+    test 6 pass
+    reverse() works!
+    ereht olleH
+
+
+{% endfilter %} {% endblock post %}

@@ -1,0 +1,7 @@
+[post]
+title: Learning C (Part 3): K&R Ch1 Exercises
+description: Solutions and explanations of K&R ch1 exercises that I find
+    interesting.
+time: 2013-11-25 Mon 04:51 AM
+tags: c
+series: learning-c
