@@ -46,7 +46,11 @@ def screenx_check_status():
 
   if screenx_cache_expired(t):
       screenx_cache_set('lastChecked', t)
-      r = requests.get("http://screenx.tv/screens/status/JoeQuery", timeout=1)
+      try:
+          r = requests.get("http://screenx.tv/screens/status/JoeQuery", timeout=1)
+      except requests.exceptions.Timeout:
+          return
+
       if r.status_code == 200:
           if r.content == 'null':
               screenx_cache_set('streaming', False)
