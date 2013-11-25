@@ -35,15 +35,16 @@
 {% endmacro %}
 
 {% macro snippet(post, filename, link=True, toggle=False) %}
-{% if link %}
-<a href="/{{post['url']}}/src/{{filename}}">Click for raw source of {{filename}}</a>
-{% endif %}
+{# This clears up weird formatting issues #}
+<p></p>
+
 {% filter code %}
 {% set path = "posts/%s/%s" % (post['url'], filename) %}
 {% include path %}
 {% endfilter %}
-{% if toggle %}
-<a class="toggle">Click to show output &dArr;</a>
+{% if link %}
+<a href="/{{post['url']}}/src/{{filename}}">raw source</a>
+{% if toggle %} | <a class="toggle">show output &dArr;</a> {% endif %}
 {% endif %}
 {% endmacro %}
 

@@ -7,10 +7,10 @@
 
         $(this).toggleClass("displaying_code");
         if($(this).hasClass("displaying_code")){
-            $(this).html("&uArr; Click to hide output");
+            $(this).html("hide output &uArr;");
         }
         else{
-            $(this).html("Click to show output &dArr;");
+            $(this).html("show output &dArr;");
         }
     });
 
