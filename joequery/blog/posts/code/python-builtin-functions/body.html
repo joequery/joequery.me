@@ -1413,6 +1413,60 @@ Additionally, if you pass `None` as the `filter_function`, all elements of
     >>> [x for x in mylist if x]
     [True, 'hi', [0]]
 
+{{ header("float(x)", "float")|safe }}
 
+Convert a string or number `x` to floating point.
+
+    >>> x = 10
+    >>> float(x)
+    10.0
+    >>> x = "10"
+    >>> float(x)
+    10.0
+
+Attempting to convert a non-numeric value to float throws a `ValueError`:
+
+    >>> float("hello")
+    Traceback (most recent call last):
+        File "<stdin>", line 1, in <module>
+    ValueError: could not convert string to float: hello
+    
+### Infinity
+
+`float()` can also be used to create positive/negative infinity values. The
+use-cases are generally limited to specific mathematical algorithms and
+trigonometric calculations. A decent discussion can be found here on
+[Stackoverflow](http://stackoverflow.com/questions/382603/when-would-you-use-infinity).
+
+    >>> pinf = float("+inf")
+    >>> ninf = float("-inf")
+    >>> x = 10
+    >>> ninf <= x <= pinf
+    True
+    >>> ninf < pinf
+    True
+    >>> x + pinf
+    inf
+    >>> x - pinf
+    -inf
+    >>> pinf - ninf
+    inf
+
+### NaN
+
+The `nan`, or "Not a number" value can also be created via `float()`. Any
+mathematical operation performed with `nan` becomes `nan`.
+
+    >>> nan = float("nan")
+    >>> x + nan
+    nan
+    >>> x - nan
+    nan
+    >>> nan + nan
+    nan
+    >>> sum((1,2,3))
+    6
+    >>> sum((1,2,3,nan))
+    nan
 
 {% endfilter %} {% endblock post %}
