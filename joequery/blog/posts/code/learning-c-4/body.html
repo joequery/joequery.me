@@ -1,0 +1,173 @@
+{% from "macros" import img, blogimg, snippet, toggle %} {% set p = post %}
+{% extends "templates/post.html" %} {% block post %} {% filter markdown %}
+
+This article will discuss bitwise operators and common procedures done with
+them.
+
+What do these bits look like?
+-----------------------------
+
+Consider an `unsigned short x` with the value 15. Note that $1111_{2} = 15_{10}$.
+Consequently, if the size of `unsigned short` was 16 bits on our computer, we
+could expect `x` to appear like so:
+
+{{blogimg(g,post,"img1.png")|safe}}
+
+If we were to "align" another `unsigned short` with our variable `x`, we could
+perform various logical operations between the two as if they were part of a
+truth table. For example, suppose we have an `unsigned short y` with value 9,
+which is equal to $1001_{2}$. We could perform a logical AND between `x` and
+`y`. The result is as follows:
+
+{{blogimg(g,post,"img2.png")|safe}}
+
+Basic operations
+----------------
+
+### NOT
+
+The one`s complement operator, `~`, informally known as the unary `NOT`
+operator, takes the bits of an integer and flips them: 0's become 1's, 1's
+become 0's.
+
+For example, consider an `unsigned char c` with 8 bits, with value 0. This means
+every bit composing `c` is set to 0. Thus `~c` would transform all bits from 0
+to 1. In this case, `c` actually goes from being the smallest possible `unsigned
+char` value to the largest possible `unsigned char` value!
+
+{{blogimg(g,post,"img3.png")|safe}}
+{{ snippet(p, "ex1.c", toggle=True)|safe}}
+
+    c: 0
+    ~c: 255, UCHAR_MAX: 255
+
+As a more interesting example, consider $57_{10} = 111001_{2}$ stored in an
+`unsigned char` variable `c`.
+
+{{blogimg(g,post,"img4.png")|safe}}
+{{ snippet(p, "ex2.c", toggle=True)|safe}}
+
+    c: 57
+    ~c: 198
+
+It's important to note that the type of integer the result of `~c` will be
+stored in affects the outcome greatly. If we were to store the result of `~c`
+into an `unsigned int`, for example, the leading 0's of the `unsigned int` would
+bie converted to 1s, leading to a much larger result.
+
+{{ snippet(p, "ex3.c", toggle=True)|safe}}
+
+    c: 57
+    ~c: 198
+    ~c: 4294967238
+
+### AND
+
+And is used as a means to turn specific bits off. ANDing a bit at a particular
+location with 0 makes it 0, and ANDing with 1 preserves the value.
+
+Suppose we have an `unsigned char c` with value $31_{10} = 11111_{2}$. Now
+suppose we want to turn the last 3 bits of `c` off (AKA set them to 0). The
+expected result would be $11000_{2} = 24_{10}$.
+
+The way we do this is by ANDing with a sequence of bits that are all 1 except
+for the last 3, which will be 0. We can craft such a sequence in two steps:
+
+1. Create a sequence of bits that are all 0 except the last 3. We must have
+   exactly enough to "fill" up the integer.
+2. NOT the sequence, causing all values to be 1 except the last 3
+
+When we assign a value to an integral type (`char`, `short`, `int`, `long`), C
+will pad the value the necessary amount of 0s to make it fit the type correctly.
+Thus, if an `unsigned char` is 8 bits on our computer, the statement
+
+    unsigned char c = 0;
+
+will completely fill `c` up with 8 bits of 0s. Consequently, we can take
+advantage of this to construct a sequence of 1s that fills up all 8 bits just by
+using the unary NOT operator
+
+{{ snippet(p, "ex4.c", toggle=True)|safe}}
+
+    c: 0
+    ~c: 1
+    ~c: 255
+
+We can now construct the sequence of bits that are all 1s except the last 3. To
+demonstrate, such a sequence for an 8 bit `unsigned char` would be
+$11111000_{2} = 248_{10}$. So we should start off with the sequence
+$00000111_{2}$ and then complement it.
+
+{{ snippet(p, "ex5.c", toggle=True)|safe}}
+
+    c: 248
+
+Now to AND this [bitmask](http://en.wikipedia.org/wiki/Mask_(computing)) with
+our original $31_{10} = 11111_{2}$, with the expected result being
+$11000_{2} = 24_{10}$
+
+{{ snippet(p, "ex6.c", toggle=True)|safe}}
+
+    c: 31
+    c: 24
+
+Generating the bitmask is much simpler using shifts, which I'm unfortunately too
+bored to discuss in too much detail.
+
+### SHIFTS
+
+There is a left shift, `x << n`, which shifts each bit of an integral to the
+left `n` times. There is also a right shift. Here are the only details we'll
+cover, since the shifts themselves are pretty straight forward:
+
+1. Left shifting always causes vacated bits to be filled with 0s
+2. Right shifting an `unsigned` quantity always fills the vacated bits with 0s
+    * Right shifting a signed quantity may fill vacated bits with different symbols.
+3. `x << n` is equivalent to $x \times 2^n$
+4. `x >> n` is equivalent to $x / 2^n$ (integer division)
+
+
+getbits() function
+------------------
+
+Suppose we have an integral value, and we would like to extract a certain number
+of bits at a particular position. Specifically, suppose we want to subtract `n`
+bits from an integral starting at position `p`, where the rightmost bit is
+position 0.
+
+For example:
+{{blogimg(g,post,"img5.png")|safe}}
+
+So how do we actually achieve the desired result? It takes two simple steps:
+
+1. Shift our integral to the right until the last bit we are interested in sits
+   at position 0.
+2. Set all bits outside of our range of interest to 0
+
+In the example above, we can see that `getbits(x,5,3)` took 3 shifts to the
+right to get the last bit we were interested in (the 0 at position 3) to
+position 0. It took `getbits(x,3,2)` 2 shifts, and `getbits(x,6,4)` 3 shifts.
+Thus the number of shifts needed can be generalized to `p+1-n`, and you can use
+the examples above to verify that claim.
+
+Why we do need to set bits outside of our range of interest to 0? Because there
+may be bits set to 1 to the left of our `p`. We only want the `n` bits starting
+from `p` to be returned, so we must set all bits to the left of our range after
+the shift to 0.
+
+{{blogimg(g,post,"img6.png")|safe}}
+
+The way to generate this bitmask is to:
+
+1. Start off with a sequence of all 1s
+2. Shift to the left `n` times. This will place 0s in the vacant slots
+3. Take the complement of the sequence, which will leave us with all 0s followed
+   by 1s in the last `n` bits.
+
+The `getbits()` function can thus be defined as so:
+
+    unsigned getbits(unsigned x, int p, int n) {
+        return (x >> (p+1-n)) & ~(~0 << n);
+    }
+
+{% endfilter %} {% endblock post %}

@@ -1,0 +1,7 @@
+[post]
+title: Learning C (Part 4): Bitwise Operators
+description: Covers topic such as shifts, AND, OR, XOR, and common procedures
+    performed on bits.
+time: 2013-12-03 Tue 04:34 AM
+tags: c
+series: learning-c
