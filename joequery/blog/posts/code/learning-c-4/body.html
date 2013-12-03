@@ -53,7 +53,7 @@ As a more interesting example, consider $57_{10} = 111001_{2}$ stored in an
 It's important to note that the type of integer the result of `~c` will be
 stored in affects the outcome greatly. If we were to store the result of `~c`
 into an `unsigned int`, for example, the leading 0's of the `unsigned int` would
-bie converted to 1s, leading to a much larger result.
+be converted to 1s, leading to a much larger result.
 
 {{ snippet(p, "ex3.c", toggle=True)|safe}}
 
@@ -131,7 +131,7 @@ getbits() function
 ------------------
 
 Suppose we have an integral value, and we would like to extract a certain number
-of bits at a particular position. Specifically, suppose we want to subtract `n`
+of bits at a particular position. Specifically, suppose we want to extract `n`
 bits from an integral starting at position `p`, where the rightmost bit is
 position 0.
 
