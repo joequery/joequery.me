@@ -32,6 +32,7 @@ article h1 a{
 }
 a.streaming{
 	color:#800517;
+	text-decoration:underline;
 }
 .left {
 	float:left
