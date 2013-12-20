@@ -1,0 +1,80 @@
+{% from "macros" import img, blogimg, snippet, toggle %} {% set p = post %}
+{% extends "templates/post.html" %} {% block post %} {% filter markdown %}
+
+This article contains exercises that will test your knowledge of pointers. If
+you find yourself struggling with any of these questions, feel free to ask for
+help by emailing me at [joseph@vertstudios.com](mailto:joseph@vertstudios.com).
+
+If you are uncomfortable or unfamiliar with pointers, please view (and
+understand!) the following videos before progressing to the exercises:
+
+1. [Beginner's introduction to pointers in C](http://www.youtube.com/watch?v=IkyWCOUY8V4)
+2. [Malloc and functions returning pointers](http://www.youtube.com/watch?v=3JX6TyLOmGQ)
+
+Problems
+--------
+
+### Problem 1
+
+Write a `swap()` function with the following function header:
+
+    void swap(int *p1, int *p2);
+
+Use this function to swap the values of two integers.
+
+    int main(){
+        int x = 10;
+        int y = 20;
+
+         // You must figure out how to call the function correctly!
+        swap(...)
+
+        // Should print out x: 20, y: 10
+        printf("x: %d, y: %d\n", x, y);
+    }
+
+### Problem 2
+
+Write a program that demonstrates the fact that arrays themselves are not passed
+to functions, but a pointer to the first element of the array is what is passed.
+
+Hint: The `sizeof` operator will be useful.
+
+### Problem 3
+
+According to the C standard, `arr[0]` is actually syntactic shorthand for
+`*(arr+0)`. Write a program that prints all elements of an integer array using
+this alternative notation.
+
+### Problem 4
+
+Create a simple function `print_addr(int x)` whose sole purpose is to print the
+address of the integer `x` passed to it. Create an integer variable in main,
+print out its address, and then pass that variable to `print_addr`. Compare the
+results. Is this expected behavior?
+
+### Problem 5
+
+Create a function `new_integer()` that declares and initializes an integer
+inside the function and returns the address of that integer. Print out the
+integer value associated with this memory address in main.  Is this legal C?
+Does your complier display warnings? Is this a safe operation?
+
+### Problem 6
+
+Create a function `print_array` which will print out all values of an integer
+array.  What parameters must the function have in order to work for any integer
+array?
+
+### Problem 7
+
+Write a program which uses an `ARR_SIZE` constant via `#define ARR_SIZE 10`.
+Create a function that allocates memory for `ARR_SIZE` integers, assigns the 0th
+integer to 0, the 1st integer to 1, and so on, and returns the address of the
+allocated space. (Your array should look like `[0|1|2|...]`). use the
+`print_array` function from problem 6 above to print out each element of the
+allocated array. After you have successfully made the program, alter the value
+of `ARR_SIZE` and observe the results.
+
+
+{% endfilter %} {% endblock post %}

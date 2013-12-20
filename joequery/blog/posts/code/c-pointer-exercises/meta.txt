@@ -1,0 +1,6 @@
+[post]
+title: C pointer exercises
+description: Test your knowledge of pointers by completing the following
+    exercises.
+time: 2013-12-20 Fri 03:37 AM
+tags: c
