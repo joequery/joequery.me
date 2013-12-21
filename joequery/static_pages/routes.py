@@ -23,9 +23,9 @@ def resume_page():
 def contact_page():
     return static_page("contact.html")
 
-@bp.route("/tutoring")
+@bp.route("/mentoring")
 def tutoring_page():
-    return static_page("tutoring.html")
+    return static_page("mentoring.html")
 
 @bp.route("/stream")
 def stream_page():

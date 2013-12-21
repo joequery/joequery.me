@@ -1,0 +1,111 @@
+{% from "macros" import img, yt %}
+{% extends "basic-layout.html" %}
+{% block title %}Mentoring | Joseph McCullough{% endblock %}
+
+{% block body %}
+<article class="page">
+    <h1 class="title">Mentoring</h1>
+    <div class="entry">
+{% filter markdown %}
+If you are a novice programmer looking to build solid fundamentals and progress
+your skills, I am available as a *free* mentor.
+
+Why free?
+---------
+
+There are a few reasons why it benefits me to mentor you for free:
+
+1. Your questions provide inspiration for new articles/videos, which drives more
+   traffic to this site.
+2. I love knowing I [helped someone][0] understand concepts.
+3. I would like to eventually charge for tutoring, but I need experience
+   developing lesson plans and estimating time to produce articles/videos so I
+   can price fairly.
+
+[0]: https://plus.google.com/u/0/106631733716989180126/posts/fzVQLaaEj8F
+
+
+What subjects are available for mentoring?
+------------------------------------------
+
+### Math
+
+* Basic mathematics (College Algebra through Calculus I)
+* Introduction to proofs
+* Discrete mathematics
+* Abstract algebra
+* Algorithms in mathematics
+
+### Computer Science
+
+* All intro courses
+* Data structures
+* Algorithm design and analysis
+* Object Oriented programming
+
+If you want mentoring over a specific programming language, I can help with the
+following:
+
+* C
+* Python
+* Java
+* Ruby
+* PHP (Why would you want to learn this?!)
+
+
+How do I know you're actually good at teaching?
+--------------------------------------
+
+Here are some comments extracted from my educational [YouTube videos][1].
+(Comments extracted from [here][2] and [here][3]).
+
+[1]: http://www.youtube.com/user/JoeQuery/videos
+[2]: http://www.youtube.com/all_comments?v=IkyWCOUY8V4
+[3]: http://www.youtube.com/all_comments?v=3JX6TyLOmGQ
+
+<blockquote>
+Thanks, Joe. The best pointer tutorial I've come across. I've been struggling
+with this for some time and I feel like I finally have a good hold on it.
+</blockquote>
+
+<blockquote>
+Thank you for the tutorial. The explanation is clear, straight forward, and easy
+to understand.  If there are five stars to rate this tutorial, I give you
+five stars.  Unfortunately, it only accepts one like.
+</blockquote>
+
+<blockquote>
+Thanks for this video!!  I really like when things are explained clearly, you
+are certainly gifted. I really look forward to see more C tutorials.
+Cheers :)
+</blockquote>
+
+<blockquote>
+these videos are so helpful for studying for my final exam, you need to make
+more! Great job, keep up the good work
+</blockquote>
+
+I invite you to evaluate my teaching style yourself. These YouTube screencasts should
+provide a general feel for how I do things.
+<div class="">
+    <iframe src="http://www.youtube.com/embed/IkyWCOUY8V4"
+            frameborder="0" allowfullscreen width="500" height="300"></iframe>
+</div>
+<div class="">
+    <iframe src="http://www.youtube.com/embed/TA_qrRZ1cpI"
+            frameborder="0" allowfullscreen width="500" height="300"></iframe>
+</div>
+
+Let's get started!
+------------------
+
+You have decided you would like my help, so how do you receive it? Simply contact
+me through any of the means listed on my [contact page](/contact), and we can
+get started immediately!
+
+
+{% endfilter %}
+
+    </div>
+</article>
+{% endblock %}
