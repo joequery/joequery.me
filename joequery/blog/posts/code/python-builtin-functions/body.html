@@ -15,8 +15,8 @@
 
 {% extends "templates/post.html" %} {% block post %} {% filter markdown %}
 
-NOTE: This is a work in progress
---------------------------------
+NOTE: This is a work in progress. (Last edit Dec 29, 2013)
+----------------------------------------------------------
 
 The [official documentation](http://docs.python.org/2/library/functions.html) on
 Python's built-in functions feels lacking in the examples department. This post
@@ -60,6 +60,9 @@ Clicking any <a style="font-size: 20px;" href="#index">&uArr;</a>'s you see will
     <td>{{ fnlink("file")|safe }}</td>
     <td>{{ fnlink("filter")|safe }}</td>
     <td>{{ fnlink("float")|safe }}</td>
+</tr>
+<tr>
+    <td>{{ fnlink("format")|safe }}</td>
 </tr>
 </table>
 
@@ -1468,5 +1471,235 @@ mathematical operation performed with `nan` becomes `nan`.
     6
     >>> sum((1,2,3,nan))
     nan
+
+{{ header("format(value, format_spec)", "format")|safe }}
+
+Return a string representation of `value`, formatted according to the
+`format_spec`. The `format_spec` options are specified in the [format spec
+mini-language](http://docs.python.org/2/library/string.html#formatspec), but we
+will discuss common use cases here.
+
+### The empty format_spec
+
+Using the empty string (`""`) as the `format_spec`, or omitting the
+`format_spec` argument when calling `format()`, will produce the same result as
+calling `str(value)`.
+
+    >>> format(10.10)
+    '10.1'
+    >>> format(10.10, "")
+    '10.1'
+    >>> str(10.10)
+    '10.1'
+
+### The format_spec grammar
+
+The official documentation specifies the BNF grammar of the format_spec
+
+    [[fill]align][sign][#][0][width][,][.precision][type]
+
+The grammar may not be easiest way to learn the format possibilities, but once
+you go through the examples below and understand, this will serve as a useful
+reference.
+
+### Simple width alignments
+
+Suppose we want to draw a table, using `|`'s to separate the table cells. We can
+specify a width and an alignment on the table contents so everything lines up
+nicely. The `format_spec` for this is `[align][width]`. There are three
+primary alignments: left (`<`), right (`>`), centered (`^`). 
+
+    >>> headers = ["First name", "last name"]
+    >>> row1 = ["Joseph", "McCullough"]
+    >>> row2 = ["Luke", "Wilczoch"]
+    >>> row3 = ["MarKus", "Haley"]
+    >>> tablerows = [headers, row1, row2, row3]
+    >>> format_spec = "<15"
+    >>> for first,last in tablerows:
+    ...     print(format(first, format_spec) + "|" + format(last, format_spec))
+    ...
+    First name     |last name
+    Joseph         |McCullough
+    Luke           |Wilczoch
+    MarKus         |Haley
+    >>> format_spec = ">15"
+    >>> for first,last in tablerows:
+    ...     print(format(first, format_spec) + "|" + format(last, format_spec))
+    ...
+         First name|      last name
+             Joseph|     McCullough
+               Luke|       Wilczoch
+             MarKus|          Haley
+    >>> format_spec = "^15"
+    >>> for first,last in tablerows:
+    ...     print(format(first, format_spec) + "|" + format(last, format_spec))
+    ...
+      First name   |   last name
+        Joseph     |  McCullough
+         Luke      |   Wilczoch
+        MarKus     |     Haley
+
+### Fill character
+
+As you can see in the above example, when the `format_spec` specifies a width
+larger than the string being formatted, blank spaces are used to fill up the
+remaining width.
+
+    >>> format("12345", "^10")
+    '  12345   '
+
+We can change the default blank space to whatever character we wish by placing a
+character before the alignment symbol
+
+    >>> format("12345", "-^10")
+    '--12345---'
+    >>> format("12345", "x^10")
+    'xx12345xxx'
+
+### Formatting numbers
+
+The `format()` function has many options specific to formatting numbers.
+
+#### Leading sign
+
+The mini-language provides three different options for specifying the display of
+numeric signs:
+
+* `+` - display the sign for both positive and negative numbers
+* `-` - display the sign only for negative numbers (default behavior)
+* ` `(space) - display a leading space for positive numbers and a minus sign for
+        negative numbers
+
+As you can see from the grammar above, the leading sign option is placed after
+the alignment but before the width.
+
+    >>> format_specs = ["^+6", "^-6", "^ 6"]
+    >>> numbers = [-5, 10, -100, 5000]
+    >>> for format_spec in format_specs:
+    ...     for n in numbers:
+    ...             print(format(n, format_spec))
+    ...     print("-------")
+    ...
+      -5
+     +10
+     -100
+    +5000
+    -------
+      -5
+      10
+     -100
+     5000
+    -------
+      -5
+      10
+     -100
+     5000
+    -------
+
+#### Zero padding
+
+Placing a '0' after the width in the `format_spec` will 0-pad the numbers,
+depending on the direction of the alignment.
+
+    >>> format(.12345, "^010")
+    '00.1234500'
+    >>> format(.12345, "<010")
+    '0.12345000'
+    >>> format(.12345, ">010")
+    '0000.12345'
+    >>> format(12345, "<010")
+    '1234500000'
+    >>> format(12345, ">010")
+    '0000012345'
+    >>> format(12345, "^010")
+    '0012345000'
+
+#### Integer formatting
+
+Some numeric format specifications apply only to integer values.
+
+You can specify the integer "type" you want to display, such as binary, octal,
+or hex. This is done by appending the `type` symbol corresponding to the desired
+output type to the end of your `format_spec`.
+
+Here are the possible types:
+
+* `b` - binary format
+* `c` - converts the integer to its corresponding unicode character
+* `d` - decimal integer (default)
+* `o` - octal format
+* `x` - hex, lowercase letters
+* `X` - hex, uppercase letters
+
+Here is an example combining a fill character, alignment specification, a width,
+and the different integer display types
+
+    >>> types = ["b", "c", "d", "o", "x", "X"]
+    >>> for t in types:
+    ...     print(format(100, "-^15"+t))
+    ...
+    ----1100100----
+    -------d-------
+    ------100------
+    ------144------
+    ------64-------
+    ------64-------
+
+In order to remove any ambiguity, you can place a `#` before the width in the
+`format_spec`, which will place a leading "0x" for hex numbers, "0b" before
+binary, and "0o" before octal.
+
+    >>> types = ["b", "c", "d", "o", "x", "X"]
+    >>> for t in types:
+    ...     print(format(100, "-^#15"+t))
+    ...
+    ---0b1100100---
+    -------d-------
+    ------100------
+    -----0o144-----
+    -----0x64------
+    -----0X64------
+
+#### Floating point formatting
+
+Similar to integers, there are specific formatters available for floating-point
+numbers. The primary ones are:
+
+* `e` - exponent notation with lowercase 'e'
+* `E` - exponent notation with uppercase 'E'
+* `f` - displays the number as fixed point (this is what you will use most)
+* `%` - percentage
+
+For example, this format specifier specifies "-" as the fill character,
+designates the format to be right-aligned, of width 15, and then of a particular
+type.
+
+    >>> types = ["e", "E", "f", "%"]
+    >>> for t in types:
+    ...     print(format(1.25, "->15"+t))
+    ...
+    ---1.250000e+00
+    ---1.250000E+00
+    -------1.250000
+    ----125.000000%
+
+#### Precision (number of decimal points)
+
+If you are displaying a floating point number, there's a chance you want to
+manipulate how many digits are displayed after the decimal. To force exactly `n`
+digits after the decimal place, append `.nf` at the end of the `format_spec`.
+`f` here just represents the fixed_point floating-point formatter.
+
+    >>> print(format(100.25, ".4f"))
+    100.2500
+    >>> print(format(100.25, ".1f"))
+    100.2
+
+As you can see, the formatter will truncate .25 to .2 instead of rounding.
+
+This, of course, can be combined with other format specifications.
+
+    >>> print(format(100.25, "#^+20.3f"))
+    ######+100.250######
 
 {% endfilter %} {% endblock post %}
