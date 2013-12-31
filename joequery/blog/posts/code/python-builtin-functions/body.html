@@ -63,6 +63,7 @@ Clicking any <a style="font-size: 20px;" href="#index">&uArr;</a>'s you see will
 </tr>
 <tr>
     <td>{{ fnlink("format")|safe }}</td>
+    <td>{{ fnlink("frozenset")|safe }}</td>
 </tr>
 </table>
 
@@ -1701,5 +1702,88 @@ This, of course, can be combined with other format specifications.
 
     >>> print(format(100.25, "#^+20.3f"))
     ######+100.250######
+
+{{ header("frozenset(iterable)", "frozenset")|safe }}
+
+The `frozenset` function constructs a
+[frozenset](http://docs.python.org/2/library/stdtypes.html#types-set), which is
+identical to a normal set with two notable differences:
+
+(1) frozensets are immutable (you cannot add or remove elements from them)
+
+    >>> mylist = [0,1,2,3]
+    >>> myset = set(mylist)
+    >>> # sets are mutable, we can add and remove elements
+    >>> myset.add(4)
+    >>> myset
+    set([0, 1, 2, 3, 4])
+    >>> myfrozenset = frozenset(mylist)
+    >>> # frozensets are immutable, you cannot add or remove elements
+    >>> myfrozenset.add(4)
+    Traceback (most recent call last):
+      File "<stdin>", line 1, in <module>
+    AttributeError: 'frozenset' object has no attribute 'add'
+
+
+(2) frozensets are hashable (and can therefore be used as dictionary keys)
+
+    >>> mylist = [0,1,2,3]
+    >>> myset = set(mylist)
+    >>> # sets are not hashable
+    >>> hash(myset)
+    Traceback (most recent call last):
+      File "<stdin>", line 1, in <module>
+    TypeError: unhashable type: 'set'
+    >>> # consequently, they cannot be used as dictionary keys
+    >>> {myset: "myvalue"}
+    Traceback (most recent call last):
+      File "<stdin>", line 1, in <module>
+    TypeError: unhashable type: 'set'
+    >>> # frozensets are hashable, and can thus be used as dictionary keys
+    >>> myfrozenset = frozenset(mylist)
+    >>> hash(myfrozenset)
+    7305593827067572700
+    >>> {myfrozenset: "myvalue"}
+    {frozenset([0, 1, 2, 3]): 'myvalue'}
+
+Another consequence of frozensets being hashable is that you can have a set of
+frozensets (although you cannot have a set of sets, since elements of sets must
+also be hashable)
+
+    >>> a = set([1])
+    >>> b = set([2])
+    >>> f = frozenset([3])
+    >>> a.add(b)
+    Traceback (most recent call last):
+      File "<stdin>", line 1, in <module>
+    TypeError: unhashable type: 'set'
+    >>> a.add(f)
+    >>> a
+    set([1, frozenset([3])])
+    >>> f2 = frozenset([3])
+    >>> f2 in a
+    True
+
+
+### Standard set operations
+
+All operations that apply to sets that do not involve altering the set will
+apply to frozensets as well. Such operations include intersection, union, subset
+tests, etc. Here are just a few examples, but more examples of set operations
+can be found in the [set() section](#set).
+
+    >>> numbers = frozenset([0,1,2,3,4,5,6])
+    >>> evens = frozenset([0,2,4,6])
+    >>> 3 in numbers
+    True
+    >>> 3 in evens
+    False
+    >>> # subset tests
+    >>> evens <= numbers
+    True
+    >>> # True because all elements of evens can be found in numbers
+    >>> numbers <= evens
+    False
+    >>> # False because, for example, 3 is in numbers but not in evens
 
 {% endfilter %} {% endblock post %}
