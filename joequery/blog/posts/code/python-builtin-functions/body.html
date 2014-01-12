@@ -89,20 +89,15 @@ found on this [stackoverflow answer](http://stackoverflow.com/a/8370696).
 Return True if all elements of the iterable are true (or if the iterable is
 empty).
 
-    >>> all(x for x in [0,1,2,3])
+    >>> all([0,1,2,3])
     False
-    >>> all(x for x in [1,2,3])
+    >>> all([1,2,3])
     True
     >>> mylist = ["hello", "there", "how", "are", "you", ""]
-    >>> all(x for x in mylist)
+    >>> all(mylist)
     False
-    >>> all(x for x in mylist[:-1])
+    >>> all(mylist[:-1])
     True
-    >>> mycomprehension = [x.startswith("h") for x in mylist]
-    >>> mycomprehension
-    [True, False, True, False, False, False]
-    >>> all(x for x in mycomprehension)
-    False
     >>> print(all([]))
     True
 
@@ -111,16 +106,16 @@ empty).
 Return True if any element of the iterable is true. If the iterable is empty,
 return False.
 
-    >>> any(x for x in [0,1,2,3])
+    >>> any([0,1,2,3])
     True
-    >>> any(x for x in [0, False, "", {}, []])
+    >>> any([0, False, "", {}, []])
     False
     >>> any([])
     False
-    >>> mycomprehension = [x for x in xrange(10) if x%2 == 0]
-    >>> mycomprehension
+    >>> mylist = [x for x in xrange(10) if x%2 == 0]
+    >>> mylist
     [0, 2, 4, 6, 8]
-    >>> any(mycomprehension)
+    >>> any(mylist)
     True
 
 {{ header("basestring", "basestring")|safe }}
@@ -684,7 +679,10 @@ be the key, the second will be the value. For example,
     >>> # strings are iterables.
     >>> dict(["a9", "b6"])
     {'a': '9', 'b': '6'}
-    >>> myset = set([('x', 10), ('y', 20)])
+    >>> mylist = [('x', 10), ('y', 20)]
+    >>> dict(mylist)
+    {'y': 20, 'x': 10}
+    >>> myset = set(mylist)
     >>> myset
     set([('x', 10), ('y', 20)])
     >>> dict(myset)
@@ -957,12 +955,12 @@ However, we can alter the element if we access it via list indexing.
     >>> mylist
     [10, 11, 12, 13, 14, 15, 16, 17, 18, 19]
 
-Note that a list comprehension would be a more elegant solution for this trivial
-example
+If you find yourself making simple modifications to elements of a list based on
+simple conditions, you should consider using a list comprehension.
 
-    mylist = [element+10 for element in mylist]
+    my_new_list = [element+10 for element in mylist]
 
-But if you want to alter elements based on non trivial conditions, the
+But if you want to alter elements based on non-trivial conditions, the
 `enumerate()` mechanism may work better.
 
 {{ header("eval(expr), eval(expr, globals), eval(expr, globals, locals)", "eval")|safe }}
