@@ -32,7 +32,7 @@ def before_request():
       g.streaming = screenx_cache_get('streaming')
 
   set_assets_dir()
-  get_streaming_status()
+  #get_streaming_status()
 
 @app.errorhandler(404)
 def page_not_found(e):
