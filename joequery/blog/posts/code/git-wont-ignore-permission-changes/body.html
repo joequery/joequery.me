@@ -1,0 +1,59 @@
+{% from "macros" import img, blogimg %} {% set p = post %}
+{% extends "templates/post.html" %} {% block post %} {% filter markdown %}
+
+This article describes a possible solution for those who cannot convince git to
+ignore file permission changes.
+
+What git permission issues look like
+------------------------------------
+
+When you haven't made a change to a file, but running `git status` makes it
+seems like you've changed nearly every file, that's a pretty good indication
+that you are experiencing issues with file permissions changing. Unless you
+specifically want to introduce permission changes into your history, adding
+these permission changes to commits serves as needless clutter. Additionally, it
+makes asking git questions like "what commits changed this file?" less reliable.
+
+You can also verify you are having permissions issues by running `git diff`. If
+you see output resembling the following, git is showing you that permissions on
+the files have changed:
+
+    diff --git a/joequery/__init__.py b/joequery/__init__.py
+    old mode 100644
+    new mode 100755
+    diff --git a/joequery/blog/__init__.py b/joequery/blog/__init__.py
+    old mode 100644
+    new mode 100755
+    diff --git a/joequery/blog/helpers.py b/joequery/blog/helpers.py
+    old mode 100644
+    new mode 100755
+
+What you've already tried
+-------------------------
+
+At this point, I'm assuming you have already googled around for "git ignore file
+permissions", and have come across solutions such as
+
+    $ git config --global core.filemode false
+
+If you haven't done that yet... go do that! Then come back if you still have
+issues.
+
+Are you using a virtual machine shared directory?
+-------------------------------------------------
+
+If your git repository lives in a directory shared between a vm guest and host,
+this may be the root of your issues. This is especially the case if you use git
+within the vm itself.
+
+Yes, I'm using a VM shared directory. Now what?
+-----------------------------------------------
+
+The solution I use is simply working with git on the host instead of within the
+vm. The host will not see the permission changes like your VM does, so it won't
+attempt to add them to the commit.
+
+This may involve having an extra cygwin window open, for example, dedicated
+solely for git.
+
+{% endfilter %} {% endblock post %}

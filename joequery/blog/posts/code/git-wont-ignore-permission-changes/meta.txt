@@ -1,0 +1,6 @@
+[post]
+title: git won't ignore permission changes - possible solution
+description: A possible solution for those who cannot convince git to ignore
+    file permissions.
+time: 2014-05-04 Sun 06:40 PM
+tags: git, utilities
