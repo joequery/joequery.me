@@ -3,7 +3,8 @@
 
 If you are developing ruby applications within a virtual machine, you might
 have run across a similar looking error when trying to run bundle install.
-Gem::Ext::BuildError: ERROR: Failed to build gem native extension.
+
+    Gem::Ext::BuildError: ERROR: Failed to build gem native extension.
 
     /home/vagrant/.rbenv/versions/2.1.1/bin/ruby extconf.rb
     checking for rb_thread_blocking_region()... yes
@@ -38,8 +39,8 @@ file for the project.
 ### Step 1
 
 Since I primarily work with Python, I'm used to the virtualenv ecosystem where
-all virtual environments for a project have directories within a ~/.env
-directory.  To mirror that, let's create a directory called .bundles
+all virtual environments for a project have directories within a `~/.env`
+directory.  To mirror that, let's create a directory called `.bundles`
 
     $ mkdir ~/.bundles
 
@@ -52,10 +53,10 @@ Go ahead and cd to that directory and get the absolute path via pwd. We'll need 
 ### Step 2
 
 Now let's move back to your ruby project directory. If you have a
-.bundle/config file local to your project, open it in your favorite text
-editor. Otherwise, create both the .bundle directory and a file called config
-within that directory. (Note: The .bundle directory should be at the same level
-as your project Gemfile).
+`.bundle/config` file local to your project, open it in your favorite text
+editor. Otherwise, create both the `.bundle` directory and a file called config
+within that directory. (Note: The `.bundle` directory should be at the same level
+as your project `Gemfile`).
 
 Append the following to the file:
 
@@ -67,7 +68,7 @@ Append the following to the file:
 
 Now we can finally execute
 
-$ bundle install
+    $ bundle install
 
 Upon completion, bundler will indicate where the gems were installed:
 
