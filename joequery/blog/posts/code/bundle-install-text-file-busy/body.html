@@ -1,0 +1,103 @@
+{% from "macros" import img, blogimg %} {% set p = post %}
+{% extends "templates/post.html" %} {% block post %} {% filter markdown %}
+
+If you are developing ruby applications within a virtual machine, you might
+have run across a similar looking error when trying to run bundle install.
+Gem::Ext::BuildError: ERROR: Failed to build gem native extension.
+
+    /home/vagrant/.rbenv/versions/2.1.1/bin/ruby extconf.rb
+    checking for rb_thread_blocking_region()... yes
+    checking for sys/select.h... yes
+    checking for poll.h... yes
+    checking for sys/epoll.h... yes
+    checking for sys/event.h... no
+    checking for port.h... no
+    checking for sys/resource.h... yes
+    creating Makefile
+
+    Text file busy @ unlink_internal - ./siteconf20140504-1398-lxfrfm.rb
+
+What's causing the problem?
+---------------------------
+
+By default, bundler installs gems into a directory called vendor/bundle local
+to your project. Consequently, if your current project directory is within a
+shared folder between your VM and your host, bundler will attempt to install
+gems and native extensions on this shared folder.
+
+
+How do I fix it?
+----------------
+
+Thankfully there's a simple solution that enables us to keep our ruby files on
+the VM shared folder and keep the isolation provided by bundler/rbenv.  We
+simply need to tell bundler to install gems in a directory that's local to the
+VM (not on a shared folder). We can achieve this by altering the bundle config
+file for the project.
+
+### Step 1
+
+Since I primarily work with Python, I'm used to the virtualenv ecosystem where
+all virtual environments for a project have directories within a ~/.env
+directory.  To mirror that, let's create a directory called .bundles
+
+    $ mkdir ~/.bundles
+
+Go ahead and cd to that directory and get the absolute path via pwd. We'll need that next.
+
+    $ cd ~/.bundles
+    $ pwd
+    /home/vagrant/.bundles
+
+### Step 2
+
+Now let's move back to your ruby project directory. If you have a
+.bundle/config file local to your project, open it in your favorite text
+editor. Otherwise, create both the .bundle directory and a file called config
+within that directory. (Note: The .bundle directory should be at the same level
+as your project Gemfile).
+
+Append the following to the file:
+
+    ---
+    BUNDLE_PATH: "/home/vagrant/.bundles/YOUR_PROJECT_NAME_HERE"
+    BUNDLE_DISABLE_SHARED_GEMS: '1'
+
+### Step 3
+
+Now we can finally execute
+
+$ bundle install
+
+Upon completion, bundler will indicate where the gems were installed:
+
+    (vagrant)/vagrant/ruby/projects/eztemp.me$ bundle
+    Using timers 1.1.0
+    Using celluloid 0.15.2
+    Using nio4r 1.0.0
+    Using celluloid-io 0.15.0
+    Using ffi 1.9.3
+    Using rb-fsevent 0.9.4
+    Using rb-inotify 0.9.4
+    Using listen 2.7.4
+    Using rack 1.5.2
+    Using rack-protection 1.5.3
+    Using rerun 0.9.0
+    Using tilt 1.4.1
+    Using sinatra 1.4.5
+    Using bundler 1.6.2
+    Your bundle is complete!
+    It was installed into /home/vagrant/.bundles/eztemp
+
+Ensure this directory is the one you specified.
+
+The takeaway
+------------
+
+As a general rule of thumb, package managers on your VM should download and
+write to the VM only.  Difficulties arising from package managers interacting
+with virtual machine shared folders is not limited to ruby. Python's virtualenv
+ecosystem can similarly stop working if the virtualenv is located on a shared
+folder instead of remaining local to the VM.
+
+{% endfilter %} {% endblock post %}

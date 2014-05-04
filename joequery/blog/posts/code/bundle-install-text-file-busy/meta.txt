@@ -1,0 +1,6 @@
+[post]
+title: Resolving bundle install Text file busy error
+description: How to solve the Text file busy error you may recieve when
+    running bundle install within a virtual machine.
+time: 2014-05-04 Sun 06:23 PM
+tags: ruby, vagrant
