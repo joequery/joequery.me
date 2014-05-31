@@ -19,13 +19,25 @@ Phone: (903) 330-7961
 Employment
 ----------
 
-### [Andrew Harper][31] (June 2013-Present)
+### [Andrew Harper][31] (June 2013-June 2014)
 
-  * Internal and external REST API development via Django.
-  * I aid the team with the following when requested:
-    + Git structure and organization
-    + JavaScript
-  * Self-appointed Test lead (because I'm the only one that writes them...)
+  * Rest API development via Django Rest Framework
+    - Overrode Django Rest Framework internals to allow for more dynamic routing
+    - Created authorization scheme which enforced limitations on API clients
+      (with an emphasis on securing user data)
+  * The goto guy for git conflict resolution
+  * Custom shopping cart
+    - Stripe integration
+    - Authorization to various parts of the site based on product selection
+    - Created infrastructure for promo-codes, bundled products, US vs
+      International pricing
+  * Dynamic GeoJSON generation for use with the MapBox API
+    - [View the map](https://www.andrewharper.com/hotels/map/)
+  * Created custom python APIs to cope with vendors too lazy to expose json/xml endpoints
+    - [Requests](http://docs.python-requests.org/en/latest/) was used to
+      facilitate interaction with the vendors' web applications
+    - [PyQuery](http://pythonhosted.org/pyquery/) was used to parse the
+      resulting HTML and extract relevant data.
 
 ### [Communications Corporation of America][0] (Dec 2011-June 2013)
   
@@ -57,9 +69,10 @@ Github profile: [JoeQuery][2]
 
 ### Authored Projects
 
-* [MiddleMan][33] - (Work in progress) Provides internet-capable
-microcontrollers the ability to extract data from JSON APIs without the need to
-set up a server. (See an [example][34]).
+* [MiddleMan][33] - (Work in progress) Dynamic templating system that directly
+interacts with JSON APIs responses.  ([View on github][34])
+* [JSONSelector][35] - A simple utility which describes how to traverse to a
+particular value in a JSON response.
 * [Stupid Table Plugin][7] - A stupidly simple jQuery table sorting plugin
   (Used by Mozilla!)
 * [joequery.me][25] - This very website, a custom Flask blog engine. 
@@ -72,7 +85,6 @@ data from various UT Tyler web services.
   server load
 * [Route53-To-S3][6] - Backup Route53 DNS Records from AWS to S3
 * [Rails Template][8] - Rails template with extensive nginx documentation  
-* [Vert-Flask][9] - The source of the Vert Studios website, made with Flask.
 
 ### Project Contributions
 
@@ -137,7 +149,6 @@ Available upon request.
 [6]: https://github.com/Hack56/Route53-To-S3
 [7]: https://github.com/joequery/Stupid-Table-Plugin
 [8]: https://github.com/Hack56/Rails-Template
-[9]: https://github.com/joequery/Vert-Flask
 [10]: https://github.com/kennethreitz/requests
 [11]: http://www.tylerpublicart.com/
 [12]: https://groups.google.com/forum/?fromgroups#!forum/hacktyler
@@ -160,8 +171,9 @@ Available upon request.
 [30]: https://github.com/joequery/mrbc-playground
 [31]: http://www.andrewharper.com/
 [32]: http://joequery.me/code/python-builtin-functions/
-[33]: https://github.com/joequery/MiddleMan/tree/init_dev
-[34]: https://github.com/joequery/MiddleMan/blob/9012bcd83358528d05b74d8dbd1c8926b833138f/tests/parser/usage.py#L73
+[33]: http://middleman.joequery.me
+[34]: https://github.com/joequery/MiddleMan/tree/init_dev
+[35]: http://jsonselector.com/
 
 {% endfilter %}
     </div>
