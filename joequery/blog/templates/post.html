@@ -5,6 +5,11 @@
 <article id="blogPost" class="page">
     <h1 class="title"><a href="/{{post['url']}}">{{post['title']}}</a></h1>
 
+    <div class="hireme">
+        <p>Pardon the interruption! I'm currently looking for a full-time or
+        part-time development position. <a href="/resume">View my resume</a></p>
+    </div>
+
     {% if post['series'] %}
         <div class="entry">
             <p>(This post is part of the 
@@ -19,6 +24,15 @@
         {% endblock post %}
     </div>
 </article>
+
+    <article style="padding: 0px 0px;" class="page">
+        <div class="entry">
+            <h2 style="border: 0px;" class="title">Was this article useful?</h2>
+            <p>If this article helped you solve your problem, consider
+            hiring me for a full-time or part-time position so I can help you
+            solve more problems! <a href="/resume">View my resume</a></p>
+        </div>
+    </article>
 
 {% if post['tags'] %}
     <article style="padding: 0px 0px;" class="page">
